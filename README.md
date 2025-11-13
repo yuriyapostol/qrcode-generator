@@ -1,5 +1,5 @@
 # qrcode-generator
-QR Code Generator implementation in JavaScript
+QR Code Generator implementation in JavaScript.
 
 [online demo(js)](https://kazuhikoarase.github.io/qrcode-generator/js/demo/)
 
