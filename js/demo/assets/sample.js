@@ -35,8 +35,19 @@ var create_qrcode = function(text, typeNumber,
   qr.make();
 
 //  return qr.createTableTag();
-//  return qr.createSvgTag();
-  return qr.createImgTag();
+  return qr.toString('SVG', {
+    cell: {
+      size: 6,
+      fill: "#00f",
+      style: "opacity: 0.8"
+    },
+    background: "#ff0",
+    alt: text,
+    title: "QR Code"
+  });
+  //return qr.toString('SVG', { cellSize: 5, margin: 10, cellColor: "#f00", backgroundColor: "transparent", alt: "alt", title: "title" });
+  //return qr.toString('SVG', 5, 0, "#f00", "transparent");
+//  return qr.createImgTag();
 };
 
 var update_qrcode = function() {
