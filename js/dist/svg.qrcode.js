@@ -38,12 +38,13 @@
     let id = opts.id || 'qrcode';
     let _class = opts.class || 'qrcode';
     let style = opts.style || '';
-
+    
     let cell = opts.cell || {};
     if (typeof cell === 'string') cell = { fill: cell };
     if (typeof cell !== 'object' || ! cell) cell = {};
+    let scalable = typeof opts.scalable !== 'undefined' ? opts.scalable : ! (typeof cellSize === 'number' || typeof opts.cellSize === 'number' || typeof cell.size === 'number');
     if (typeof cellSize === 'number') cell.size = cellSize;
-    if (typeof cell.size !== 'number') cell.size = opts.cellSize || 2;
+    if (typeof cell.size !== 'number') cell.size = (typeof opts.cellSize === 'number') ? opts.cellSize : 1;
     if (typeof cellColor === 'string') cell.fill = cellColor;
     if (typeof cell.fill !== 'string') cell.fill = (typeof opts.cellColor === 'string') ? opts.cellColor : 'black';
     if (typeof cell.stroke !== 'string') cell.stroke = 'none';
@@ -80,7 +81,7 @@
       rect = `l${cell.size},0 0,${cell.size} -${cell.size},0 0,-${cell.size}z `;
     
     svg += `<svg version="1.1" xmlns="http://www.w3.org/2000/svg"`;
-    svg += ! opts.scalable ? ` width="${size}px" height="${size}px"` : '';
+    svg += ! scalable ? ` width="${size}px" height="${size}px"` : '';
     svg += ` viewBox="0 0 ${size} ${size}" preserveAspectRatio="xMinYMin meet" id="${escapeXml(id)}" class="${escapeXml(_class)}" style="${escapeXml(style)}"`;
     svg += (title.text || alt.text)
       ? ` role="img" aria-labelledby="${escapeXml([title.id, alt.id].join(' ').trim())}"`
