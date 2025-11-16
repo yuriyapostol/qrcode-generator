@@ -1,20 +1,13 @@
 //---------------------------------------------------------------------
 //
-// QR Code Generator for JavaScript, Extended SVG Support
+// Extended SVG support for JavaScript QR Code Generator (optional)
 //
-// Original code:
-//   QR Code Generator for JavaScript
+// Copyright (c) 2025 Yuriy Apostol
+// https://github.com/yuriyapostol
+//
+// Based on createSvgTag method from original QR Code Generator for JavaScript
 //   Copyright (c) 2009 Kazuhiko Arase
 //   http://www.d-project.com/
-//
-// Modifications:
-//   Copyright (c) 2025 Yuriy Apostol
-//   https://github.com/yuriyapostol
-//   Changes:
-//     - Rewritten SVG generation
-//       - Optimized the output SVG code
-//       - Added more parameters (IDs, classes, styles, colors)
-//     - Moved the SVG generation method to optional functionality
 //
 // Licensed under the MIT license:
 //   http://www.opensource.org/licenses/mit-license.php
@@ -91,8 +84,8 @@
       svg += `<title id="${escapeXml(title.id)}">${escapeXml(title.text)}</title>`;
     if (alt.text)
       svg += `<description id="${escapeXml(alt.id)}">${escapeXml(alt.text)}</description>`;
-    svg += `<rect id="${escapeXml(background.id)}" class="${escapeXml(background.class)}" style="${escapeXml(background.style)}" width="100%" height="100%" fill="${background.fill}" stroke="${background.stroke}"/>`;
-    svg += `<path id="${escapeXml(cell.id)}" class="${escapeXml(cell.class)}" style="${escapeXml(cell.style)}" d="`;
+    svg += `<rect id="${escapeXml(background.id)}"${background.class ? ` class="${escapeXml(background.class)}"` : ''}${background.style ? ` style="${escapeXml(background.style)}"` : ''} width="100%" height="100%"${background.fill ? ` fill="${background.fill}"` : ''}${background.stroke ? ` stroke="${background.stroke}"` : ''}/>`;
+    svg += `<path id="${escapeXml(cell.id)}"${cell.class ? ` class="${escapeXml(cell.class)}"` : ''}${cell.style ? ` style="${escapeXml(cell.style)}"` : ''} d="`;
 
     for (let r = 0; r < count; r++) {
       let mr = r * cell.size + margin;
@@ -104,7 +97,7 @@
       }
     }
 
-    svg += `" fill="${cell.fill}" stroke="${cell.stroke}"/></svg>`;
+    svg += `"${cell.fill ? ` fill="${cell.fill}"` : ''}${cell.stroke ? ` stroke="${cell.stroke}"` : ''}/></svg>`;
     return svg;
   };
 
