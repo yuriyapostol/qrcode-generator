@@ -514,6 +514,18 @@ var qrcode = function() {
       return qrHtml;
     };
 
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+      let options = (typeof cellSize === "object")
+        ? cellSize
+        : {
+          cellSize: cellSize || 2,
+          margin,
+          alt,
+          title
+        };
+      return _this.toString('SVG', options);
+    };
+
     _this.createDataURL = function(cellSize, margin) {
 
       cellSize = cellSize || 2;
