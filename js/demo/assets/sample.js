@@ -34,8 +34,9 @@ var create_qrcode = function(text, typeNumber,
   qr.addData(text, mode);
   qr.make();
 
-//  return qr.createTableTag();
-  /*return qr.toString('SVG', {
+  //return qr.createTableTag(5, 20);
+  return qr.toString('table', { cellSize: 5, margin: 20, cellColor: "#f00", backgroundColor: "#ff0" });
+  /*return qr.toString('svg', {
     cell: {
       size: 6,
       fill: "#00f",
@@ -45,9 +46,9 @@ var create_qrcode = function(text, typeNumber,
     alt: text,
     title: "QR Code"
   });*/
-  //return qr.toString('SVG', { cellSize: 5, margin: 10, cellColor: "#f00", backgroundColor: "transparent", alt: "alt", title: "title" });
-  //return qr.toString('SVG', 5, 0, "#f00", "transparent");
-  return qr.createSvgTag();
+  //return qr.toString('svg', { cellSize: 5, margin: 10, cellColor: "#f00", backgroundColor: "transparent", alt: "alt", title: "title" });
+  //return qr.toString('svg', 5, 0, "#f00", "transparent");
+  //return qr.createSvgTag();
   //return qr.createImgTag();
 };
 

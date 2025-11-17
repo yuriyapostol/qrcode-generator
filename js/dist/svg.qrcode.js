@@ -19,7 +19,7 @@
 (function(qrcode) {
   
   // Export to SVG code
-  qrcode.toString.formats['SVG'] = function(cellSize, margin, cellColor, backgroundColor) {
+  qrcode.toString.formats['svg'] = function(cellSize, margin, cellColor, backgroundColor) {
     
     // Handle options object as first parameter
     let opts = {};
