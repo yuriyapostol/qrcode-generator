@@ -16,10 +16,10 @@
 //
 //---------------------------------------------------------------------
 
-(function(qrcode) {
+(function (qrcode) {
   
-  // Export to table HTML code
-  qrcode.toString.formats['table'] = function(cellSize, margin, cellColor, backgroundColor) {
+  // Render to table HTML code
+  qrcode.toString.formats['table'] = function (cellSize, margin, cellColor, backgroundColor) {
     
     // Handle options object as first parameter
     let opts = {};

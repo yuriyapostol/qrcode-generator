@@ -34,8 +34,10 @@ var create_qrcode = function(text, typeNumber,
   qr.addData(text, mode);
   qr.make();
 
+  //return "<pre style='color: white; background: black; padding: 1em;'>" + qr.createASCII(1, 2) + "</pre>";
+  return "<pre style='color: white; background: black; padding: 1em;'>" + qr.toString('ascii', 1, 2) + "</pre>";
   //return qr.createTableTag(5, 20);
-  return qr.toString('table', { cellSize: 5, margin: 20, cellColor: "#f00", backgroundColor: "#ff0" });
+  //return qr.toString('table', { cellSize: 5, margin: 20, cellColor: "#f00", backgroundColor: "#ff0" });
   /*return qr.toString('svg', {
     cell: {
       size: 6,

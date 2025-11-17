@@ -16,10 +16,10 @@
 //
 //---------------------------------------------------------------------
 
-(function(qrcode) {
+(function (qrcode) {
   
-  // Export to SVG code
-  qrcode.toString.formats['svg'] = function(cellSize, margin, cellColor, backgroundColor) {
+  // Render to SVG code
+  qrcode.toString.formats['svg'] = function (cellSize, margin, cellColor, backgroundColor) {
     
     // Handle options object as first parameter
     let opts = {};
