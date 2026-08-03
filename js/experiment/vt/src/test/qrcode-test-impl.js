@@ -41,7 +41,7 @@ describe('QRCode', function(){
 		qr.addData(unescape(encodeURI(sourceText)));
 		qr.make();
 
-		expect(qr.createImgTag() ).to.equal(correctImgTag);
+		expect(qr.toString('gif') ).to.equal(correctImgTag);
 	});
 
 	it('should generate correct GIF image data', function(){
@@ -52,7 +52,7 @@ describe('QRCode', function(){
 		qr.addData(unescape(encodeURI(sourceText)));
 		qr.make();
 
-		var data = qr.createDataURL().replace('data:image/gif;base64,', '');
+		var data = qr.toString({ format : 'gif', tag : false }).replace('data:image/gif;base64,', '');
 
 		expect(btoa(atob(data) ) ).to.equal(correctImgData);
 	});
@@ -134,9 +134,9 @@ describe('QRCode', function(){
 		qr.addData(unescape(encodeURI(sourceText)));
 		qr.make();
 
-		expect(qr.createASCII() ).to.equal(correctTextData1, 'ASCII QRCode of size 1 is incorrect');
-		expect(qr.createASCII(1, 0) ).to.equal(correctTextData2, 'ASCII QRCode of size 1 without margin is incorrect');
-		expect(qr.createASCII(2) ).to.equal(correctTextData3, 'ASCII QRCode of size 2 is incorrect');
+		expect(qr.toString('ascii') ).to.equal(correctTextData1, 'ASCII QRCode of size 1 is incorrect');
+		expect(qr.toString('ascii', 1, 0) ).to.equal(correctTextData2, 'ASCII QRCode of size 1 without margin is incorrect');
+		expect(qr.toString('ascii', 2) ).to.equal(correctTextData3, 'ASCII QRCode of size 2 is incorrect');
 	});
 });
 
@@ -163,7 +163,7 @@ export const sjis = function(qrcode) {
       qr.addData('あいう澤', 'Kanji');
       qr.addData('abcあいう①', 'Byte');
       qr.make();
-      expect(capture('s', qr.createDataURL() ) ).to.equal(s);
+      expect(capture('s', qr.toString({ format : 'gif', tag : false }) ) ).to.equal(s);
     });
   });
 };
@@ -198,7 +198,7 @@ export const utf8 = function(qrcode) {
       const qr = qrcode(8, 'L');
       qr.addData('abcあいうĀ👏', 'Byte');
       qr.make();
-      expect(capture('s', qr.createDataURL() ) ).to.equal(s);
+      expect(capture('s', qr.toString({ format : 'gif', tag : false }) ) ).to.equal(s);
     });
   });
 };
@@ -229,7 +229,7 @@ export const misc = function(qrcode) {
       qr.addData('漢字', 'Kanji');
       qr.addData('abcあいう', 'Byte');
       qr.make();
-      expect(capture('s', qr.createDataURL() ) ).to.equal(s);
+      expect(capture('s', qr.toString({ format : 'gif', tag : false }) ) ).to.equal(s);
     });
 
     it('img tag (for coverage)', function(){
@@ -248,44 +248,44 @@ export const misc = function(qrcode) {
       const qr = qrcode(1, 'L');
       qr.addData('abc');
       qr.make();
-      expect(capture('s', qr.createImgTag(3, 1, 'a<>"&\'\\z') ) ).to.equal(s);
+      expect(capture('s', qr.toString('gif', 3, 1, 'a<>"&\'\\z') ) ).to.equal(s);
     });
 
     it('table tag (for coverage)', function(){
       const qr = qrcode(1, 'L');
       qr.addData('{TABLE}');
       qr.make();
-      expect(!!qr.createTableTag() ).to.be.true;
+      expect(!!qr.toString('table') ).to.be.true;
     });
 
     it('svg tag (for coverage)', function(){
       const qr = qrcode(1, 'Q');
       qr.addData('{SVG}');
       qr.make();
-      expect(!!qr.createSvgTag() ).to.be.true;
+      expect(!!qr.toString('svg') ).to.be.true;
     });
 
     it('svg tag by object (for coverage)', function(){
       const qr = qrcode(1, 'H');
       qr.addData('{SVG}');
       qr.make();
-      expect(!!qr.createSvgTag({}) ).to.be.true;
+      expect(!!qr.toString({ format : 'svg' }) ).to.be.true;
     });
 
     it('svg tag auto crispEdges for whole-number cell size', function(){
       const qr = qrcode(1, 'H');
       qr.addData('{SVG}');
       qr.make();
-      expect(qr.createSvgTag({cellSize : 2}) ).to.contain(' shape-rendering="crispEdges"');
-      expect(qr.createSvgTag({cellSize : 2.5}) ).not.to.contain(' shape-rendering="crispEdges"');
+      expect(qr.toString({ format : 'svg', cellSize : 2 }) ).to.contain(' shape-rendering="crispEdges"');
+      expect(qr.toString({ format : 'svg', cellSize : 2.5 }) ).not.to.contain(' shape-rendering="crispEdges"');
     });
 
     it('svg tag can force crispEdges on and off', function(){
       const qr = qrcode(1, 'H');
       qr.addData('{SVG}');
       qr.make();
-      expect(qr.createSvgTag({cellSize : 2.5, crispEdges : true}) ).to.contain(' shape-rendering="crispEdges"');
-      expect(qr.createSvgTag({cellSize : 2, crispEdges : false}) ).not.to.contain(' shape-rendering="crispEdges"');
+      expect(qr.toString({ format : 'svg', cellSize : 2.5, crispEdges : true }) ).to.contain(' shape-rendering="crispEdges"');
+      expect(qr.toString({ format : 'svg', cellSize : 2, crispEdges : false }) ).not.to.contain(' shape-rendering="crispEdges"');
     });
 
     it('svg tag by object (for coverage)', function(){
@@ -329,7 +329,7 @@ export const misc = function(qrcode) {
       qr.addData('12345', 'Numeric');
       qr.addData('123456', 'Numeric');
       qr.make();
-      expect(capture('s', qr.createDataURL() ) ).to.equal(s);
+      expect(capture('s', qr.toString({ format : 'gif', tag : false }) ) ).to.equal(s);
     });
 
     const dataURLHandler = function(dataURL) {
@@ -342,25 +342,25 @@ export const misc = function(qrcode) {
           const qr = qrcode(t, e);
           qr.addData('1', 'Numeric');
           qr.make();
-          dataURLHandler(qr.createDataURL() );
+          dataURLHandler(qr.toString({ format : 'gif', tag : false }) );
         });
         it('addData - Alphanumeric (for coverage)', function(){
           const qr = qrcode(t, e);
           qr.addData('A1', 'Alphanumeric');
           qr.make();
-          dataURLHandler(qr.createDataURL() );
+          dataURLHandler(qr.toString({ format : 'gif', tag : false }) );
         });
         it('addData - Kanji (for coverage)', function(){
           const qr = qrcode(t, e);
           qr.addData('漢', 'Kanji');
           qr.make();
-          dataURLHandler(qr.createDataURL() );
+          dataURLHandler(qr.toString({ format : 'gif', tag : false }) );
         });
         it('addData - Byte (for coverage)', function(){
           const qr = qrcode(t, e);
           qr.addData('A1漢', 'Byte');
           qr.make();
-          dataURLHandler(qr.createDataURL() );
+          dataURLHandler(qr.toString({ format : 'gif', tag : false }) );
         });
       });
     });

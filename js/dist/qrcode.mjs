@@ -472,53 +472,6 @@ export const qrcode = function(typeNumber, errorCorrectionLevel) {
     return qrcode.toString.formats[format].apply(this, _arguments);
   };
 
-  _this.createTableTag = function(cellSize, margin) {
-    let options = (typeof cellSize === "object")
-      ? cellSize
-      : {
-        cellSize: cellSize || 2,
-        margin
-      };
-    return _this.toString('table', options);
-  };
-
-  _this.createSvgTag = function(cellSize, margin, alt, title) {
-    let options = (typeof cellSize === "object")
-      ? cellSize
-      : {
-        cellSize: cellSize || 2,
-        margin,
-        alt,
-        title
-      };
-    return _this.toString('svg', options);
-  };
-
-  _this.createDataURL = function(cellSize, margin) {
-    return _this.toString('gif', {
-      cellSize: cellSize || 2,
-      margin,
-      tag: false
-    });
-  };
-
-  _this.createImgTag = function(cellSize, margin, alt, title) {
-    let options = (typeof cellSize === "object")
-      ? cellSize
-      : {
-        cellSize: cellSize || 2,
-        margin,
-        alt,
-        title
-      };
-    options.tag = 'img';
-    return _this.toString('gif', options);
-  };
-
-  _this.createASCII = function(cellSize, margin) {
-    return _this.toString('ascii', cellSize, margin);
-  };
-
   _this.renderTo2dContext = function(context, cellSize) {
     cellSize = cellSize || 2;
     const length = _this.getModuleCount();
@@ -1443,12 +1396,12 @@ const qrNumber = function(data) {
   const strToNum = function(s) {
     let num = 0;
     for (let i = 0; i < s.length; i += 1) {
-      num = num * 10 + chatToNum(s.charAt(i) );
+      num = num * 10 + charToNum(s.charAt(i) );
     }
     return num;
   };
 
-  const chatToNum = function(c) {
+  const charToNum = function(c) {
     if ('0' <= c && c <= '9') {
       return c.charCodeAt(0) - '0'.charCodeAt(0);
     }

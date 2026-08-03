@@ -22,7 +22,6 @@ import {
   type QRPolynominal,
   type QRRSBlock,
   type QRData,
-  type QRSvgTagOpts,
   type QRBitBuffer
 } from './types';
 
@@ -477,55 +476,6 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
     return qrcodeToString.formats[format].apply(_this, _arguments);
   };
 
-  const createTableTag = function(cellSize_or_opts? : number | { [key : string] : any }, margin? : number) {
-    const options = (typeof cellSize_or_opts === 'object')
-      ? cellSize_or_opts
-      : {
-        cellSize: cellSize_or_opts || 2,
-        margin
-      };
-    return _this.toString('table', options);
-  };
-
-  const createSvgTag = function(cellSize_or_opts? : number | QRSvgTagOpts,
-      margin? : number, alt? : any, title? : any) {
-    const options = (typeof cellSize_or_opts === 'object')
-      ? cellSize_or_opts
-      : {
-        cellSize: cellSize_or_opts || 2,
-        margin,
-        alt,
-        title
-      };
-    return _this.toString('svg', options);
-  };
-
-  const createDataURL = function(cellSize? : number, margin? : number) {
-    return _this.toString('gif', {
-      cellSize: cellSize || 2,
-      margin,
-      tag: false
-    });
-  };
-
-  const createImgTag = function(cellSize_or_opts? : number | { [key : string] : any },
-      margin? : number, alt? : string, title? : string) {
-    const options = (typeof cellSize_or_opts === 'object')
-      ? cellSize_or_opts
-      : {
-        cellSize: cellSize_or_opts || 2,
-        margin,
-        alt,
-        title
-      };
-    options.tag = 'img';
-    return _this.toString('gif', options);
-  };
-
-  const createASCII = function(cellSize? : number, margin? : number) {
-    return _this.toString('ascii', cellSize, margin);
-  };
-
   const renderTo2dContext = function(context : CanvasRenderingContext2D, cellSize? : number) {
     cellSize = cellSize || 2;
     const length = _this.getModuleCount();
@@ -543,11 +493,6 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
     getModuleCount,
     make,
     toString,
-    createTableTag,
-    createSvgTag,
-    createDataURL,
-    createImgTag,
-    createASCII,
     renderTo2dContext,
   };
 

@@ -43,16 +43,6 @@ interface QRCode {
   toString() : string;
   toString(format: string, ...args: any[]) : string;
   toString(opts: { format: string, [key: string]: any }) : string;
-  createImgTag(cellSize?: number, margin?: number, alt?: string, title?: string) : string;
-  createImgTag(opts? : { cellSize?: number, margin?: number, alt?: string, title?: string, [key: string]: any }) : string;
-  createSvgTag(cellSize?: number, margin?: number, alt?: string, title?: string) : string;
-  createSvgTag(opts? : { cellSize?: number, margin?: number,
-      scalable?: boolean, crispEdges?: boolean | 'auto', alt?: string,
-      title?: string, [key: string]: any }) : string;
-  createDataURL(cellSize?: number, margin?: number) : string;
-  createTableTag(cellSize?: number, margin?: number) : string;
-  createTableTag(opts? : { cellSize?: number, margin?: number, [key: string]: any }) : string;
-  createASCII(cellSize?: number, margin?: number) : string;
   renderTo2dContext(context: CanvasRenderingContext2D, cellSize?: number): void;
 }
 

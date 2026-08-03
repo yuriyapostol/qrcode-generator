@@ -34,14 +34,6 @@ export interface QRCode {
   toString() : string;
   toString(format: string, ...args: any[]) : string;
   toString(opts: { format: string, [key: string]: any }) : string;
-  createTableTag(cellSize?: number, margin?: number) : string;
-  createTableTag(opts? : QRTableTagOpts) : string;
-  createSvgTag(cellSize?: number, margin?: number, alt?: any, title?: any) : string;
-  createSvgTag(opts? : QRSvgTagOpts) : string;
-  createDataURL(cellSize?: number, margin?: number) : string;
-  createImgTag(cellSize?: number, margin?: number, alt?: string, title?: string) : string;
-  createImgTag(opts? : QRImgTagOpts) : string;
-  createASCII(cellSize?: number, margin?: number) : string;
   renderTo2dContext(context: CanvasRenderingContext2D, cellSize?: number) : void;
 }
 

@@ -19,7 +19,7 @@ var errorCorrectionLevel = 'L';
 var qr = qrcode(typeNumber, errorCorrectionLevel);
 qr.addData('Hi!');
 qr.make();
-document.getElementById('placeHolder').innerHTML = qr.createImgTag();
+document.getElementById('placeHolder').innerHTML = qr.toString('gif');
 ```
 ## API Documentation
 
@@ -68,21 +68,27 @@ _[Note] call make() before this function._
 | row   | <code>number</code> | 0 ~ moduleCount - 1 |
 | col   | <code>number</code> | 0 ~ moduleCount - 1 |
 
-#### createDataURL(cellSize, margin) => <code>string</code>
-#### createImgTag(cellSize, margin, alt) => <code>string</code>
-#### createSvgTag(cellSize, margin) => <code>string</code>
-#### createTableTag(cellSize, margin) => <code>string</code>
-#### createASCII(cellSize, margin) => <code>string</code>
-Helper functions for HTML.
- _[Note] call make() before these functions._
+#### toString(format, ...args) => <code>string</code>
+Render a QR Code with a registered formatter.
+ _[Note] call make() before this function._
 
-| Param    | Type                | Description           |
-| -------- | ------------------- | --------------------- |
-| cellSize | <code>number</code> | default: 2            |
-| margin   | <code>number</code> | default: cellSize * 4 |
-| alt      | <code>string</code> | (optional)            |
+| Param  | Type                | Description                                           |
+| ------ | ------------------- | ----------------------------------------------------- |
+| format | <code>string</code> | Formatter name (`gif`, `svg`, `table`, `ascii`)      |
+| args   | <code>any[]</code>  | Formatter-specific positional arguments              |
 
-#### createSvgTag(opts) => <code>string</code>
+#### toString({ format, ...opts }) => <code>string</code>
+Render a QR Code with formatter options passed as an object.
+
+```javascript
+qr.toString('gif'); // default <img .../>
+qr.toString({ format: 'gif', tag: false }); // data:image/gif...
+qr.toString({ format: 'svg', cellSize: 2, crispEdges: 'auto' });
+qr.toString({ format: 'table', cellSize: 5, margin: 20 });
+qr.toString('ascii', 1, 2);
+```
+
+#### SVG Formatter Options
 
 | Param         | Type                 | Description           |
 | ------------- | -------------------- | --------------------- |
