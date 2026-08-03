@@ -476,7 +476,7 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
     return qrcodeToString.formats[format].apply(_this, _arguments);
   };
 
-  const renderTo2dContext = function(context : CanvasRenderingContext2D, cellSize? : number) {
+  const toCanvas = function(context : CanvasRenderingContext2D, cellSize? : number) {
     cellSize = cellSize || 2;
     const length = _this.getModuleCount();
     for (let row = 0; row < length; row++) {
@@ -493,7 +493,7 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
     getModuleCount,
     make,
     toString,
-    renderTo2dContext,
+    toCanvas,
   };
 
   return _this;

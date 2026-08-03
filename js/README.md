@@ -98,7 +98,7 @@ qr.toString('ascii', 1, 2);
 | opts.scalable | <code>boolean</code> | default: false        |
 | opts.crispEdges | <code>boolean</code> \| <code>'auto'</code> | default: auto; applies <code>crispEdges</code> automatically for whole-number <code>cellSize</code> values |
 
-#### renderTo2dContext(context, cellSize) => <code>void</code>
+#### toCanvas(context, cellSize) => <code>void</code>
 
 --
 

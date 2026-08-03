@@ -43,7 +43,7 @@ interface QRCode {
   toString() : string;
   toString(format: string, ...args: any[]) : string;
   toString(opts: { format: string, [key: string]: any }) : string;
-  renderTo2dContext(context: CanvasRenderingContext2D, cellSize?: number): void;
+  toCanvas(context: CanvasRenderingContext2D, cellSize?: number): void;
 }
 
 declare var qrcode : QRCodeFactory;

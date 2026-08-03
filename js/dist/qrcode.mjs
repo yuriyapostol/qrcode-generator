@@ -472,7 +472,7 @@ export const qrcode = function(typeNumber, errorCorrectionLevel) {
     return qrcode.toString.formats[format].apply(this, _arguments);
   };
 
-  _this.renderTo2dContext = function(context, cellSize) {
+  _this.toCanvas = function(context, cellSize) {
     cellSize = cellSize || 2;
     const length = _this.getModuleCount();
     for (let row = 0; row < length; row++) {

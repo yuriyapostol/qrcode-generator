@@ -34,7 +34,7 @@ export interface QRCode {
   toString() : string;
   toString(format: string, ...args: any[]) : string;
   toString(opts: { format: string, [key: string]: any }) : string;
-  renderTo2dContext(context: CanvasRenderingContext2D, cellSize?: number) : void;
+  toCanvas(context: CanvasRenderingContext2D, cellSize?: number) : void;
 }
 
 export interface QRCodeFactory {
@@ -48,30 +48,6 @@ export interface QRCodeFactory {
     formats: { [format : string] : (...args : any[]) => string };
   };
 }
-
-export type QRImgTagOpts = {
-  cellSize?: number,
-  margin?: number,
-  alt?: string,
-  title?: string,
-  [key : string] : any
-};
-
-export type QRTableTagOpts = {
-  cellSize?: number,
-  margin?: number,
-  [key : string] : any
-};
-
-export type QRSvgTagOpts = {
-  cellSize?: number,
-  margin?: number,
-  scalable?: boolean,
-  crispEdges?: boolean | 'auto',
-  alt?: any,
-  title?: any,
-  [key : string] : any
-};
 
 export type QRData = {
   getMode() : number;

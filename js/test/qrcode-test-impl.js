@@ -305,7 +305,7 @@ export const misc = function(qrcode) {
       const qr = qrcode(1, 'H');
       qr.addData('{2d}');
       qr.make();
-      qr.renderTo2dContext(context);
+      qr.toCanvas(context);
       expect(count).to.equal(21 * 21);
       expect(check).to.equal(93106);
     });
