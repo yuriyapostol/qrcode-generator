@@ -1,7 +1,4 @@
-import * as pkg from 'qrcode-generator';
-
-const qrcode = pkg.default;
-const named = pkg.qrcode;
+import qrcode, { qrcode as named } from 'qrcode-generator';
 
 const qr = qrcode(0, 'M');
 
