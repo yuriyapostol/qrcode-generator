@@ -1,0 +1,2 @@
+"use strict";const f=require("../core/qrcode.js");function n(e){for(var s=[],u=0;u<e.length;u++){var t=e.charCodeAt(u);t<128?s.push(t):t<2048?s.push(192|t>>6,128|t&63):t<55296||t>=57344?s.push(224|t>>12,128|t>>6&63,128|t&63):(u++,t=65536+((t&1023)<<10|e.charCodeAt(u)&1023),s.push(240|t>>18,128|t>>12&63,128|t>>6&63,128|t&63))}return s}f.default.registerEncoder("UTF-8",{encode:n,eci:26,modes:["Byte"]});
+//# sourceMappingURL=utf8.js.map

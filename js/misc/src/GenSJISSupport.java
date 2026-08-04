@@ -24,8 +24,8 @@ public class GenSJISSupport {
 
   public void start() throws Exception {
 
-    String templateFile = "qrcode_SJIS.js.tmpl";
-    String dstFile = "qrcode_SJIS.js";
+    String templateFile = "sjis.js.tmpl";
+    String dstFile = "sjis.js";
 
     List<int[]> codeTable = new ArrayList<int[]>();
     BufferedReader in = new BufferedReader(new InputStreamReader(

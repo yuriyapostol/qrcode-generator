@@ -1,16 +1,33 @@
 {
   "name": "qrcode-generator",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "QR Code Generator implementation in JavaScript.",
   "author": "Yuriy Apostol",
   "license": "MIT",
-  "main": "dist/qrcode.js",
-  "module": "dist/qrcode.mjs",
-  "types": "dist/qrcode.d.ts",
+  "main": "dist/core/qrcode.js",
+  "module": "dist/core/qrcode.mjs",
+  "types": "dist/core/qrcode.d.ts",
   "exports": {
-    "types": "./dist/qrcode.d.ts",
-    "require": "./dist/qrcode.js",
-    "import": "./dist/qrcode.mjs"
+    ".": {
+      "types": "./dist/core/qrcode.d.ts",
+      "require": "./dist/core/qrcode.js",
+      "import": "./dist/core/qrcode.mjs"
+    },
+    "./core/*": {
+      "types": "./dist/core/*.d.ts",
+      "require": "./dist/core/*.js",
+      "import": "./dist/core/*.mjs"
+    },
+    "./renderers/*": {
+      "types": "./dist/renderers/*.d.ts",
+      "require": "./dist/renderers/*.js",
+      "import": "./dist/renderers/*.mjs"
+    },
+    "./encodings/*": {
+      "types": "./dist/encodings/*.d.ts",
+      "require": "./dist/encodings/*.js",
+      "import": "./dist/encodings/*.mjs"
+    }
   },
   "directories": {
     "dist": "dist"
@@ -28,10 +45,16 @@
     "generator"
   ],
   "scripts": {
-    "test": "wtr"
+    "build": "tsc && vite build",
+    "test": "wtr",
+    "test:src": "wtr --config src/web-test-runner.config.mjs",
+    "test:types": "tsc -p tsconfig.import-smoke.json"
   },
   "devDependencies": {
     "@open-wc/testing": "^4.0.0",
-    "@web/test-runner": "^0.20.2"
+    "@web/test-runner": "^0.20.2",
+    "typescript": "~5.8.3",
+    "vite": "^7.3.6",
+    "vite-plugin-dts": "^4.5.4"
   }
 }
