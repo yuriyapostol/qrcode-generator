@@ -1,0 +1,19 @@
+import d from "../core/qrcode.mjs";
+d.registerRenderer("table", function(l, r, c, p) {
+  let t = {};
+  typeof l == "object" && (t = l || {}, l = void 0);
+  let o = t.cell || {};
+  typeof o == "string" && (o = { color: o }), (typeof o != "object" || !o) && (o = {}), typeof l == "number" && (o.size = l), typeof o.size != "number" && (o.size = typeof t.cellSize == "number" ? t.cellSize : 1), typeof c == "string" && (o.color = c), typeof o.color != "string" && (o.color = typeof t.cellColor == "string" ? t.cellColor : "black"), typeof r > "u" && (r = t.margin), typeof r != "number" && (r = typeof r > "u" ? o.size * 4 : 0);
+  let e = t.background || {};
+  typeof e == "string" && (e = { color: e }), (typeof e != "object" || !e) && (e = {}), typeof p == "string" && (e.color = p), typeof e.color != "string" && (e.color = typeof t.backgroundColor == "string" ? t.backgroundColor : "white");
+  const s = Number(this.getModuleCount()), b = Number(o.size);
+  let i = `<table style="border: ${Number(r)}px solid ${e.color}; border-collapse: collapse; padding: 0px; margin: 0px; background-color: ${e.color};"><tbody>`;
+  for (let f = 0; f < s; f += 1) {
+    i += "<tr>";
+    for (let n = 0; n < s; n += 1)
+      i += `<td style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${b}px; height: ${b}px; background-color: ${this.isDark(f, n) ? o.color : "transparent"};"/>`;
+    i += "</tr>";
+  }
+  return i += "</tbody></table>", i;
+});
+//# sourceMappingURL=table.mjs.map

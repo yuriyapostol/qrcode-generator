@@ -46,6 +46,8 @@
   ],
   "scripts": {
     "build": "tsc && vite build",
+    "docs:sync": "mkdir -p docs/dist && cp -R dist/core docs/dist/ && cp -R dist/encodings docs/dist/ && cp -R dist/renderers docs/dist/",
+    "build:docs": "npm run build && npm run docs:sync",
     "test": "wtr",
     "test:src": "wtr --config src/web-test-runner.config.mjs",
     "test:types": "tsc -p tsconfig.import-smoke.json"
