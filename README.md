@@ -3,14 +3,14 @@ QR Code Generator
 
 ## Getting Started
 
-1. Import the core module and any optional renderers or encodings you need.
+1. Import the package and any optional renderers or encodings you need.
 2. Prepare a place holder.
 3. Generate QR and render it.
 
 ```html
 <script type="module">
-import qrcode from './core/qrcode.mjs';
-import './renderers/gif.mjs';
+import qrcode from 'qrcode-generator';
+import 'qrcode-generator/renderers/gif';
 </script>
 ```
 ```html
@@ -24,6 +24,17 @@ qr.addData('Hi!');
 qr.make();
 document.getElementById('placeHolder').innerHTML = qr.render('gif');
 ```
+
+Optional modules:
+
+- `qrcode-generator/renderers/gif`
+- `qrcode-generator/renderers/svg`
+- `qrcode-generator/renderers/table`
+- `qrcode-generator/renderers/ascii`
+- `qrcode-generator/renderers/canvas`
+- `qrcode-generator/encodings/utf8`
+- `qrcode-generator/encodings/sjis`
+
 ## API Documentation
 
 ### QRCodeFactory
@@ -127,8 +138,6 @@ qr.render('canvas', context, 2);
 | opts.margin   | <code>number</code>  | default: cellSize * 4 |
 | opts.scalable | <code>boolean</code> | default: false        |
 | opts.crispEdges | <code>boolean</code> \| <code>'auto'</code> | default: auto; applies <code>crispEdges</code> automatically for whole-number <code>cellSize</code> values |
-
-#### toCanvas(context, cellSize) => <code>void</code>
 
 --
 
