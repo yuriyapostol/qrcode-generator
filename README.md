@@ -1,6 +1,10 @@
 QR Code Generator
 ===
 
+This project started as a fork of [kazuhikoarase/qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator). Two pull requests were submitted back to the original repository. The main changes there focused on moving renderers into optional plugins and expanding QR code appearance customization while preserving compatibility with the original API.
+
+At the time the fork was separated from the original repository, both pull requests were still open, and further work needed to continue without waiting on upstream decisions. Because of that, development continues here independently, and legacy compatibility helpers from the original API have already been removed. See [Migration from Legacy API](#migration-from-legacy-api).
+
 ## Getting Started
 
 1. Import the package and any optional renderers or encodings you need.
@@ -131,13 +135,59 @@ qr.render('canvas', context, 2);
 
 #### SVG Formatter Options
 
-| Param         | Type                 | Description           |
-| ------------- | -------------------- | --------------------- |
-| opts          | <code>object</code>  | default: {}           |
-| opts.cellSize | <code>number</code>  | default: 2            |
-| opts.margin   | <code>number</code>  | default: cellSize * 4 |
-| opts.scalable | <code>boolean</code> | default: false        |
-| opts.crispEdges | <code>boolean</code> \| <code>'auto'</code> | default: auto; applies <code>crispEdges</code> automatically for whole-number <code>cellSize</code> values |
+| Param | Type | Description |
+| ----- | ---- | ----------- |
+| opts | <code>object</code> | default: `{}` |
+| opts.id | <code>string</code> | SVG root id, default: `qrcode` |
+| opts.class | <code>string</code> | SVG root class, default: `qrcode` |
+| opts.style | <code>string</code> | SVG root inline style, default: `''` |
+| opts.cellSize | <code>number</code> | Shortcut for `opts.cell.size`, default: `1` |
+| opts.margin | <code>number</code> | default: `cellSize * 4` |
+| opts.cellColor | <code>string</code> | Shortcut for `opts.cell.fill`, default: `black` |
+| opts.backgroundColor | <code>string</code> | Shortcut for `opts.background.fill`, default: `white` |
+| opts.scalable | <code>boolean</code> | When `true`, omits fixed `width`/`height`; default depends on whether a fixed cell size is provided |
+| opts.crispEdges | <code>boolean</code> \| <code>'auto'</code> | default: `auto`; applies `shape-rendering="crispEdges"` automatically for whole-number cell sizes |
+| opts.cell | <code>object</code> \| <code>string</code> | Cell styling options; string value is treated as `fill` |
+| opts.cell.size | <code>number</code> | Cell size, default: `opts.cellSize` or `1` |
+| opts.cell.fill | <code>string</code> | Cell fill color, default: `opts.cellColor` or `black` |
+| opts.cell.stroke | <code>string</code> | Cell stroke color, default: `none` |
+| opts.cell.style | <code>string</code> | Inline style for the `<path>` with QR cells |
+| opts.cell.class | <code>string</code> | Class for the `<path>` with QR cells, default: `${class}-cells` |
+| opts.cell.id | <code>string</code> | Id for the `<path>` with QR cells, default: `${id}-cells` |
+| opts.background | <code>object</code> \| <code>string</code> | Background styling options; string value is treated as `fill` |
+| opts.background.fill | <code>string</code> | Background fill color, default: `opts.backgroundColor` or `white` |
+| opts.background.stroke | <code>string</code> | Background stroke color, default: `none` |
+| opts.background.style | <code>string</code> | Inline style for the background `<rect>` |
+| opts.background.class | <code>string</code> | Class for the background `<rect>`, default: `${class}-background` |
+| opts.background.id | <code>string</code> | Id for the background `<rect>`, default: `${id}-background` |
+| opts.title | <code>object</code> \| <code>string</code> | Optional SVG `<title>`; string value is treated as `text` |
+| opts.title.text | <code>string</code> | Text content for `<title>` |
+| opts.title.id | <code>string</code> | Id for `<title>`, default: `${id}-title` when title text is present |
+| opts.alt | <code>object</code> \| <code>string</code> | Optional SVG `<description>`; string value is treated as `text` |
+| opts.alt.text | <code>string</code> | Text content for `<description>` |
+| opts.alt.id | <code>string</code> | Id for `<description>`, default: `${id}-description` when description text is present |
+
+## Migration from Legacy API
+
+Legacy rendering helpers from the original API are no longer available in this project. Use `render(...)` with optional renderer plugins instead.
+
+```javascript
+// Before
+qr.createImgTag(2, 4);
+qr.createSvgTag(2, 4);
+qr.createTableTag(5, 20);
+qr.createASCII(1, 2);
+qr.createDataURL(2, 4);
+qr.renderTo2dContext(context, 2);
+
+// After
+qr.render('gif', 2, 4);
+qr.render('svg', 2, 4);
+qr.render('table', 5, 20);
+qr.render('ascii', 1, 2);
+qr.render({ renderer: 'gif', cellSize: 2, margin: 4, tag: false });
+qr.render('canvas', context, 2);
+```
 
 --
 
