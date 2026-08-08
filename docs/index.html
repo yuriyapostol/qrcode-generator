@@ -5,33 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title itemprop="name">QR Code Generator Demo</title>
   <style>
-    :root {
-      --bg: #f5efe4;
-      --ink: #182126;
-      --muted: #5e6a6f;
-      --line: rgba(24, 33, 38, 0.12);
-      --panel: rgba(255, 252, 246, 0.88);
-      --panel-strong: #fffaf2;
-      --accent: #0d7c66;
-      --accent-2: #c65d3a;
-      --shadow: 0 18px 50px rgba(24, 33, 38, 0.10);
-      --radius: 22px;
-      --mono: "SFMono-Regular", "Cascadia Code", "Fira Code", monospace;
-      --sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    }
-
     * {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      color: var(--ink);
-      font: 16px/1.45 var(--sans);
-      background:
-        radial-gradient(circle at top left, rgba(13, 124, 102, 0.18), transparent 26rem),
-        radial-gradient(circle at top right, rgba(198, 93, 58, 0.18), transparent 18rem),
-        linear-gradient(180deg, #fbf7ef 0%, #f5efe4 100%);
+      color: #222;
+      background: #fff;
+      font: 16px/1.5 Arial, sans-serif;
     }
 
     a {
@@ -39,65 +21,58 @@
     }
 
     .page {
-      width: min(1180px, calc(100% - 32px));
+      width: min(1200px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 40px 0 56px;
-    }
-
-    .hero,
-    .controls,
-    .card {
-      background: var(--panel);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      padding: 24px 0 40px;
     }
 
     .hero {
       margin-bottom: 24px;
-      padding: 28px;
     }
 
     .hero h1 {
-      margin: 0 0 10px;
-      font-size: clamp(2.2rem, 4.8vw, 4.2rem);
-      line-height: 0.94;
-      letter-spacing: -0.04em;
+      margin: 0 0 12px;
+      font-size: 2rem;
+      line-height: 1.2;
     }
 
     .hero p {
-      margin: 0;
-      max-width: 48rem;
-      color: var(--muted);
-      font-size: 1.02rem;
+      margin: 0 0 12px;
+      max-width: 56rem;
+      color: #555;
     }
 
     .repo-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      margin-top: 16px;
-      padding: 0 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(13, 124, 102, 0.24);
-      background: rgba(13, 124, 102, 0.08);
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 700;
+      display: inline-block;
+      text-decoration: underline;
     }
 
-    .controls {
-      padding: 22px;
-      margin-bottom: 24px;
-    }
-
-    .controls-grid {
+    .workspace-grid {
       display: grid;
-      gap: 14px;
-      grid-template-columns: 1.35fr repeat(5, minmax(110px, 1fr));
-      align-items: end;
+      gap: 24px;
+      grid-template-columns: minmax(320px, 1fr) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .panel-header {
+      margin-bottom: 16px;
+    }
+
+    .panel-header h2 {
+      margin: 0 0 8px;
+      font-size: 1.125rem;
+    }
+
+    .panel-header p {
+      margin: 0;
+      color: #555;
+    }
+
+    .selector-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 16px;
     }
 
     .field {
@@ -105,198 +80,110 @@
       gap: 6px;
     }
 
-    .field.wide {
-      grid-column: 1 / -1;
+    .field label {
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
-    .field label,
-    .toggle {
-      font-size: 0.84rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-    }
-
-    textarea,
-    select {
+    select,
+    textarea {
       width: 100%;
-      border: 1px solid rgba(24, 33, 38, 0.14);
-      background: var(--panel-strong);
-      color: var(--ink);
-      border-radius: 14px;
-      padding: 12px 14px;
+      border: 1px solid #ccc;
+      background: #fff;
+      color: #222;
+      border-radius: 4px;
+      padding: 10px 12px;
       font: inherit;
       outline: none;
     }
 
     textarea {
-      min-height: 128px;
+      min-height: 520px;
       resize: vertical;
-      font-family: var(--mono);
-      line-height: 1.35;
+      font: 13px/1.55 "SFMono-Regular", Consolas, monospace;
+      white-space: pre;
+      tab-size: 2;
     }
 
-    textarea:focus,
-    select:focus {
-      border-color: rgba(13, 124, 102, 0.55);
-      box-shadow: 0 0 0 4px rgba(13, 124, 102, 0.14);
-    }
-
-    .toggles {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 18px;
-      margin-top: 12px;
-    }
-
-    .toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-transform: none;
-      letter-spacing: 0;
-      font-size: 0.92rem;
-      color: var(--ink);
-      cursor: pointer;
-    }
-
-    .toggle input {
-      accent-color: var(--accent);
+    select:focus,
+    textarea:focus {
+      border-color: #888;
     }
 
     .status {
-      margin-top: 14px;
       min-height: 24px;
-      color: var(--muted);
+      margin-top: 12px;
+      color: #555;
       font-size: 0.95rem;
     }
 
     .status.error {
-      color: var(--accent-2);
-      font-weight: 700;
+      color: #b00020;
     }
 
-    .example-grid {
-      display: grid;
-      gap: 18px;
-      grid-template-columns: minmax(320px, 0.88fr) minmax(0, 1.12fr);
+    .preview-panel h2 {
+      margin: 0 0 8px;
+      font-size: 1.125rem;
     }
 
-    .card {
-      overflow: hidden;
+    .preview-panel p {
+      margin: 0 0 12px;
+      color: #555;
     }
 
-    .card-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 18px 20px 12px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .card-header h2 {
-      margin: 0;
-      font-size: 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .card-header span {
-      color: var(--muted);
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .card-body {
-      min-height: 320px;
-      padding: 18px;
-      display: grid;
-      place-items: center;
-      background:
-        linear-gradient(135deg, rgba(13, 124, 102, 0.04), rgba(198, 93, 58, 0.05)),
-        repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(24, 33, 38, 0.02) 8px, rgba(24, 33, 38, 0.02) 16px);
-    }
-
-    .card-body > * {
-      max-width: 100%;
+    .preview-frame {
+      min-height: 620px;
+      padding: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+      overflow: auto;
     }
 
     .render-pre {
       display: inline-block;
-      width: auto;
       max-width: 100%;
       margin: 0;
       overflow: auto;
       white-space: pre;
       font: 12px/1 monospace;
       padding: 1em;
-      border-radius: 16px;
+      border-radius: 4px;
       color: white;
       background: black;
     }
 
-    .code-block {
-      width: 100%;
-      margin: 0;
-      overflow: auto;
-      white-space: pre;
-      font: 13px/1.5 var(--mono);
-      color: #edf8f5;
-      background: #112027;
-      padding: 18px;
-      border-radius: 16px;
-    }
-
-    .card-note {
-      padding: 0 20px 18px;
-      color: var(--muted);
+    .hint {
+      margin-top: 12px;
+      color: #555;
       font-size: 0.91rem;
     }
 
     .footer {
       margin-top: 22px;
-      color: var(--muted);
+      color: #555;
       font-size: 0.9rem;
     }
 
     @media (max-width: 980px) {
-      .controls-grid,
-      .example-grid {
-        grid-template-columns: 1fr 1fr;
+      .workspace-grid,
+      .selector-grid {
+        grid-template-columns: 1fr;
       }
 
-      .field.wide {
-        grid-column: 1 / -1;
+      .preview-frame {
+        min-height: 280px;
       }
     }
 
     @media (max-width: 720px) {
       .page {
-        width: min(100% - 20px, 1180px);
+        width: min(100% - 20px, 1240px);
         padding-top: 20px;
       }
 
-      .controls-grid,
-      .example-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero,
-      .controls {
-        padding: 18px;
-      }
-
-      .card-header,
-      .card-note {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-
-      .card-body {
-        min-height: 240px;
-        padding: 14px;
+      textarea {
+        min-height: 420px;
       }
     }
   </style>
@@ -306,94 +193,49 @@
     <section class="hero">
       <h1 itemprop="name">QR Code Generator</h1>
       <p itemprop="description">
-        Interactive demo for the current modular API. Pick one renderer example and see both the
-        rendered output and the exact code that produces it.
+        Minimal playground for the modular API. Choose a coder preset and a renderer preset,
+        then edit the generated code directly. The preview updates from the code on the left.
       </p>
       <a class="repo-link" href="https://github.com/yuriyapostol/qrcode-generator">github.com/yuriyapostol/qrcode-generator</a>
     </section>
 
-    <section class="controls">
-      <div class="controls-grid">
-        <div class="field wide">
-          <label for="text">Payload</label>
-          <textarea id="text">here comes qr!</textarea>
+    <section class="workspace">
+      <div class="workspace-grid">
+        <div class="controls-panel">
+          <div class="panel-header">
+            <h2>Playground Code</h2>
+            <p>Preset selectors generate starter code. After that, the preview is driven by the textarea content.</p>
+          </div>
+
+          <div class="selector-grid">
+            <div class="field">
+              <label for="coder-preset">Coder Preset</label>
+              <select id="coder-preset"></select>
+            </div>
+
+            <div class="field">
+              <label for="renderer-preset">Renderer Preset</label>
+              <select id="renderer-preset"></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="playground-code">Code</label>
+            <textarea id="playground-code" spellcheck="false"></textarea>
+          </div>
+
+          <div id="status" class="status"></div>
         </div>
 
-        <div class="field">
-          <label for="type-number">Type Number</label>
-          <select id="type-number"></select>
-        </div>
-
-        <div class="field">
-          <label for="ecl">Error Correction</label>
-          <select id="ecl">
-            <option value="L">L (7%)</option>
-            <option value="M" selected>M (15%)</option>
-            <option value="Q">Q (25%)</option>
-            <option value="H">H (30%)</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="mode">Mode</label>
-          <select id="mode">
-            <option value="Numeric">Numeric</option>
-            <option value="Alphanumeric">Alphanumeric</option>
-            <option value="Byte" selected>Byte</option>
-            <option value="Kanji">Kanji</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="encoding">Encoding</label>
-          <select id="encoding">
-            <option value="default">Auto / none</option>
-            <option value="UTF-8" selected>UTF-8</option>
-            <option value="SJIS">SJIS</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="example">Example</label>
-          <select id="example">
-            <option value="svg-poster" selected>SVG poster</option>
-            <option value="svg-crisp">SVG crisp</option>
-            <option value="gif">GIF image</option>
-            <option value="table">HTML table</option>
-            <option value="ascii">ASCII</option>
-            <option value="canvas">Canvas</option>
-          </select>
+        <div class="preview-panel">
+          <h2>Preview</h2>
+          <p id="preview-label">Live output</p>
+          <div class="preview-frame" id="preview"></div>
+          <div class="hint">
+            Set the rendered value to <code>result</code>. Strings are shown as HTML or text automatically.
+          </div>
         </div>
       </div>
-
-      <div class="toggles">
-        <label class="toggle"><input id="eci" type="checkbox"> Emit ECI when supported</label>
-        <label class="toggle"><input id="trim" type="checkbox" checked> Trim surrounding whitespace</label>
-      </div>
-
-      <div id="status" class="status"></div>
-    </section>
-
-    <section class="example-grid">
-      <article class="card">
-        <div class="card-header">
-          <h2 id="example-title">SVG Poster</h2>
-          <span id="example-call">render('svg')</span>
-        </div>
-        <div class="card-body" id="example-preview"></div>
-        <div class="card-note" id="example-note">Extended SVG options with custom colors, alt/title metadata and scalable output.</div>
-      </article>
-
-      <article class="card">
-        <div class="card-header">
-          <h2>Code</h2>
-          <span>JavaScript</span>
-        </div>
-        <div class="card-body">
-          <pre class="code-block" id="example-code"></pre>
-        </div>
-        <div class="card-note">The snippet reflects the current QR settings and the selected renderer example.</div>
-      </article>
     </section>
 
     <div class="footer">
@@ -412,20 +254,149 @@
     import './dist/renderers/canvas.mjs';
 
     const elements = {
-      text: document.getElementById('text'),
-      typeNumber: document.getElementById('type-number'),
-      ecl: document.getElementById('ecl'),
-      mode: document.getElementById('mode'),
-      encoding: document.getElementById('encoding'),
-      example: document.getElementById('example'),
-      eci: document.getElementById('eci'),
-      trim: document.getElementById('trim'),
-      status: document.getElementById('status'),
-      title: document.getElementById('example-title'),
-      call: document.getElementById('example-call'),
-      note: document.getElementById('example-note'),
-      preview: document.getElementById('example-preview'),
-      code: document.getElementById('example-code')
+      coderPreset: document.getElementById('coder-preset'),
+      rendererPreset: document.getElementById('renderer-preset'),
+      code: document.getElementById('playground-code'),
+      preview: document.getElementById('preview'),
+      previewLabel: document.getElementById('preview-label'),
+      status: document.getElementById('status')
+    };
+
+    const coderPresets = {
+      'byte-basic': {
+        label: 'Byte / Basic',
+        code: [
+          "const qr = qrcode(0, 'M');",
+          "qr.addData('here comes qr!', 'Byte');",
+          'qr.make();'
+        ].join('\n')
+      },
+      'utf8-multiline': {
+        label: 'UTF-8 / Multiline',
+        code: [
+          "const qr = qrcode(0, 'Q');",
+          "qr.addData('Hello from Kyiv\\nПривіт з Києва', 'Byte', { encoding: 'UTF-8', eci: true });",
+          'qr.make();'
+        ].join('\n')
+      },
+      'numeric': {
+        label: 'Numeric',
+        code: [
+          "const qr = qrcode(0, 'L');",
+          "qr.addData('20260807', 'Numeric');",
+          'qr.make();'
+        ].join('\n')
+      },
+      'kanji': {
+        label: 'Kanji / SJIS',
+        code: [
+          "const qr = qrcode(0, 'M');",
+          "qr.addData('茗荷', 'Kanji', { encoding: 'SJIS' });",
+          'qr.make();'
+        ].join('\n')
+      },
+      'mixed-segments': {
+        label: 'Mixed Segments',
+        code: [
+          "const qr = qrcode(0, 'H');",
+          "qr.addData('INV', 'Alphanumeric');",
+          "qr.addData('-2026-', 'Byte');",
+          "qr.addData('0042', 'Numeric');",
+          'qr.make();'
+        ].join('\n')
+      }
+    };
+
+    const rendererPresets = {
+      'svg-scalable': {
+        label: 'SVG Scalable',
+        previewLabel: "render('svg', opts)",
+        code: [
+          "const result = qr.render('svg', {",
+          "  scalable: true,",
+          "  margin: 14,",
+          "  style: 'max-width: 100%; height: auto;',",
+          "  cell: {",
+          "    size: 7,",
+          "    fill: '#0d7c66',",
+          "    style: 'opacity: .92'",
+          '  },',
+          "  background: {",
+          "    fill: '#fff8ed'",
+          '  },',
+          "  alt: 'Scalable SVG QR',",
+          "  title: 'Scalable SVG QR'",
+          '});'
+        ].join('\n')
+      },
+      'svg-crisp': {
+        label: 'SVG Crisp',
+        previewLabel: "render('svg', opts)",
+        code: [
+          "const result = qr.render('svg', {",
+          '  margin: 8,',
+          '  crispEdges: true,',
+          "  style: 'max-width: 100%; height: auto;',",
+          "  cell: { size: 5, fill: '#182126' },",
+          "  background: { fill: 'transparent' },",
+          "  title: 'Crisp SVG QR'",
+          '});'
+        ].join('\n')
+      },
+      gif: {
+        label: 'GIF Image',
+        previewLabel: "render('gif', opts)",
+        code: [
+          "const result = qr.render('gif', {",
+          '  cellSize: 4,',
+          '  margin: 12,',
+          "  alt: 'GIF QR',",
+          "  title: 'GIF QR'",
+          '});'
+        ].join('\n')
+      },
+      table: {
+        label: 'HTML Table',
+        previewLabel: "render('table', opts)",
+        code: [
+          "const result = qr.render('table', {",
+          "  cell: { size: 6, color: '#c65d3a' },",
+          '  margin: 0,',
+          "  background: { color: '#d8d2c7' }",
+          '});'
+        ].join('\n')
+      },
+      ascii: {
+        label: 'ASCII',
+        previewLabel: "render('ascii', cellSize, margin)",
+        code: [
+          "const result = qr.render('ascii', 1, 1);"
+        ].join('\n')
+      },
+      canvas: {
+        label: 'Canvas',
+        previewLabel: "render('canvas', context, cellSize)",
+        code: [
+          'const cellSize = 6;',
+          'const padding = 18;',
+          'const size = qr.getModuleCount() * cellSize;',
+          "const result = document.createElement('canvas');",
+          'result.width = size + padding * 2;',
+          'result.height = size + padding * 2;',
+          "result.style.width = `${result.width}px`;",
+          "result.style.height = `${result.height}px`;",
+          "result.style.borderRadius = '18px';",
+          "result.style.boxShadow = '0 14px 32px rgba(24, 33, 38, 0.12)';",
+          "result.style.background = 'white';",
+          "const context = result.getContext('2d');",
+          'context.save();',
+          "context.fillStyle = '#f4efe7';",
+          'context.fillRect(0, 0, size + padding * 2, size + padding * 2);',
+          'context.translate(padding, padding);',
+          "qr.render('canvas', context, cellSize);",
+          'context.restore();'
+        ].join('\n')
+      }
     };
 
     const createOption = (value, label) => {
@@ -435,52 +406,22 @@
       return option;
     };
 
-    elements.typeNumber.appendChild(createOption('0', 'Auto detect'));
-    for (let i = 1; i <= 40; i += 1) {
-      elements.typeNumber.appendChild(createOption(String(i), String(i)));
+    for (const [value, preset] of Object.entries(coderPresets)) {
+      elements.coderPreset.appendChild(createOption(value, preset.label));
     }
-    elements.typeNumber.value = '0';
 
-    const normalizeText = text => {
-      if (!elements.trim.checked) {
-        return text;
-      }
-      return text.replace(/^[\s\u3000]+|[\s\u3000]+$/g, '');
-    };
+    for (const [value, preset] of Object.entries(rendererPresets)) {
+      elements.rendererPreset.appendChild(createOption(value, preset.label));
+    }
 
-    const updateModeUI = () => {
-      const mode = elements.mode.value;
-      const supportsEncoding = mode === 'Byte' || mode === 'Kanji';
-      elements.encoding.disabled = !supportsEncoding;
-      elements.eci.disabled = !supportsEncoding;
-      if (!supportsEncoding) {
-        elements.encoding.value = 'default';
-        elements.eci.checked = false;
-      }
-      if (mode === 'Kanji' && elements.encoding.value === 'UTF-8') {
-        elements.encoding.value = 'SJIS';
-      }
-    };
+    elements.coderPreset.value = 'byte-basic';
+    elements.rendererPreset.value = 'svg-scalable';
 
-    const buildSegmentOptions = mode => {
-      const opts = {};
-      if ((mode === 'Byte' || mode === 'Kanji') && elements.encoding.value !== 'default') {
-        opts.encoding = elements.encoding.value;
-      }
-      if (elements.eci.checked) {
-        opts.eci = true;
-      }
-      return Object.keys(opts).length ? opts : undefined;
-    };
-
-    const buildQRCode = () => {
-      const qr = qrcode(Number(elements.typeNumber.value), elements.ecl.value);
-      const text = normalizeText(elements.text.value);
-      const mode = elements.mode.value;
-      const opts = buildSegmentOptions(mode);
-      qr.addData(text, mode, opts);
-      qr.make();
-      return { qr, text, mode, opts };
+    const buildCodeFromPresets = () => {
+      const coder = coderPresets[elements.coderPreset.value];
+      const renderer = rendererPresets[elements.rendererPreset.value];
+      elements.previewLabel.textContent = renderer.previewLabel;
+      return `${coder.code}\n\n${renderer.code}`;
     };
 
     const escapeHtml = value => value
@@ -488,212 +429,106 @@
       .replaceAll('<', '&lt;')
       .replaceAll('>', '&gt;');
 
-    const buildAddDataCode = (text, mode, opts) => {
-      if (!opts) {
-        return `qr.addData(${JSON.stringify(text)}, ${JSON.stringify(mode)});`;
+    const setStatus = (message, isError = false) => {
+      elements.status.className = isError ? 'status error' : 'status';
+      elements.status.textContent = message;
+    };
+
+    const clearPreview = () => {
+      elements.preview.innerHTML = '';
+    };
+
+    const looksLikeHtml = value => /^\s*</.test(value);
+
+    const detectStringOutputType = value => {
+      const normalized = value.trimStart().toLowerCase();
+      if (normalized.startsWith('<svg')) return 'SVG';
+      if (normalized.startsWith('<img')) return 'IMG';
+      if (normalized.startsWith('<table')) return 'TABLE';
+      if (normalized.startsWith('<')) return 'HTML';
+      return 'Plain text';
+    };
+
+    const renderResult = value => {
+      if (value == null) {
+        return false;
       }
-      return `qr.addData(${JSON.stringify(text)}, ${JSON.stringify(mode)}, ${JSON.stringify(opts, null, 2)});`;
-    };
-
-    const renderCanvasPreview = qr => {
-      const cellSize = 6;
-      const margin = 18;
-      const count = qr.getModuleCount();
-      const size = count * cellSize + margin * 2;
-      const canvas = document.createElement('canvas');
-      canvas.width = size;
-      canvas.height = size;
-      canvas.style.width = `${size}px`;
-      canvas.style.height = `${size}px`;
-      canvas.style.borderRadius = '18px';
-      canvas.style.boxShadow = '0 14px 32px rgba(24, 33, 38, 0.12)';
-      canvas.style.background = 'white';
-      const context = canvas.getContext('2d');
-      context.fillStyle = '#f4efe7';
-      context.fillRect(0, 0, size, size);
-      context.save();
-      context.translate(margin, margin);
-      qr.render('canvas', context, cellSize);
-      context.restore();
-      return canvas;
-    };
-
-    const getExample = ({ qr, text, mode, opts }) => {
-      const commonCode = [
-        `const qr = qrcode(${Number(elements.typeNumber.value)}, ${JSON.stringify(elements.ecl.value)});`,
-        buildAddDataCode(text, mode, opts),
-        'qr.make();'
-      ];
-
-      const examples = {
-        'svg-poster': {
-          title: 'SVG Poster',
-          call: "render('svg')",
-          note: 'Extended SVG options with custom colors, alt/title metadata and scalable output.',
-          renderOpts: {
-            scalable: true,
-            margin: 14,
-            class: 'poster-code',
-            style: 'max-width: 100%; height: auto;',
-            cell: {
-              size: 7,
-              fill: '#0d7c66',
-              style: 'opacity: .92'
-            },
-            background: {
-              fill: '#fff8ed',
-              stroke: '#d3c4ad'
-            },
-            alt: text,
-            title: 'Poster SVG QR'
-          },
-          preview() {
-            return qr.render('svg', this.renderOpts);
-          },
-          code() {
-            return [...commonCode, `const html = qr.render('svg', ${JSON.stringify(this.renderOpts, null, 2)});`].join('\n');
-          }
-        },
-        'svg-crisp': {
-          title: 'SVG Crisp',
-          call: "render({ renderer: 'svg' })",
-          note: 'Object-form render call, crisp edges and transparent background.',
-          renderOpts: {
-            renderer: 'svg',
-            cell: {
-              size: 5,
-              fill: '#182126'
-            },
-            background: 'transparent',
-            margin: 8,
-            crispEdges: true,
-            style: 'max-width: 100%; height: auto;',
-            alt: `${mode} sample`,
-            title: 'Crisp SVG QR'
-          },
-          preview() {
-            return qr.render(this.renderOpts);
-          },
-          code() {
-            return [...commonCode, `const html = qr.render(${JSON.stringify(this.renderOpts, null, 2)});`].join('\n');
-          }
-        },
-        gif: {
-          title: 'GIF Image',
-          call: "render('gif')",
-          note: 'Legacy-friendly image output as an embeddable tag.',
-          renderOpts: {
-            cellSize: 4,
-            margin: 12,
-            alt: text,
-            title: 'GIF QR'
-          },
-          preview() {
-            return qr.render('gif', this.renderOpts);
-          },
-          code() {
-            return [...commonCode, `const html = qr.render('gif', ${JSON.stringify(this.renderOpts, null, 2)});`].join('\n');
-          }
-        },
-        table: {
-          title: 'HTML Table',
-          call: "render('table')",
-          note: 'Useful for debugging structure and visual theming in plain HTML.',
-          renderOpts: {
-            cell: {
-              size: 6,
-              color: '#c65d3a'
-            },
-            margin: 0,
-            background: {
-              color: '#d8d2c7'
-            }
-          },
-          preview() {
-            return `<div style="display: inline-block; padding: 10px; border-radius: 16px; background: #d8d2c7;">${qr.render('table', this.renderOpts)}</div>`;
-          },
-          code() {
-            return [...commonCode, `const html = qr.render('table', ${JSON.stringify(this.renderOpts, null, 2)});`].join('\n');
-          }
-        },
-        ascii: {
-          title: 'ASCII',
-          call: "render('ascii')",
-          note: 'Text-mode preview, handy in logs, terminals and snapshot tests.',
-          preview() {
-            return `<pre class="render-pre">${escapeHtml(qr.render('ascii', 1, 1))}</pre>`;
-          },
-          code() {
-            return [...commonCode, "const ascii = qr.render('ascii', 1, 1);"].join('\n');
-          }
-        },
-        canvas: {
-          title: 'Canvas',
-          call: "render('canvas')",
-          note: 'Direct drawing into a 2D context without converting through a string renderer.',
-          preview() {
-            return renderCanvasPreview(qr);
-          },
-          code() {
-            return [
-              ...commonCode,
-              "const canvas = document.querySelector('canvas');",
-              "const context = canvas.getContext('2d');",
-              "qr.render('canvas', context, 6);"
-            ].join('\n');
-          }
+      if (value instanceof HTMLElement) {
+        elements.preview.appendChild(value);
+        return true;
+      }
+      if (typeof value === 'string') {
+        if (looksLikeHtml(value)) {
+          elements.preview.innerHTML = value;
+          return true;
         }
-      };
-
-      return examples[elements.example.value];
+        elements.preview.innerHTML = `<pre class="render-pre">${escapeHtml(value)}</pre>`;
+        return true;
+      }
+      if (typeof value === 'object' && value.nodeType === 1) {
+        elements.preview.appendChild(value);
+        return true;
+      }
+      elements.preview.innerHTML = `<pre class="render-pre">${escapeHtml(String(value))}</pre>`;
+      return true;
     };
 
-    const renderAll = () => {
+    const evaluatePlayground = () => {
+      clearPreview();
+
+      let outputMeta = 'Live output';
+
       try {
-        updateModeUI();
-        const built = buildQRCode();
-        const encodingLabel = elements.encoding.value === 'default' ? 'auto' : elements.encoding.value;
-        elements.status.className = 'status';
-        elements.status.textContent =
-          `modules: ${built.qr.getModuleCount()} x ${built.qr.getModuleCount()} | mode: ${built.mode} | encoding: ${encodingLabel}${elements.eci.checked ? ' | eci: on' : ''}`;
+        const run = new Function(
+          'qrcode',
+          'document',
+          `${elements.code.value}
+return typeof result !== 'undefined'
+  ? result
+  : (typeof qr !== 'undefined' ? qr : undefined);`
+        );
 
-        const example = getExample(built);
-        elements.title.textContent = example.title;
-        elements.call.textContent = example.call;
-        elements.note.textContent = example.note;
-        elements.code.textContent = example.code();
-        elements.preview.innerHTML = '';
+        const value = run(qrcode, document);
 
-        const preview = example.preview();
-        if (preview instanceof HTMLElement) {
-          elements.preview.appendChild(preview);
-        } else {
-          elements.preview.innerHTML = preview;
+        if (!renderResult(value)) {
+          setStatus('The code ran, but no renderable value was assigned to result.', true);
+          elements.previewLabel.textContent = 'No output';
+          return;
         }
+
+        if (value instanceof HTMLCanvasElement) {
+          outputMeta = 'Canvas';
+        } else if (typeof value === 'string') {
+          outputMeta = detectStringOutputType(value);
+        } else if (value instanceof HTMLElement) {
+          outputMeta = value.tagName;
+        }
+
+        elements.previewLabel.textContent = outputMeta;
+        setStatus(`Rendered from code | coder preset: ${coderPresets[elements.coderPreset.value].label} | renderer preset: ${rendererPresets[elements.rendererPreset.value].label}`);
       } catch (error) {
-        elements.status.className = 'status error';
-        elements.status.textContent = String(error);
-        elements.preview.innerHTML = '';
-        elements.code.textContent = '';
+        clearPreview();
+        elements.previewLabel.textContent = 'Execution error';
+        setStatus(String(error), true);
       }
     };
 
-    for (const element of [
-      elements.text,
-      elements.typeNumber,
-      elements.ecl,
-      elements.mode,
-      elements.encoding,
-      elements.example,
-      elements.eci,
-      elements.trim
-    ]) {
-      element.addEventListener('input', renderAll);
-      element.addEventListener('change', renderAll);
-    }
+    const applyPresetCombination = () => {
+      elements.code.value = buildCodeFromPresets();
+      evaluatePlayground();
+    };
 
-    updateModeUI();
-    renderAll();
+    let codeDebounce = 0;
+    const scheduleEvaluate = () => {
+      window.clearTimeout(codeDebounce);
+      codeDebounce = window.setTimeout(evaluatePlayground, 120);
+    };
+
+    elements.coderPreset.addEventListener('change', applyPresetCombination);
+    elements.rendererPreset.addEventListener('change', applyPresetCombination);
+    elements.code.addEventListener('input', scheduleEvaluate);
+
+    applyPresetCombination();
   </script>
 </body>
 </html>
