@@ -131,6 +131,7 @@ qr.render({ renderer: 'svg', cellSize: 2, crispEdges: 'auto' });
 qr.render({ renderer: 'table', cellSize: 5, margin: 20 });
 qr.render('ascii', 1, 2);
 qr.render('canvas', context, 2);
+qr.render('canvas', context, { cellSize: 6, margin: 12, cellColor: '#111', backgroundColor: '#eee' });
 ```
 
 #### SVG Formatter Options
@@ -167,6 +168,28 @@ qr.render('canvas', context, 2);
 | opts.alt.text | <code>string</code> | Text content for `<description>` |
 | opts.alt.id | <code>string</code> | Id for `<description>`, default: `${id}-description` when description text is present |
 
+#### Canvas Renderer Options
+
+`canvas` accepts either positional args or an options object after `context`.
+
+| Param | Type | Description |
+| ----- | ---- | ----------- |
+| context | <code>CanvasRenderingContext2D</code> | Target 2D context |
+| cellSize | <code>number</code> | Cell size, default: `2` |
+| margin | <code>number</code> | Outer margin, default: `cellSize * 4` |
+| cellColor | <code>string</code> | Dark cell color, default: `black` |
+| backgroundColor | <code>string</code> | Background color, default: `white` |
+
+```javascript
+qr.render('canvas', context, 2, 8, '#000', '#fff');
+qr.render('canvas', context, {
+  cellSize: 2,
+  margin: 8,
+  cellColor: '#000',
+  backgroundColor: '#fff'
+});
+```
+
 ## Migration from Legacy API
 
 Legacy rendering helpers from the original API are no longer available in this project. Use `render(...)` with optional renderer plugins instead.
@@ -187,6 +210,7 @@ qr.render('table', 5, 20);
 qr.render('ascii', 1, 2);
 qr.render({ renderer: 'gif', cellSize: 2, margin: 4, tag: false });
 qr.render('canvas', context, 2);
+qr.render('canvas', context, { cellSize: 2, margin: 8, cellColor: '#000', backgroundColor: '#fff' });
 ```
 
 --

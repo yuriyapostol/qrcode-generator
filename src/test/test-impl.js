@@ -288,7 +288,7 @@ export const misc = function(qrcode) {
       expect(qr.render({ renderer : 'svg', cellSize : 2, crispEdges : false }) ).not.to.contain(' shape-rendering="crispEdges"');
     });
 
-    it('svg tag by object (for coverage)', function(){
+    it('canvas renderer legacy args (for coverage)', function(){
 
       let count = 0;
       let check = 0;
@@ -306,8 +306,49 @@ export const misc = function(qrcode) {
       qr.addData('{2d}');
       qr.make();
       qr.render('canvas', context);
-      expect(count).to.equal(21 * 21);
-      expect(check).to.equal(93106);
+      expect(count).to.equal(221);
+      expect(check).to.equal(131826);
+    });
+
+    it('canvas renderer accepts object options', function(){
+
+      const fills = [];
+      const context = {
+        fillStyle : '',
+        fillRect : function(x, y, width, height) {
+          fills.push({
+            fillStyle : this.fillStyle,
+            x : x,
+            y : y,
+            width : width,
+            height : height
+          });
+        },
+      };
+
+      const qr = qrcode(1, 'H');
+      qr.addData('{2d}');
+      qr.make();
+      qr.render('canvas', context, {
+        cellSize : 3,
+        margin : 2,
+        cellColor : '#111111',
+        backgroundColor : '#eeeeee'
+      });
+
+      expect(fills[0]).to.deep.equal({
+        fillStyle : '#eeeeee',
+        x : 0,
+        y : 0,
+        width : 67,
+        height : 67
+      });
+      expect(fills).to.have.length(221);
+      expect(fills[1].fillStyle).to.equal('#111111');
+      expect(fills[1].x).to.equal(2);
+      expect(fills[1].y).to.equal(2);
+      expect(fills[1].width).to.equal(3);
+      expect(fills[1].height).to.equal(3);
     });
 
     it('- (for coverage)', function(){

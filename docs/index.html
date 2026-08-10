@@ -375,26 +375,25 @@
       },
       canvas: {
         label: 'Canvas',
-        previewLabel: "render('canvas', context, cellSize)",
+        previewLabel: "render('canvas', context, opts)",
         code: [
           'const cellSize = 6;',
-          'const padding = 18;',
-          'const size = qr.getModuleCount() * cellSize;',
+          'const margin = 18;',
+          'const size = qr.getModuleCount() * cellSize + margin * 2;',
           "const result = document.createElement('canvas');",
-          'result.width = size + padding * 2;',
-          'result.height = size + padding * 2;',
+          'result.width = size;',
+          'result.height = size;',
           "result.style.width = `${result.width}px`;",
           "result.style.height = `${result.height}px`;",
           "result.style.borderRadius = '18px';",
           "result.style.boxShadow = '0 14px 32px rgba(24, 33, 38, 0.12)';",
-          "result.style.background = 'white';",
           "const context = result.getContext('2d');",
-          'context.save();',
-          "context.fillStyle = '#f4efe7';",
-          'context.fillRect(0, 0, size + padding * 2, size + padding * 2);',
-          'context.translate(padding, padding);',
-          "qr.render('canvas', context, cellSize);",
-          'context.restore();'
+          "qr.render('canvas', context, {",
+          '  cellSize,',
+          '  margin,',
+          "  cellColor: '#182126',",
+          "  backgroundColor: '#f4efe7'",
+          '});'
         ].join('\n')
       }
     };
