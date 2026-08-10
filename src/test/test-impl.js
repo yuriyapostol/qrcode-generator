@@ -258,6 +258,17 @@ export const misc = function(qrcode) {
       expect(!!qr.render('table') ).to.be.true;
     });
 
+    it('table renderer keeps margin outside QR cells', function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('{TABLE}');
+      qr.make();
+      const table = qr.render('table', 2, 4, '#111111', '#eeeeee');
+      expect(table).not.to.contain('border: 4px solid');
+      expect(table).to.contain('colspan="21"');
+      expect(table).to.contain('width: 4px; height: 4px; background-color: #eeeeee;');
+      expect(table).to.contain('width: 4px; height: 2px; background-color: #eeeeee;');
+    });
+
     it('svg tag (for coverage)', function(){
       const qr = qrcode(1, 'Q');
       qr.addData('{SVG}');

@@ -50,15 +50,42 @@ qrcode.registerRenderer('table', function(cellSize? : number | { [key : string] 
   const cellSizeValue = Number(cell.size);
   const marginSize = Number(margin);
 
-  let table = `<table style="border: ${marginSize}px solid ${background.color}; border-collapse: collapse; padding: 0px; margin: 0px; background-color: ${background.color};"><tbody>`;
+  const spacerCell = (width : number, height : number) =>
+    `<td style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${width}px; height: ${height}px; background-color: ${background.color};"/>`;
+
+  let table = `<table style="border: none; border-collapse: collapse; border-spacing: 0px; padding: 0px; margin: 0px; background-color: ${background.color};"><tbody>`;
+
+  if (marginSize > 0) {
+    table += '<tr>';
+    table += spacerCell(marginSize, marginSize);
+    table += `<td colspan="${count}" style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${count * cellSizeValue}px; height: ${marginSize}px; background-color: ${background.color};"/>`;
+    table += spacerCell(marginSize, marginSize);
+    table += '</tr>';
+  }
 
   for (let r = 0; r < count; r += 1) {
     table += '<tr>';
+
+    if (marginSize > 0) {
+      table += spacerCell(marginSize, cellSizeValue);
+    }
 
     for (let c = 0; c < count; c += 1) {
       table += `<td style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${cellSizeValue}px; height: ${cellSizeValue}px; background-color: ${this.isDark(r, c) ? cell.color : 'transparent'};"/>`;
     }
 
+    if (marginSize > 0) {
+      table += spacerCell(marginSize, cellSizeValue);
+    }
+
+    table += '</tr>';
+  }
+
+  if (marginSize > 0) {
+    table += '<tr>';
+    table += spacerCell(marginSize, marginSize);
+    table += `<td colspan="${count}" style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${count * cellSizeValue}px; height: ${marginSize}px; background-color: ${background.color};"/>`;
+    table += spacerCell(marginSize, marginSize);
     table += '</tr>';
   }
 
