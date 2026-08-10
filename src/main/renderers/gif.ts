@@ -1,14 +1,14 @@
 //---------------------------------------------------------------------
 //
-// GIF/DataURL Render for JavaScript QR Code Generator (optional)
+// GIF Renderer Extension for JavaScript QR Code Generator
+//
+// Created the GIF/DataURL renderer extension and added color support
+//   Copyright (c) 2026 Yuriy Apostol
+//   https://github.com/yuriyapostol
 //
 // Based on createImgTag/createDataURL helpers from original QR Code Generator for JavaScript
 //   Copyright (c) 2009 Kazuhiko Arase
 //   http://www.d-project.com/
-//
-// Moved to extension, refactored
-//   Copyright (c) 2026 Yuriy Apostol
-//   https://github.com/yuriyapostol
 //
 // Licensed under the MIT license:
 //   http://www.opensource.org/licenses/mit-license.php
@@ -18,6 +18,8 @@
 //---------------------------------------------------------------------
 
 import { qrcode } from '../core/qrcode';
+
+type RGB = [number, number, number];
 
 type ByteArrayOutputStream = {
   writeByte: (b: number) => void;
@@ -123,7 +125,64 @@ const base64EncodeOutputStream = function() {
   };
 };
 
-const gifImage = function(width : number, height : number) {
+const parseRgbColor = function(value : string, fallback : RGB) : RGB {
+  if (typeof value !== 'string') return fallback;
+
+  const color = value.trim().toLowerCase();
+  let match = color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (match) {
+    const hex = match[1];
+    if (hex.length === 3) {
+      return [
+        parseInt(hex.charAt(0) + hex.charAt(0), 16),
+        parseInt(hex.charAt(1) + hex.charAt(1), 16),
+        parseInt(hex.charAt(2) + hex.charAt(2), 16)
+      ];
+    }
+    return [
+      parseInt(hex.substring(0, 2), 16),
+      parseInt(hex.substring(2, 4), 16),
+      parseInt(hex.substring(4, 6), 16)
+    ];
+  }
+
+  match = color.match(/^rgba?\(\s*([^)]+)\s*\)$/i);
+  if (match) {
+    const parts = match[1].split(',').map(part => part.trim());
+    if (parts.length >= 3) {
+      const parseChannel = function(channel : string) {
+        if (/%$/.test(channel)) {
+          const percentage = Number(channel.slice(0, -1));
+          if (!Number.isFinite(percentage)) return null;
+          return Math.max(0, Math.min(255, Math.round(percentage * 2.55)));
+        }
+        const numeric = Number(channel);
+        if (!Number.isFinite(numeric)) return null;
+        return Math.max(0, Math.min(255, Math.round(numeric)));
+      };
+
+      const rgb = parts.slice(0, 3).map(parseChannel);
+      if (rgb.every(channel => channel !== null)) {
+        return rgb as RGB;
+      }
+    }
+  }
+
+  switch (color) {
+  case 'black': return [0, 0, 0];
+  case 'white': return [255, 255, 255];
+  case 'red': return [255, 0, 0];
+  case 'green': return [0, 128, 0];
+  case 'blue': return [0, 0, 255];
+  case 'yellow': return [255, 255, 0];
+  case 'gray':
+  case 'grey': return [128, 128, 128];
+  case 'transparent': return [255, 255, 255];
+  default: return fallback;
+  }
+};
+
+const gifImage = function(width : number, height : number, foreground : RGB, background : RGB) {
   const _width = width;
   const _height = height;
   const _data = new Array<number>(width * height);
@@ -140,12 +199,12 @@ const gifImage = function(width : number, height : number) {
       out.writeByte(0);
       out.writeByte(0);
 
-      out.writeByte(0x00);
-      out.writeByte(0x00);
-      out.writeByte(0x00);
-      out.writeByte(0xff);
-      out.writeByte(0xff);
-      out.writeByte(0xff);
+      out.writeByte(foreground[0]);
+      out.writeByte(foreground[1]);
+      out.writeByte(foreground[2]);
+      out.writeByte(background[0]);
+      out.writeByte(background[1]);
+      out.writeByte(background[2]);
 
       out.writeString(',');
       out.writeShort(0);
@@ -276,8 +335,9 @@ const gifImage = function(width : number, height : number) {
 };
 
 const createDataURL = function(width : number, height : number,
+    foreground : RGB, background : RGB,
     getPixel : (x : number, y : number) => number) {
-  const gif = gifImage(width, height);
+  const gif = gifImage(width, height, foreground, background);
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       gif.setPixel(x, y, getPixel(x, y));
@@ -298,7 +358,7 @@ const createDataURL = function(width : number, height : number,
 };
 
 qrcode.registerRenderer('gif', function(cellSize? : number | { [key : string] : any },
-    margin? : number, alt? : string, title? : string) {
+    margin? : number, cellColor? : string, backgroundColor? : string) {
 
   let opts : { [key : string] : any } = {};
   if (typeof cellSize === 'object') {
@@ -310,8 +370,12 @@ qrcode.registerRenderer('gif', function(cellSize? : number | { [key : string] : 
   if (typeof cellSize !== 'number') cellSize = (typeof opts.cellSize === 'number') ? opts.cellSize : 2;
   if (typeof margin === 'undefined') margin = opts.margin;
   if (typeof margin !== 'number') margin = (typeof margin === 'undefined') ? cellSize * 4 : 0;
-  if (typeof alt !== 'string') alt = opts.alt;
-  if (typeof title !== 'string') title = opts.title;
+  if (typeof cellColor !== 'string') cellColor = opts.cellColor;
+  if (typeof backgroundColor !== 'string') backgroundColor = opts.backgroundColor;
+  const alt = (typeof opts.alt === 'string') ? opts.alt : void 0;
+  const title = (typeof opts.title === 'string') ? opts.title : void 0;
+  const foreground = parseRgbColor((typeof cellColor === 'string') ? cellColor : 'black', [0, 0, 0]);
+  const background = parseRgbColor((typeof backgroundColor === 'string') ? backgroundColor : 'white', [255, 255, 255]);
   const cellSizeValue = Number(cellSize);
   const marginSize = Number(margin);
   const moduleCount = Number((this as any).getModuleCount());
@@ -320,7 +384,7 @@ qrcode.registerRenderer('gif', function(cellSize? : number | { [key : string] : 
   const min = marginSize;
   const max = size - marginSize;
 
-  const dataURL = createDataURL(size, size, (x, y) => {
+  const dataURL = createDataURL(size, size, foreground, background, (x, y) => {
     if (min <= x && x < max && min <= y && y < max) {
       const c = Math.floor((x - min) / cellSizeValue);
       const r = Math.floor((y - min) / cellSizeValue);

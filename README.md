@@ -127,6 +127,8 @@ Render a QR Code with renderer options passed as an object.
 ```javascript
 qr.render('gif'); // default <img .../>
 qr.render({ renderer: 'gif', tag: false }); // data:image/gif...
+qr.render('gif', 4, 12, '#182126', '#f4efe7');
+qr.render({ renderer: 'gif', cellSize: 4, margin: 12, cellColor: '#182126', backgroundColor: '#f4efe7' });
 qr.render({ renderer: 'svg', cellSize: 2, crispEdges: 'auto' });
 qr.render({ renderer: 'table', cellSize: 5, margin: 20 });
 qr.render('ascii', 1, 2);
@@ -168,6 +170,38 @@ qr.render('canvas', context, { cellSize: 6, margin: 12, cellColor: '#111', backg
 | opts.alt.text | <code>string</code> | Text content for `<description>` |
 | opts.alt.id | <code>string</code> | Id for `<description>`, default: `${id}-description` when description text is present |
 
+#### GIF Renderer Options
+
+`gif` uses the same positional color arguments as other visual renderers: `cellSize`, `margin`, `cellColor`, `backgroundColor`. HTML-specific `alt` and `title` are available through the options object form.
+
+| Param | Type | Description |
+| ----- | ---- | ----------- |
+| cellSize | <code>number</code> | Positional cell size |
+| margin | <code>number</code> | Positional outer margin |
+| cellColor | <code>string</code> | Positional dark cell color |
+| backgroundColor | <code>string</code> | Positional background color |
+| opts.cellSize | <code>number</code> | Cell size, default: `2` |
+| opts.margin | <code>number</code> | Outer margin, default: `cellSize * 4` |
+| opts.cellColor | <code>string</code> | Dark cell color in GIF palette, default: `black` |
+| opts.backgroundColor | <code>string</code> | Background color in GIF palette, default: `white` |
+| opts.alt | <code>string</code> | `alt` attribute for HTML output |
+| opts.title | <code>string</code> | `title` attribute for HTML output |
+| opts.tag | <code>boolean</code> \| <code>string</code> | `false` for data URL, `true`/`undefined` for `<img>`, or custom tag name |
+
+```javascript
+qr.render('gif', 4, 12, '#182126', '#f4efe7');
+qr.render({ renderer: 'gif', tag: false, cellColor: '#182126', backgroundColor: '#f4efe7' });
+qr.render({
+  renderer: 'gif',
+  cellSize: 4,
+  margin: 12,
+  cellColor: '#182126',
+  backgroundColor: 'rgb(244, 239, 231)',
+  alt: 'GIF QR',
+  title: 'GIF QR'
+});
+```
+
 #### Canvas Renderer Options
 
 `canvas` accepts either positional args or an options object after `context`.
@@ -208,7 +242,7 @@ qr.render('gif', 2, 4);
 qr.render('svg', 2, 4);
 qr.render('table', 5, 20);
 qr.render('ascii', 1, 2);
-qr.render({ renderer: 'gif', cellSize: 2, margin: 4, tag: false });
+qr.render({ renderer: 'gif', cellSize: 2, margin: 4, tag: false, alt: 'QR code' });
 qr.render('canvas', context, 2);
 qr.render('canvas', context, { cellSize: 2, margin: 8, cellColor: '#000', backgroundColor: '#fff' });
 ```

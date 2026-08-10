@@ -248,7 +248,51 @@ export const misc = function(qrcode) {
       const qr = qrcode(1, 'L');
       qr.addData('abc');
       qr.make();
-      expect(capture('s', qr.render('gif', 3, 1, 'a<>"&\'\\z') ) ).to.equal(s);
+      expect(capture('s', qr.render({
+        renderer : 'gif',
+        cellSize : 3,
+        margin : 1,
+        alt : 'a<>"&\'\\z'
+      }) ) ).to.equal(s);
+    });
+
+    it('gif renderer accepts custom colors via options object', function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('abc');
+      qr.make();
+
+      const data = qr.render({
+        renderer : 'gif',
+        tag : false,
+        cellColor : '#112233',
+        backgroundColor : 'rgb(240, 241, 242)'
+      }).replace('data:image/gif;base64,', '');
+
+      const binary = atob(data);
+      expect(binary.charCodeAt(13) ).to.equal(0x11);
+      expect(binary.charCodeAt(14) ).to.equal(0x22);
+      expect(binary.charCodeAt(15) ).to.equal(0x33);
+      expect(binary.charCodeAt(16) ).to.equal(240);
+      expect(binary.charCodeAt(17) ).to.equal(241);
+      expect(binary.charCodeAt(18) ).to.equal(242);
+    });
+
+    it('gif renderer accepts custom colors as positional args', function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('abc');
+      qr.make();
+
+      const html = qr.render('gif', 3, 1, '#112233', 'rgb(240, 241, 242)');
+      const src = html.match(/src="([^"]+)"/)[1];
+      const data = src.replace('data:image/gif;base64,', '');
+
+      const binary = atob(data);
+      expect(binary.charCodeAt(13) ).to.equal(0x11);
+      expect(binary.charCodeAt(14) ).to.equal(0x22);
+      expect(binary.charCodeAt(15) ).to.equal(0x33);
+      expect(binary.charCodeAt(16) ).to.equal(240);
+      expect(binary.charCodeAt(17) ).to.equal(241);
+      expect(binary.charCodeAt(18) ).to.equal(242);
     });
 
     it('table tag (for coverage)', function(){
