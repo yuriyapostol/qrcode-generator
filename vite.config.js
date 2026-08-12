@@ -14,6 +14,7 @@ export default defineConfig({
       entry: {
         'core/qrcode': resolve(__dirname, 'src/main/core/qrcode.ts'),
         'renderers/gif': resolve(__dirname, 'src/main/renderers/gif.ts'),
+        'renderers/png': resolve(__dirname, 'src/main/renderers/png.ts'),
         'renderers/ascii': resolve(__dirname, 'src/main/renderers/ascii.ts'),
         'renderers/table': resolve(__dirname, 'src/main/renderers/table.ts'),
         'renderers/svg': resolve(__dirname, 'src/main/renderers/svg.ts'),

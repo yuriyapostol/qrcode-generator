@@ -58,5 +58,8 @@
     "typescript": "~5.8.3",
     "vite": "^7.3.6",
     "vite-plugin-dts": "^4.5.4"
+  },
+  "dependencies": {
+    "@upng/upng-js": "^2.2.2"
   }
 }

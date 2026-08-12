@@ -15,6 +15,7 @@ At the time the fork was separated from the original repository, both pull reque
 <script type="module">
 import qrcode from 'qrcode-generator';
 import 'qrcode-generator/renderers/gif';
+import 'qrcode-generator/renderers/png';
 </script>
 ```
 ```html
@@ -32,6 +33,7 @@ document.getElementById('placeHolder').innerHTML = qr.render('gif');
 Optional modules:
 
 - `qrcode-generator/renderers/gif`
+- `qrcode-generator/renderers/png`
 - `qrcode-generator/renderers/svg`
 - `qrcode-generator/renderers/table`
 - `qrcode-generator/renderers/ascii`
@@ -118,7 +120,7 @@ Render a QR Code with a registered renderer.
 
 | Param  | Type                | Description                                           |
 | ------ | ------------------- | ----------------------------------------------------- |
-| renderer | <code>string</code> | Renderer name (`gif`, `svg`, `table`, `ascii`, `canvas`) |
+| renderer | <code>string</code> | Renderer name (`gif`, `png`, `svg`, `table`, `ascii`, `canvas`) |
 | args   | <code>any[]</code>  | Renderer-specific positional arguments               |
 
 #### render({ renderer, ...opts }) => <code>any</code>
@@ -127,6 +129,7 @@ Render a QR Code with renderer options passed as an object.
 ```javascript
 qr.render('gif'); // default <img .../>
 qr.render({ renderer: 'gif', tag: false }); // data:image/gif...
+qr.render({ renderer: 'png', tag: false, colors: 2 }); // data:image/png...
 qr.render('gif', 4, 12, '#182126', '#f4efe7');
 qr.render({ renderer: 'gif', cellSize: 4, margin: 12, cellColor: '#182126', backgroundColor: '#f4efe7' });
 qr.render({ renderer: 'svg', cellSize: 2, crispEdges: 'auto' });
@@ -202,6 +205,40 @@ qr.render({
 });
 ```
 
+#### PNG Renderer Options
+
+`png` mirrors the `gif` renderer API and emits quantized `data:image/png` output or an HTML image tag. By default it uses a 2-color palette for a compact GIF-like PNG.
+
+| Param | Type | Description |
+| ----- | ---- | ----------- |
+| cellSize | <code>number</code> | Positional cell size |
+| margin | <code>number</code> | Positional outer margin |
+| cellColor | <code>string</code> | Positional dark cell color |
+| backgroundColor | <code>string</code> | Positional background color |
+| opts.cellSize | <code>number</code> | Cell size, default: `2` |
+| opts.margin | <code>number</code> | Outer margin, default: `cellSize * 4` |
+| opts.cellColor | <code>string</code> | Dark cell color, default: `black` |
+| opts.backgroundColor | <code>string</code> | Background color, default: `white` |
+| opts.colors | <code>number</code> | Quantized palette size, default: `2`; use `0` for lossless |
+| opts.alt | <code>string</code> | `alt` attribute for HTML output |
+| opts.title | <code>string</code> | `title` attribute for HTML output |
+| opts.tag | <code>boolean</code> \| <code>string</code> | `false` for data URL, `true`/`undefined` for `<img>`, or custom tag name |
+
+```javascript
+qr.render('png', 4, 12, '#182126', '#f4efe7');
+qr.render({ renderer: 'png', tag: false, colors: 2 });
+qr.render({
+  renderer: 'png',
+  cellSize: 4,
+  margin: 12,
+  cellColor: 'rgba(24, 33, 38, 0.75)',
+  backgroundColor: 'transparent',
+  colors: 2,
+  alt: 'PNG QR',
+  title: 'PNG QR'
+});
+```
+
 #### Canvas Renderer Options
 
 `canvas` accepts either positional args or an options object after `context`.
@@ -239,10 +276,12 @@ qr.renderTo2dContext(context, 2);
 
 // After
 qr.render('gif', 2, 4);
+qr.render('png', 2, 4);
 qr.render('svg', 2, 4);
 qr.render('table', 5, 20);
 qr.render('ascii', 1, 2);
 qr.render({ renderer: 'gif', cellSize: 2, margin: 4, tag: false, alt: 'QR code' });
+qr.render({ renderer: 'png', cellSize: 2, margin: 4, tag: false, colors: 2 });
 qr.render('canvas', context, 2);
 qr.render('canvas', context, { cellSize: 2, margin: 8, cellColor: '#000', backgroundColor: '#fff' });
 ```

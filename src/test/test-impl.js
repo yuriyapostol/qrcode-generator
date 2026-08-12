@@ -295,6 +295,111 @@ export const misc = function(qrcode) {
       expect(binary.charCodeAt(18) ).to.equal(242);
     });
 
+    it('png renderer returns PNG data URL by object options', function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('abc');
+      qr.make();
+
+      const dataURL = qr.render({
+        renderer : 'png',
+        tag : false,
+        cellColor : '#112233',
+        backgroundColor : 'rgb(240, 241, 242)',
+        colors : 2
+      });
+
+      expect(dataURL.startsWith('data:image/png;base64,') ).to.be.true;
+
+      const binary = atob(dataURL.replace('data:image/png;base64,', ''));
+      expect(binary.charCodeAt(0) ).to.equal(0x89);
+      expect(binary.charCodeAt(1) ).to.equal(0x50);
+      expect(binary.charCodeAt(2) ).to.equal(0x4e);
+      expect(binary.charCodeAt(3) ).to.equal(0x47);
+    });
+
+    it('png renderer returns image tag by positional args', function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('abc');
+      qr.make();
+
+      const html = qr.render('png', 3, 1, '#112233', 'rgb(240, 241, 242)');
+      const src = html.match(/src="([^"]+)"/)[1];
+
+      expect(html).to.contain('width="65"');
+      expect(html).to.contain('height="65"');
+      expect(src.startsWith('data:image/png;base64,') ).to.be.true;
+
+      const binary = atob(src.replace('data:image/png;base64,', ''));
+      expect(binary.charCodeAt(0) ).to.equal(0x89);
+      expect(binary.charCodeAt(1) ).to.equal(0x50);
+      expect(binary.charCodeAt(2) ).to.equal(0x4e);
+      expect(binary.charCodeAt(3) ).to.equal(0x47);
+    });
+
+    it('png renderer keeps transparent background', async function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('abc');
+      qr.make();
+
+      const dataURL = qr.render({
+        renderer : 'png',
+        tag : false,
+        backgroundColor : 'transparent',
+        colors : 2
+      });
+
+      const image = new Image();
+      image.src = dataURL;
+      await new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = reject;
+      });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const context = canvas.getContext('2d');
+      context.drawImage(image, 0, 0);
+
+      const corner = context.getImageData(0, 0, 1, 1).data;
+      expect(corner[3]).to.equal(0);
+    });
+
+    it('png renderer keeps rgba alpha for modules', async function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('abc');
+      qr.make();
+
+      const dataURL = qr.render({
+        renderer : 'png',
+        tag : false,
+        cellSize : 3,
+        margin : 1,
+        cellColor : 'rgba(17, 34, 51, 0.5)',
+        backgroundColor : 'rgba(240, 241, 242, 1)',
+        colors : 2
+      });
+
+      const image = new Image();
+      image.src = dataURL;
+      await new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = reject;
+      });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const context = canvas.getContext('2d');
+      context.drawImage(image, 0, 0);
+
+      const modulePixel = context.getImageData(1, 1, 1, 1).data;
+      expect(modulePixel[0]).to.equal(17);
+      expect(modulePixel[1]).to.equal(34);
+      expect(modulePixel[2]).to.equal(51);
+      expect(modulePixel[3]).to.equal(128);
+    });
+
     it('table tag (for coverage)', function(){
       const qr = qrcode(1, 'L');
       qr.addData('{TABLE}');
