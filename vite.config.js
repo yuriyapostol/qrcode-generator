@@ -12,15 +12,15 @@ export default defineConfig({
     emptyOutDir: true,
     lib: {
       entry: {
-        'core/qrcode': resolve(__dirname, 'src/main/core/qrcode.ts'),
-        'renderers/gif': resolve(__dirname, 'src/main/renderers/gif.ts'),
-        'renderers/png': resolve(__dirname, 'src/main/renderers/png.ts'),
-        'renderers/ascii': resolve(__dirname, 'src/main/renderers/ascii.ts'),
-        'renderers/table': resolve(__dirname, 'src/main/renderers/table.ts'),
-        'renderers/svg': resolve(__dirname, 'src/main/renderers/svg.ts'),
-        'renderers/canvas': resolve(__dirname, 'src/main/renderers/canvas.ts'),
-        'encodings/sjis': resolve(__dirname, 'src/main/encodings/sjis.ts'),
-        'encodings/utf8': resolve(__dirname, 'src/main/encodings/utf8.ts')
+        'core/qrcode': resolve(__dirname, 'src/core/qrcode.ts'),
+        'renderers/gif': resolve(__dirname, 'src/renderers/gif.ts'),
+        'renderers/png': resolve(__dirname, 'src/renderers/png.ts'),
+        'renderers/ascii': resolve(__dirname, 'src/renderers/ascii.ts'),
+        'renderers/table': resolve(__dirname, 'src/renderers/table.ts'),
+        'renderers/svg': resolve(__dirname, 'src/renderers/svg.ts'),
+        'renderers/canvas': resolve(__dirname, 'src/renderers/canvas.ts'),
+        'encodings/sjis': resolve(__dirname, 'src/encodings/sjis.ts'),
+        'encodings/utf8': resolve(__dirname, 'src/encodings/utf8.ts')
       },
       fileName: (format, entryName) =>
         format == 'cjs'? `${entryName}.js` :
