@@ -304,8 +304,7 @@ export const misc = function(qrcode) {
         renderer : 'png',
         tag : false,
         cellColor : '#112233',
-        backgroundColor : 'rgb(240, 241, 242)',
-        colors : 2
+        backgroundColor : 'rgb(240, 241, 242)'
       });
 
       expect(dataURL.startsWith('data:image/png;base64,') ).to.be.true;
@@ -344,8 +343,7 @@ export const misc = function(qrcode) {
       const dataURL = qr.render({
         renderer : 'png',
         tag : false,
-        backgroundColor : 'transparent',
-        colors : 2
+        backgroundColor : 'transparent'
       });
 
       const image = new Image();
@@ -376,8 +374,7 @@ export const misc = function(qrcode) {
         cellSize : 3,
         margin : 1,
         cellColor : 'rgba(17, 34, 51, 0.5)',
-        backgroundColor : 'rgba(240, 241, 242, 1)',
-        colors : 2
+        backgroundColor : 'rgba(240, 241, 242, 1)'
       });
 
       const image = new Image();

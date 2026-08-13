@@ -149,7 +149,6 @@ const parseRgbaColor = function(value : string, fallback : RGBA) : RGBA {
 
 const createDataURL = function(width : number, height : number,
     foreground : RGBA, background : RGBA,
-    colors : number,
     getPixel : (x : number, y : number) => boolean) {
   const rgba = new Uint8Array(width * height * 4);
 
@@ -164,7 +163,7 @@ const createDataURL = function(width : number, height : number,
     }
   }
 
-  const png = UPNG.encode([rgba.buffer], width, height, colors);
+  const png = UPNG.encode([rgba.buffer], width, height, 0);
   const base64 = encodeBase64(new Uint8Array(png));
   return 'data:image/png;base64,' + base64;
 };
@@ -186,7 +185,6 @@ qrcode.registerRenderer('png', function(cellSize? : number | { [key : string] : 
   if (typeof backgroundColor !== 'string') backgroundColor = opts.backgroundColor;
   const alt = (typeof opts.alt === 'string') ? opts.alt : void 0;
   const title = (typeof opts.title === 'string') ? opts.title : void 0;
-  const colors = Math.max(0, Math.round(typeof opts.colors === 'number' ? opts.colors : 2));
   const foreground = parseRgbaColor((typeof cellColor === 'string') ? cellColor : 'black', [0, 0, 0, 255]);
   const background = parseRgbaColor((typeof backgroundColor === 'string') ? backgroundColor : 'white', [255, 255, 255, 255]);
   const cellSizeValue = Number(cellSize);
@@ -197,7 +195,7 @@ qrcode.registerRenderer('png', function(cellSize? : number | { [key : string] : 
   const min = marginSize;
   const max = size - marginSize;
 
-  const dataURL = createDataURL(size, size, foreground, background, colors, (x, y) => {
+  const dataURL = createDataURL(size, size, foreground, background, (x, y) => {
     if (min <= x && x < max && min <= y && y < max) {
       const c = Math.floor((x - min) / cellSizeValue);
       const r = Math.floor((y - min) / cellSizeValue);
