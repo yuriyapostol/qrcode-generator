@@ -23,6 +23,11 @@
       "require": "./dist/renderers/*.js",
       "import": "./dist/renderers/*.mjs"
     },
+    "./renderers/utils/*": {
+      "types": "./dist/renderers/utils/*.d.ts",
+      "require": "./dist/renderers/utils/*.js",
+      "import": "./dist/renderers/utils/*.mjs"
+    },
     "./encodings/*": {
       "types": "./dist/encodings/*.d.ts",
       "require": "./dist/encodings/*.js",

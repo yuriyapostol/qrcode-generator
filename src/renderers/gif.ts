@@ -18,8 +18,8 @@
 //---------------------------------------------------------------------
 
 import { qrcode } from '../core/qrcode';
-
-type RGB = [number, number, number];
+import { parseRgbColor, type RGB } from './utils/color';
+import { escapeXml } from './utils/xml';
 
 type ByteArrayOutputStream = {
   writeByte: (b: number) => void;
@@ -27,21 +27,6 @@ type ByteArrayOutputStream = {
   writeBytes: (b: number[], off?: number, len?: number) => void;
   writeString: (s: string) => void;
   toByteArray: () => number[];
-};
-
-const escapeXml = function(s : string) {
-  let escaped = '';
-  for (let i = 0; i < s.length; i += 1) {
-    const c = s.charAt(i);
-    switch(c) {
-    case '<': escaped += '&lt;'; break;
-    case '>': escaped += '&gt;'; break;
-    case '&': escaped += '&amp;'; break;
-    case '"': escaped += '&quot;'; break;
-    default : escaped += c; break;
-    }
-  }
-  return escaped;
 };
 
 const byteArrayOutputStream = function() : ByteArrayOutputStream {
@@ -123,63 +108,6 @@ const base64EncodeOutputStream = function() {
       return _base64;
     }
   };
-};
-
-const parseRgbColor = function(value : string, fallback : RGB) : RGB {
-  if (typeof value !== 'string') return fallback;
-
-  const color = value.trim().toLowerCase();
-  let match = color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
-  if (match) {
-    const hex = match[1];
-    if (hex.length === 3) {
-      return [
-        parseInt(hex.charAt(0) + hex.charAt(0), 16),
-        parseInt(hex.charAt(1) + hex.charAt(1), 16),
-        parseInt(hex.charAt(2) + hex.charAt(2), 16)
-      ];
-    }
-    return [
-      parseInt(hex.substring(0, 2), 16),
-      parseInt(hex.substring(2, 4), 16),
-      parseInt(hex.substring(4, 6), 16)
-    ];
-  }
-
-  match = color.match(/^rgba?\(\s*([^)]+)\s*\)$/i);
-  if (match) {
-    const parts = match[1].split(',').map(part => part.trim());
-    if (parts.length >= 3) {
-      const parseChannel = function(channel : string) {
-        if (/%$/.test(channel)) {
-          const percentage = Number(channel.slice(0, -1));
-          if (!Number.isFinite(percentage)) return null;
-          return Math.max(0, Math.min(255, Math.round(percentage * 2.55)));
-        }
-        const numeric = Number(channel);
-        if (!Number.isFinite(numeric)) return null;
-        return Math.max(0, Math.min(255, Math.round(numeric)));
-      };
-
-      const rgb = parts.slice(0, 3).map(parseChannel);
-      if (rgb.every(channel => channel !== null)) {
-        return rgb as RGB;
-      }
-    }
-  }
-
-  switch (color) {
-  case 'black': return [0, 0, 0];
-  case 'white': return [255, 255, 255];
-  case 'red': return [255, 0, 0];
-  case 'green': return [0, 128, 0];
-  case 'blue': return [0, 0, 255];
-  case 'yellow': return [255, 255, 0];
-  case 'gray':
-  case 'grey': return [128, 128, 128];
-  case 'transparent': return [255, 255, 255];
-  default: return fallback;
-  }
 };
 
 const gifImage = function(width : number, height : number, foreground : RGB, background : RGB) {

@@ -149,20 +149,18 @@ qr.render('canvas', context, { cellSize: 6, margin: 12, cellColor: '#111', backg
 | opts.style | <code>string</code> | SVG root inline style, default: `''` |
 | opts.cellSize | <code>number</code> | Shortcut for `opts.cell.size`, default: `1` |
 | opts.margin | <code>number</code> | default: `cellSize * 4` |
-| opts.cellColor | <code>string</code> | Shortcut for `opts.cell.fill`, default: `black` |
-| opts.backgroundColor | <code>string</code> | Shortcut for `opts.background.fill`, default: `white` |
+| opts.cellColor | <code>string</code> | Shortcut for `opts.cell.color`, default: `black` |
+| opts.backgroundColor | <code>string</code> | Shortcut for `opts.background.color`, default: `white` |
 | opts.scalable | <code>boolean</code> | When `true`, omits fixed `width`/`height`; default depends on whether a fixed cell size is provided |
 | opts.crispEdges | <code>boolean</code> \| <code>'auto'</code> | default: `auto`; applies `shape-rendering="crispEdges"` automatically for whole-number cell sizes |
-| opts.cell | <code>object</code> \| <code>string</code> | Cell styling options; string value is treated as `fill` |
+| opts.cell | <code>object</code> \| <code>string</code> | Cell styling options; string value is treated as `color` |
 | opts.cell.size | <code>number</code> | Cell size, default: `opts.cellSize` or `1` |
-| opts.cell.fill | <code>string</code> | Cell fill color, default: `opts.cellColor` or `black` |
-| opts.cell.stroke | <code>string</code> | Cell stroke color, default: `none` |
+| opts.cell.color | <code>string</code> | Cell color, default: `opts.cellColor` or `black` |
 | opts.cell.style | <code>string</code> | Inline style for the `<path>` with QR cells |
 | opts.cell.class | <code>string</code> | Class for the `<path>` with QR cells, default: `${class}-cells` |
 | opts.cell.id | <code>string</code> | Id for the `<path>` with QR cells, default: `${id}-cells` |
-| opts.background | <code>object</code> \| <code>string</code> | Background styling options; string value is treated as `fill` |
-| opts.background.fill | <code>string</code> | Background fill color, default: `opts.backgroundColor` or `white` |
-| opts.background.stroke | <code>string</code> | Background stroke color, default: `none` |
+| opts.background | <code>object</code> \| <code>string</code> | Background styling options; string value is treated as `color` |
+| opts.background.color | <code>string</code> | Background color, default: `opts.backgroundColor` or `white` |
 | opts.background.style | <code>string</code> | Inline style for the background `<rect>` |
 | opts.background.class | <code>string</code> | Class for the background `<rect>`, default: `${class}-background` |
 | opts.background.id | <code>string</code> | Id for the background `<rect>`, default: `${id}-background` |

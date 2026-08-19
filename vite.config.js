@@ -19,6 +19,8 @@ export default defineConfig({
         'renderers/table': resolve(__dirname, 'src/renderers/table.ts'),
         'renderers/svg': resolve(__dirname, 'src/renderers/svg.ts'),
         'renderers/canvas': resolve(__dirname, 'src/renderers/canvas.ts'),
+        'renderers/utils/xml': resolve(__dirname, 'src/renderers/utils/xml.ts'),
+        'renderers/utils/color': resolve(__dirname, 'src/renderers/utils/color.ts'),
         'encodings/sjis': resolve(__dirname, 'src/encodings/sjis.ts'),
         'encodings/utf8': resolve(__dirname, 'src/encodings/utf8.ts')
       },

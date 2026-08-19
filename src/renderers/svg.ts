@@ -17,6 +17,7 @@
 //---------------------------------------------------------------------
 
 import { qrcode } from '../core/qrcode';
+import { escapeXml } from './utils/xml';
 
 qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : any },
     margin? : number, cellColor? : string, backgroundColor? : string) {
@@ -32,7 +33,7 @@ qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : 
   const style = opts.style || '';
 
   let cell = opts.cell || {};
-  if (typeof cell === 'string') cell = { fill: cell };
+  if (typeof cell === 'string') cell = { color: cell };
   if (typeof cell !== 'object' || !cell) cell = {};
   const scalable = typeof opts.scalable !== 'undefined'
     ? opts.scalable
@@ -40,9 +41,8 @@ qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : 
   const crispEdges = typeof opts.crispEdges !== 'undefined' ? opts.crispEdges : 'auto';
   if (typeof cellSize === 'number') cell.size = cellSize;
   if (typeof cell.size !== 'number') cell.size = (typeof opts.cellSize === 'number') ? opts.cellSize : 1;
-  if (typeof cellColor === 'string') cell.fill = cellColor;
-  if (typeof cell.fill !== 'string') cell.fill = (typeof opts.cellColor === 'string') ? opts.cellColor : 'black';
-  if (typeof cell.stroke !== 'string') cell.stroke = 'none';
+  if (typeof cellColor === 'string') cell.color = cellColor;
+  if (typeof cell.color !== 'string') cell.color = (typeof opts.cellColor === 'string') ? opts.cellColor : 'black';
   if (typeof cell.style !== 'string') cell.style = '';
   if (typeof cell.class !== 'string') cell.class = `${_class}-cells`;
   if (typeof cell.id !== 'string') cell.id = `${id}-cells`;
@@ -51,13 +51,12 @@ qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : 
   if (typeof margin !== 'number') margin = (typeof margin === 'undefined') ? cell.size * 4 : 0;
 
   let background = opts.background || {};
-  if (typeof background === 'string') background = { fill: background };
+  if (typeof background === 'string') background = { color: background };
   if (typeof background !== 'object' || !background) background = {};
-  if (typeof backgroundColor === 'string') background.fill = backgroundColor;
-  if (typeof background.fill !== 'string') {
-    background.fill = (typeof opts.backgroundColor === 'string') ? opts.backgroundColor : 'white';
+  if (typeof backgroundColor === 'string') background.color = backgroundColor;
+  if (typeof background.color !== 'string') {
+    background.color = (typeof opts.backgroundColor === 'string') ? opts.backgroundColor : 'white';
   }
-  if (typeof background.stroke !== 'string') background.stroke = 'none';
   if (typeof background.style !== 'string') background.style = '';
   if (typeof background.class !== 'string') background.class = `${_class}-background`;
   if (typeof background.id !== 'string') background.id = `${id}-background`;
@@ -67,10 +66,6 @@ qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : 
 
   let title = (typeof opts.title === 'string') ? { text: opts.title } : opts.title || {};
   title.id = (title.text) ? title.id || `${id}-title` : null;
-
-  const escapeXml = (s : string) => s.replace(/[<>&"]/g, c =>
-    ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c] as string)
-  );
 
   const count = Number(this.getModuleCount());
   const cellSizeValue = Number(cell.size);
@@ -96,7 +91,7 @@ qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : 
   if (alt.text) {
     svg += `<description id="${escapeXml(alt.id)}">${escapeXml(alt.text)}</description>`;
   }
-  svg += `<rect id="${escapeXml(background.id)}"${background.class ? ` class="${escapeXml(background.class)}"` : ''}${background.style ? ` style="${escapeXml(background.style)}"` : ''} width="100%" height="100%"${background.fill ? ` fill="${background.fill}"` : ''}${background.stroke ? ` stroke="${background.stroke}"` : ''}/>`;
+  svg += `<rect id="${escapeXml(background.id)}"${background.class ? ` class="${escapeXml(background.class)}"` : ''}${background.style ? ` style="${escapeXml(background.style)}"` : ''} width="100%" height="100%"${background.color ? ` fill="${background.color}"` : ''}/>`;
   svg += `<path id="${escapeXml(cell.id)}"${cell.class ? ` class="${escapeXml(cell.class)}"` : ''}${cell.style ? ` style="${escapeXml(cell.style)}"` : ''} d="`;
 
   for (let r = 0; r < count; r += 1) {
@@ -109,6 +104,6 @@ qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : 
     }
   }
 
-  svg += `"${cell.fill ? ` fill="${cell.fill}"` : ''}${cell.stroke ? ` stroke="${cell.stroke}"` : ''}/></svg>`;
+  svg += `"${cell.color ? ` fill="${cell.color}"` : ''}/></svg>`;
   return svg;
 });
