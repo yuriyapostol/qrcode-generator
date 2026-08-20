@@ -118,13 +118,24 @@ _[Note] call make() before this function._
 Render a QR Code with a registered renderer.
  _[Note] call make() before this function._
 
+`render(...)`, `registerRenderer(...)`, and `getRenderer(...)` are installed by
+importing any optional renderer. The base core module does not load renderer
+registry code until a renderer module is imported.
+
 | Param  | Type                | Description                                           |
 | ------ | ------------------- | ----------------------------------------------------- |
 | renderer | <code>string</code> | Renderer name (`gif`, `png`, `svg`, `table`, `ascii`, `canvas`) |
-| args   | <code>any[]</code>  | Renderer-specific positional arguments               |
+| args   | <code>any[]</code>  | Renderer-specific positional arguments and option objects |
 
 #### render({ renderer, ...opts }) => <code>any</code>
 Render a QR Code with renderer options passed as an object.
+
+Renderer options can be passed as a single object or mixed into any positional
+argument slot. Plain objects are merged into renderer options; simple values are
+assigned to the next positional parameter for that renderer. `opts.cell` and
+`opts.background` may be objects or color strings. `cellSize`/`cellColor` and
+`backgroundColor` are aliases for `cell.size`/`cell.color` and
+`background.color`.
 
 ```javascript
 qr.render('gif'); // default <img .../>
@@ -132,11 +143,13 @@ qr.render({ renderer: 'gif', tag: false }); // data:image/gif...
 qr.render({ renderer: 'png', tag: false }); // data:image/png...
 qr.render('gif', 4, 12, '#182126', '#f4efe7');
 qr.render({ renderer: 'gif', cellSize: 4, margin: 12, cellColor: '#182126', backgroundColor: '#f4efe7' });
+qr.render('svg', 12, 24, { cell: '#777', background: '#fff' });
 qr.render({ renderer: 'svg', cellSize: 2, crispEdges: 'auto' });
+qr.render({ renderer: 'svg', cell: { size: 2, color: '#111' }, background: { color: '#fff' } });
 qr.render({ renderer: 'table', cellSize: 5, margin: 20 });
 qr.render('ascii', 1, 2);
 qr.render('canvas', context, 2);
-qr.render('canvas', context, { cellSize: 6, margin: 12, cellColor: '#111', backgroundColor: '#eee' });
+qr.render('canvas', context, { cell: { size: 6, color: '#111' }, margin: 12, background: '#eee' });
 ```
 
 #### SVG Formatter Options
@@ -250,10 +263,9 @@ qr.render({
 ```javascript
 qr.render('canvas', context, 2, 8, '#000', '#fff');
 qr.render('canvas', context, {
-  cellSize: 2,
+  cell: { size: 2, color: '#000' },
   margin: 8,
-  cellColor: '#000',
-  backgroundColor: '#fff'
+  background: '#fff'
 });
 ```
 

@@ -1,13 +1,23 @@
-import c from "../core/qrcode.mjs";
-c.registerRenderer("canvas", function(i, t, f, s, u) {
-  let e = {};
-  typeof t == "object" && (e = t || {}, t = void 0), typeof t != "number" && (t = typeof e.cellSize == "number" ? e.cellSize : 2), typeof f > "u" && (f = e.margin), typeof f != "number" && (f = typeof f > "u" ? t * 4 : 0), typeof s != "string" && (s = typeof e.cellColor == "string" ? e.cellColor : "black"), typeof u != "string" && (u = typeof e.backgroundColor == "string" ? e.backgroundColor : "white");
-  const y = Number(this.getModuleCount()), o = Number(t), p = Number(f), l = y * o + p * 2;
-  i.fillStyle = u, i.fillRect(0, 0, l, l), i.fillStyle = s;
-  for (let r = 0; r < y; r += 1) {
-    const b = r * o + p;
-    for (let n = 0; n < y; n += 1)
-      this.isDark(r, n) && i.fillRect(n * o + p, b, o, o);
+import { registerRenderer as y } from "./utils/registry.mjs";
+y("canvas", {
+  args: [
+    { name: "context", type: "object", positionalOnly: !0 },
+    { name: "cellSize", type: "number" },
+    { name: "margin", type: "number" },
+    { name: "cellColor", type: "string" },
+    { name: "backgroundColor", type: "string" }
+  ],
+  render: function(e) {
+    const r = e.context;
+    let o = e.cellSize, l = e.margin, c = e.cellColor, f = e.backgroundColor;
+    typeof o != "number" && (o = typeof e.cellSize == "number" ? e.cellSize : 2), typeof l > "u" && (l = e.margin), typeof l != "number" && (l = typeof l > "u" ? o * 4 : 0), typeof c != "string" && (c = typeof e.cellColor == "string" ? e.cellColor : "black"), typeof f != "string" && (f = typeof e.backgroundColor == "string" ? e.backgroundColor : "white");
+    const a = Number(this.getModuleCount()), n = Number(o), u = Number(l), m = a * n + u * 2;
+    r.fillStyle = f, r.fillRect(0, 0, m, m), r.fillStyle = c;
+    for (let t = 0; t < a; t += 1) {
+      const g = t * n + u;
+      for (let i = 0; i < a; i += 1)
+        this.isDark(t, i) && r.fillRect(i * n + u, g, n, n);
+    }
   }
 });
 //# sourceMappingURL=canvas.mjs.map

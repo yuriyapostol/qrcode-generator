@@ -14,7 +14,7 @@
 
 import UPNG from '@upng/upng-js';
 
-import { qrcode } from '../core/qrcode';
+import { registerRenderer } from './utils/registry';
 import { parseRgbaColor, type RGBA } from './utils/color';
 import { escapeXml } from './utils/xml';
 
@@ -60,16 +60,20 @@ const createDataURL = function(width : number, height : number,
   return 'data:image/png;base64,' + base64;
 };
 
-qrcode.registerRenderer('png', function(cellSize? : number | { [key : string] : any },
-    margin? : number, cellColor? : string, backgroundColor? : string) {
-
-  let opts : { [key : string] : any } = {};
-  if (typeof cellSize === 'object') {
-    opts = cellSize || {};
-    cellSize = void 0;
-  }
+registerRenderer('png', {
+  args: [
+    { name: 'cellSize', type: 'number' },
+    { name: 'margin', type: 'number' },
+    { name: 'cellColor', type: 'string' },
+    { name: 'backgroundColor', type: 'string' }
+  ],
+  render: function(opts : { [key : string] : any }) {
 
   let tag = (opts.tag === false) ? false : (opts.tag === true || typeof opts.tag === 'undefined' ? 'img' : opts.tag);
+  let cellSize = opts.cellSize;
+  let margin = opts.margin;
+  let cellColor = opts.cellColor;
+  let backgroundColor = opts.backgroundColor;
   if (typeof cellSize !== 'number') cellSize = (typeof opts.cellSize === 'number') ? opts.cellSize : 2;
   if (typeof margin === 'undefined') margin = opts.margin;
   if (typeof margin !== 'number') margin = (typeof margin === 'undefined') ? cellSize * 4 : 0;
@@ -126,4 +130,5 @@ qrcode.registerRenderer('png', function(cellSize? : number | { [key : string] : 
   html += '/>';
 
   return html;
+  }
 });

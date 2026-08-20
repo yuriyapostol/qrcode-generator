@@ -1,148 +1,154 @@
-import x from "../core/qrcode.mjs";
-import { parseRgbColor as S } from "./utils/color.mjs";
-import { escapeXml as C } from "./utils/xml.mjs";
+import { registerRenderer as O } from "./utils/registry.mjs";
+import { parseRgbColor as C } from "./utils/color.mjs";
+import { escapeXml as p } from "./utils/xml.mjs";
 const _ = function() {
-  const a = [], r = {
+  const t = [], n = {
     writeByte(o) {
-      a.push(o & 255);
+      t.push(o & 255);
     },
     writeShort(o) {
-      r.writeByte(o), r.writeByte(o >>> 8);
+      n.writeByte(o), n.writeByte(o >>> 8);
     },
-    writeBytes(o, w, i) {
-      w = w || 0, i = i || o.length;
-      for (let y = 0; y < i; y += 1)
-        r.writeByte(o[y + w]);
+    writeBytes(o, l, w) {
+      l = l || 0, w = w || o.length;
+      for (let a = 0; a < w; a += 1)
+        n.writeByte(o[a + l]);
     },
     writeString(o) {
-      for (let w = 0; w < o.length; w += 1)
-        r.writeByte(o.charCodeAt(w));
+      for (let l = 0; l < o.length; l += 1)
+        n.writeByte(o.charCodeAt(l));
     },
     toByteArray() {
-      return a;
+      return t;
     }
   };
-  return r;
-}, A = function() {
-  let a = 0, r = 0, o = 0, w = "";
-  const i = function(n) {
-    if (n < 26) return 65 + n;
-    if (n < 52) return 97 + (n - 26);
-    if (n < 62) return 48 + (n - 52);
-    if (n == 62) return 43;
-    if (n == 63) return 47;
-    throw "n:" + n;
-  }, y = function(n) {
-    w += String.fromCharCode(i(n & 63));
+  return n;
+}, x = function() {
+  let t = 0, n = 0, o = 0, l = "";
+  const w = function(i) {
+    if (i < 26) return 65 + i;
+    if (i < 52) return 97 + (i - 26);
+    if (i < 62) return 48 + (i - 52);
+    if (i == 62) return 43;
+    if (i == 63) return 47;
+    throw "n:" + i;
+  }, a = function(i) {
+    l += String.fromCharCode(w(i & 63));
   };
   return {
-    writeByte(n) {
-      for (a = a << 8 | n & 255, r += 8, o += 1; r >= 6; )
-        y(a >>> r - 6), r -= 6;
+    writeByte(i) {
+      for (t = t << 8 | i & 255, n += 8, o += 1; n >= 6; )
+        a(t >>> n - 6), n -= 6;
     },
     flush() {
-      if (r > 0 && (y(a << 6 - r), a = 0, r = 0), o % 3 != 0) {
-        const n = 3 - o % 3;
-        for (let h = 0; h < n; h += 1)
-          w += "=";
+      if (n > 0 && (a(t << 6 - n), t = 0, n = 0), o % 3 != 0) {
+        const i = 3 - o % 3;
+        for (let d = 0; d < i; d += 1)
+          l += "=";
       }
     },
     toString() {
-      return w;
+      return l;
     }
   };
-}, L = function(a, r, o, w) {
-  const i = a, y = r, n = new Array(a * r), h = {
-    setPixel(t, f, e) {
-      n[f * i + t] = e;
+}, A = function(t, n, o, l) {
+  const w = t, a = n, i = new Array(t * n), d = {
+    setPixel(e, c, r) {
+      i[c * w + e] = r;
     },
-    write(t) {
-      t.writeString("GIF87a"), t.writeShort(i), t.writeShort(y), t.writeByte(128), t.writeByte(0), t.writeByte(0), t.writeByte(o[0]), t.writeByte(o[1]), t.writeByte(o[2]), t.writeByte(w[0]), t.writeByte(w[1]), t.writeByte(w[2]), t.writeString(","), t.writeShort(0), t.writeShort(0), t.writeShort(i), t.writeShort(y), t.writeByte(0);
-      const f = 2, e = g(f);
-      t.writeByte(f);
-      let c = 0;
-      for (; e.length - c > 255; )
-        t.writeByte(255), t.writeBytes(e, c, 255), c += 255;
-      t.writeByte(e.length - c), t.writeBytes(e, c, e.length - c), t.writeByte(0), t.writeString(";");
+    write(e) {
+      e.writeString("GIF87a"), e.writeShort(w), e.writeShort(a), e.writeByte(128), e.writeByte(0), e.writeByte(0), e.writeByte(o[0]), e.writeByte(o[1]), e.writeByte(o[2]), e.writeByte(l[0]), e.writeByte(l[1]), e.writeByte(l[2]), e.writeString(","), e.writeShort(0), e.writeShort(0), e.writeShort(w), e.writeShort(a), e.writeByte(0);
+      const c = 2, r = m(c);
+      e.writeByte(c);
+      let s = 0;
+      for (; r.length - s > 255; )
+        e.writeByte(255), e.writeBytes(r, s, 255), s += 255;
+      e.writeByte(r.length - s), e.writeBytes(r, s, r.length - s), e.writeByte(0), e.writeString(";");
     }
-  }, p = function(t) {
-    let f = 0, e = 0;
+  }, B = function(e) {
+    let c = 0, r = 0;
     return {
-      write(c, l) {
-        if (c >>> l)
+      write(s, y) {
+        if (s >>> y)
           throw "length over";
-        for (; f + l >= 8; )
-          t.writeByte(255 & (c << f | e)), l -= 8 - f, c >>>= 8 - f, e = 0, f = 0;
-        e = c << f | e, f = f + l;
+        for (; c + y >= 8; )
+          e.writeByte(255 & (s << c | r)), y -= 8 - c, s >>>= 8 - c, r = 0, c = 0;
+        r = s << c | r, c = c + y;
       },
       flush() {
-        f > 0 && t.writeByte(e);
+        c > 0 && e.writeByte(r);
       }
     };
-  }, d = function() {
-    const t = {};
-    let f = 0;
+  }, g = function() {
+    const e = {};
+    let c = 0;
     return {
-      add(e) {
-        if (typeof t[e] < "u")
-          throw "dup key:" + e;
-        t[e] = f, f += 1;
+      add(r) {
+        if (typeof e[r] < "u")
+          throw "dup key:" + r;
+        e[r] = c, c += 1;
       },
       size() {
-        return f;
+        return c;
       },
-      indexOf(e) {
-        return t[e];
+      indexOf(r) {
+        return e[r];
       },
-      contains(e) {
-        return typeof t[e] < "u";
+      contains(r) {
+        return typeof e[r] < "u";
       }
     };
-  }, g = function(t) {
-    const f = 1 << t, e = (1 << t) + 1;
-    let c = t + 1;
-    const l = d();
-    for (let B = 0; B < f; B += 1)
-      l.add(String.fromCharCode(B));
-    l.add(String.fromCharCode(f)), l.add(String.fromCharCode(e));
-    const b = _(), s = p(b);
-    s.write(f, c);
-    let m = 0, u = String.fromCharCode(n[m]);
-    for (m += 1; m < n.length; ) {
-      const B = String.fromCharCode(n[m]);
-      m += 1, l.contains(u + B) ? u = u + B : (s.write(l.indexOf(u), c), l.size() < 4095 && (l.size() == 1 << c && (c += 1), l.add(u + B)), u = B);
+  }, m = function(e) {
+    const c = 1 << e, r = (1 << e) + 1;
+    let s = e + 1;
+    const y = g();
+    for (let h = 0; h < c; h += 1)
+      y.add(String.fromCharCode(h));
+    y.add(String.fromCharCode(c)), y.add(String.fromCharCode(r));
+    const S = _(), f = B(S);
+    f.write(c, s);
+    let b = 0, u = String.fromCharCode(i[b]);
+    for (b += 1; b < i.length; ) {
+      const h = String.fromCharCode(i[b]);
+      b += 1, y.contains(u + h) ? u = u + h : (f.write(y.indexOf(u), s), y.size() < 4095 && (y.size() == 1 << s && (s += 1), y.add(u + h)), u = h);
     }
-    return s.write(l.indexOf(u), c), s.write(e, c), s.flush(), b.toByteArray();
+    return f.write(y.indexOf(u), s), f.write(r, s), f.flush(), S.toByteArray();
   };
-  return h;
-}, R = function(a, r, o, w, i) {
-  const y = L(a, r, o, w);
-  for (let d = 0; d < r; d += 1)
-    for (let g = 0; g < a; g += 1)
-      y.setPixel(g, d, i(g, d));
-  const n = _();
-  y.write(n);
-  const h = A(), p = n.toByteArray();
-  for (let d = 0; d < p.length; d += 1)
-    h.writeByte(p[d]);
-  return h.flush(), "data:image/gif;base64," + h;
+  return d;
+}, L = function(t, n, o, l, w) {
+  const a = A(t, n, o, l);
+  for (let g = 0; g < n; g += 1)
+    for (let m = 0; m < t; m += 1)
+      a.setPixel(m, g, w(m, g));
+  const i = _();
+  a.write(i);
+  const d = x(), B = i.toByteArray();
+  for (let g = 0; g < B.length; g += 1)
+    d.writeByte(B[g]);
+  return d.flush(), "data:image/gif;base64," + d;
 };
-x.registerRenderer("gif", function(a, r, o, w) {
-  let i = {};
-  typeof a == "object" && (i = a || {}, a = void 0);
-  let y = i.tag === !1 ? !1 : i.tag === !0 || typeof i.tag > "u" ? "img" : i.tag;
-  typeof a != "number" && (a = typeof i.cellSize == "number" ? i.cellSize : 2), typeof r > "u" && (r = i.margin), typeof r != "number" && (r = typeof r > "u" ? a * 4 : 0), typeof o != "string" && (o = i.cellColor), typeof w != "string" && (w = i.backgroundColor);
-  const n = typeof i.alt == "string" ? i.alt : void 0, h = typeof i.title == "string" ? i.title : void 0, p = S(typeof o == "string" ? o : "black", [0, 0, 0]), d = S(typeof w == "string" ? w : "white", [255, 255, 255]), g = Number(a), t = Number(r), e = Number(this.getModuleCount()) * g + t * 2, c = t, l = e - t, b = R(e, e, p, d, (m, u) => {
-    if (c <= m && m < l && c <= u && u < l) {
-      const B = Math.floor((m - c) / g), O = Math.floor((u - c) / g);
-      return this.isDark(O, B) ? 0 : 1;
-    }
-    return 1;
-  });
-  if (y === !1)
-    return b;
-  y = typeof y == "string" ? y : "img";
-  let s = "";
-  return s += "<" + y, s += ' src="', s += b, s += '"', s += ' width="', s += e, s += '"', s += ' height="', s += e, s += '"', n && (s += ' alt="', s += C(n), s += '"'), h && (s += ' title="', s += C(h), s += '"'), s += "/>", s;
+O("gif", {
+  args: [
+    { name: "cellSize", type: "number" },
+    { name: "margin", type: "number" },
+    { name: "cellColor", type: "string" },
+    { name: "backgroundColor", type: "string" }
+  ],
+  render: function(t) {
+    let n = t.tag === !1 ? !1 : t.tag === !0 || typeof t.tag > "u" ? "img" : t.tag, o = t.cellSize, l = t.margin, w = t.cellColor, a = t.backgroundColor;
+    typeof o != "number" && (o = typeof t.cellSize == "number" ? t.cellSize : 2), typeof l > "u" && (l = t.margin), typeof l != "number" && (l = typeof l > "u" ? o * 4 : 0), typeof w != "string" && (w = t.cellColor), typeof a != "string" && (a = t.backgroundColor);
+    const i = typeof t.alt == "string" ? t.alt : void 0, d = typeof t.title == "string" ? t.title : void 0, B = C(typeof w == "string" ? w : "black", [0, 0, 0]), g = C(typeof a == "string" ? a : "white", [255, 255, 255]), m = Number(o), e = Number(l), r = Number(this.getModuleCount()) * m + e * 2, s = e, y = r - e, S = L(r, r, B, g, (b, u) => {
+      if (s <= b && b < y && s <= u && u < y) {
+        const h = Math.floor((b - s) / m), z = Math.floor((u - s) / m);
+        return this.isDark(z, h) ? 0 : 1;
+      }
+      return 1;
+    });
+    if (n === !1)
+      return S;
+    n = typeof n == "string" ? n : "img";
+    let f = "";
+    return f += "<" + n, f += ' src="', f += S, f += '"', f += ' width="', f += r, f += '"', f += ' height="', f += r, f += '"', i && (f += ' alt="', f += p(i), f += '"'), d && (f += ' title="', f += p(d), f += '"'), f += "/>", f;
+  }
 });
 //# sourceMappingURL=gif.mjs.map

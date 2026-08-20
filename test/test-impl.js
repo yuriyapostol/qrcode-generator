@@ -327,6 +327,29 @@ export const misc = function(qrcode) {
       expect(!!qr.render({ renderer : 'svg' }) ).to.be.true;
     });
 
+    it('render normalizes positional args and nested style options', function(){
+      const qr = qrcode(1, 'H');
+      qr.addData('{SVG}');
+      qr.make();
+
+      const svg = qr.render('svg', 12, 24, {
+        cell : '#777777',
+        background : '#ffffff'
+      });
+      expect(svg).to.contain('viewBox="0 0 300 300"');
+      expect(svg).to.contain('fill="#777777"');
+      expect(svg).to.contain('fill="#ffffff"');
+
+      const table = qr.render({
+        renderer : 'table',
+        cell : { size : 2, color : '#111111' },
+        background : { color : '#eeeeee' },
+        margin : 4
+      });
+      expect(table).to.contain('width: 4px; height: 4px; background-color: #eeeeee;');
+      expect(table).to.contain('background-color: #111111;');
+    });
+
     it('svg tag auto crispEdges for whole-number cell size', function(){
       const qr = qrcode(1, 'H');
       qr.addData('{SVG}');
@@ -385,10 +408,9 @@ export const misc = function(qrcode) {
       qr.addData('{2d}');
       qr.make();
       qr.render('canvas', context, {
-        cellSize : 3,
+        cell : { size : 3, color : '#111111' },
         margin : 2,
-        cellColor : '#111111',
-        backgroundColor : '#eeeeee'
+        background : '#eeeeee'
       });
 
       expect(fills[0]).to.deep.equal({

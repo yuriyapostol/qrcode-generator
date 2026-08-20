@@ -3,7 +3,6 @@
 // QR Code Generator for JavaScript
 //
 // Copyright (c) 2009 Kazuhiko Arase
-//
 // URL: http://www.d-project.com/
 //
 // Licensed under the MIT license:
@@ -22,7 +21,7 @@ import {
   type QRCodeEncoder,
   type QRCodeAddDataOptions,
   type EncoderMode,
-  type QRCodeRenderer,
+  type QRCodeExtension,
   type QRPolynominal,
   type QRRSBlock,
   type QRData,
@@ -31,9 +30,10 @@ import {
 
 type QRCodeStringEncoder = (data: string) => number[];
 
-const renderers : Record<string, QRCodeRenderer> = {};
 const encoders : Record<string, QRCodeEncoder> = {};
 const defaultEncodings : Partial<Record<EncoderMode, string>> = {};
+const extensions : QRCodeExtension[] = [];
+const instances : QRCode[] = [];
 
 //---------------------------------------------------------------------
 // qrcode
@@ -550,32 +550,17 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
     makeImpl(false, getBestMaskPattern() );
   };
 
-  const render = function(renderer_or_opts? : string | { renderer: string, [key: string] : any }, ...args : any[]) {
-    let rendererName;
-    let _arguments : any = args;
-    if (typeof renderer_or_opts === 'string') {
-      rendererName = renderer_or_opts;
-    }
-    else if (typeof renderer_or_opts === 'object' && renderer_or_opts?.renderer) {
-      const { renderer: objectRenderer, ...renderOpts } = renderer_or_opts;
-      rendererName = objectRenderer;
-      _arguments = [renderOpts];
-    }
-    if (! rendererName) return '[QRCode Object]';
-    const renderer = qrcode.getRenderer(rendererName);
-    if (! renderer) {
-      throw 'unknown renderer: ' + rendererName;
-    }
-    return renderer.apply(_this, _arguments);
-  };
-
   const _this = {
     addData,
     isDark,
     getModuleCount,
     make,
-    render,
-  };
+  } as QRCode;
+
+  extensions.forEach(extension => {
+    extension(_this, qrcode);
+  });
+  instances.push(_this);
 
   return _this;
 } as QRCodeFactory;
@@ -599,12 +584,11 @@ qrcode.getDefaultEncoding = function(mode : EncoderMode) {
   return defaultEncodings[mode];
 };
 
-qrcode.registerRenderer = function(name : string, renderer : QRCodeRenderer) {
-  renderers[name] = renderer;
-};
-
-qrcode.getRenderer = function(name : string) {
-  return renderers[name];
+qrcode.use = function(extension : QRCodeExtension) {
+  extensions.push(extension);
+  instances.forEach(instance => {
+    extension(instance, qrcode);
+  });
 };
 
 //---------------------------------------------------------------------

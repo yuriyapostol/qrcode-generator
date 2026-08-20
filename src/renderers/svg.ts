@@ -1,13 +1,9 @@
 //---------------------------------------------------------------------
 //
-// Extended SVG support for JavaScript QR Code Generator (optional)
+// SVG Renderer Extension for JavaScript QR Code Generator
 //
 // Copyright (c) 2025 Yuriy Apostol
 // https://github.com/yuriyapostol
-//
-// Based on createSvgTag method from original QR Code Generator for JavaScript
-//   Copyright (c) 2009 Kazuhiko Arase
-//   http://www.d-project.com/
 //
 // Licensed under the MIT license:
 //   http://www.opensource.org/licenses/mit-license.php
@@ -16,17 +12,17 @@
 //
 //---------------------------------------------------------------------
 
-import { qrcode } from '../core/qrcode';
+import { registerRenderer } from './utils/registry';
 import { escapeXml } from './utils/xml';
 
-qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : any },
-    margin? : number, cellColor? : string, backgroundColor? : string) {
-
-  let opts : { [key : string] : any } = {};
-  if (typeof cellSize === 'object') {
-    opts = cellSize || {};
-    cellSize = void 0;
-  }
+registerRenderer('svg', {
+  args: [
+    { name: 'cellSize', type: 'number' },
+    { name: 'margin', type: 'number' },
+    { name: 'cellColor', type: 'string' },
+    { name: 'backgroundColor', type: 'string' }
+  ],
+  render: function(opts : { [key : string] : any }) {
 
   const id = opts.id || 'qrcode';
   const _class = opts.class || 'qrcode';
@@ -37,23 +33,20 @@ qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : 
   if (typeof cell !== 'object' || !cell) cell = {};
   const scalable = typeof opts.scalable !== 'undefined'
     ? opts.scalable
-    : !(typeof cellSize === 'number' || typeof opts.cellSize === 'number' || typeof cell.size === 'number');
+    : !(typeof opts.cellSize === 'number' || typeof cell.size === 'number');
   const crispEdges = typeof opts.crispEdges !== 'undefined' ? opts.crispEdges : 'auto';
-  if (typeof cellSize === 'number') cell.size = cellSize;
   if (typeof cell.size !== 'number') cell.size = (typeof opts.cellSize === 'number') ? opts.cellSize : 1;
-  if (typeof cellColor === 'string') cell.color = cellColor;
   if (typeof cell.color !== 'string') cell.color = (typeof opts.cellColor === 'string') ? opts.cellColor : 'black';
   if (typeof cell.style !== 'string') cell.style = '';
   if (typeof cell.class !== 'string') cell.class = `${_class}-cells`;
   if (typeof cell.id !== 'string') cell.id = `${id}-cells`;
 
-  if (typeof margin === 'undefined') margin = opts.margin;
+  let margin = opts.margin;
   if (typeof margin !== 'number') margin = (typeof margin === 'undefined') ? cell.size * 4 : 0;
 
   let background = opts.background || {};
   if (typeof background === 'string') background = { color: background };
   if (typeof background !== 'object' || !background) background = {};
-  if (typeof backgroundColor === 'string') background.color = backgroundColor;
   if (typeof background.color !== 'string') {
     background.color = (typeof opts.backgroundColor === 'string') ? opts.backgroundColor : 'white';
   }
@@ -106,4 +99,5 @@ qrcode.registerRenderer('svg', function(cellSize? : number | { [key : string] : 
 
   svg += `"${cell.color ? ` fill="${cell.color}"` : ''}/></svg>`;
   return svg;
+  }
 });

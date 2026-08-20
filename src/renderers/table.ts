@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------
 //
-// Extended HTML Table Render for JavaScript QR Code Generator (optional)
+// HTML Table Renderer Extension for JavaScript QR Code Generator
 //
 // Copyright (c) 2025 Yuriy Apostol
 // https://github.com/yuriyapostol
@@ -16,32 +16,29 @@
 //
 //---------------------------------------------------------------------
 
-import { qrcode } from '../core/qrcode';
+import { registerRenderer } from './utils/registry';
 
-qrcode.registerRenderer('table', function(cellSize? : number | { [key : string] : any },
-    margin? : number, cellColor? : string, backgroundColor? : string) {
-
-  let opts : { [key : string] : any } = {};
-  if (typeof cellSize === 'object') {
-    opts = cellSize || {};
-    cellSize = void 0;
-  }
+registerRenderer('table', {
+  args: [
+    { name: 'cellSize', type: 'number' },
+    { name: 'margin', type: 'number' },
+    { name: 'cellColor', type: 'string' },
+    { name: 'backgroundColor', type: 'string' }
+  ],
+  render: function(opts : { [key : string] : any }) {
 
   let cell = opts.cell || {};
   if (typeof cell === 'string') cell = { color: cell };
   if (typeof cell !== 'object' || !cell) cell = {};
-  if (typeof cellSize === 'number') cell.size = cellSize;
   if (typeof cell.size !== 'number') cell.size = (typeof opts.cellSize === 'number') ? opts.cellSize : 1;
-  if (typeof cellColor === 'string') cell.color = cellColor;
   if (typeof cell.color !== 'string') cell.color = (typeof opts.cellColor === 'string') ? opts.cellColor : 'black';
 
-  if (typeof margin === 'undefined') margin = opts.margin;
+  let margin = opts.margin;
   if (typeof margin !== 'number') margin = (typeof margin === 'undefined') ? cell.size * 4 : 0;
 
   let background = opts.background || {};
   if (typeof background === 'string') background = { color: background };
   if (typeof background !== 'object' || !background) background = {};
-  if (typeof backgroundColor === 'string') background.color = backgroundColor;
   if (typeof background.color !== 'string') {
     background.color = (typeof opts.backgroundColor === 'string') ? opts.backgroundColor : 'white';
   }
@@ -92,4 +89,5 @@ qrcode.registerRenderer('table', function(cellSize? : number | { [key : string] 
   table += '</tbody></table>';
 
   return table;
+  }
 });

@@ -1,14 +1,13 @@
 //---------------------------------------------------------------------
 //
-// ASCII Render for JavaScript QR Code Generator (optional)
+// ASCII Renderer Extension for JavaScript QR Code Generator
+//
+// Copyright (c) 2026 Yuriy Apostol
+// https://github.com/yuriyapostol
 //
 // Based on createASCII method from original QR Code Generator for JavaScript
 //   Copyright (c) 2009 Kazuhiko Arase
 //   http://www.d-project.com/
-//
-// Moved to extension, refactored
-//   Copyright (c) 2025 Yuriy Apostol
-//   https://github.com/yuriyapostol
 //
 // Licensed under the MIT license:
 //   http://www.opensource.org/licenses/mit-license.php
@@ -17,10 +16,17 @@
 //
 //---------------------------------------------------------------------
 
-import { qrcode } from '../core/qrcode';
+import { registerRenderer } from './utils/registry';
 
-qrcode.registerRenderer('ascii', function(cellSize? : number, margin? : number) {
+registerRenderer('ascii', {
+  args: [
+    { name: 'cellSize', type: 'number' },
+    { name: 'margin', type: 'number' }
+  ],
+  render: function(opts : { [key : string] : any }) {
 
+  let cellSize = opts.cellSize;
+  let margin = opts.margin;
   cellSize = cellSize || 1;
 
   if (cellSize < 2) {
@@ -119,4 +125,5 @@ qrcode.registerRenderer('ascii', function(cellSize? : number, margin? : number) 
   }
 
   return ascii.substring(0, ascii.length - 1);
+  }
 });

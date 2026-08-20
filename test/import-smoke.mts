@@ -1,4 +1,5 @@
 import qrcode, { qrcode as named } from 'qrcode-generator';
+import 'qrcode-generator/renderers/svg';
 
 const qr = qrcode(0, 'M');
 

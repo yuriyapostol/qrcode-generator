@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------
 //
-// Canvas Render for JavaScript QR Code Generator (optional)
+// Canvas Renderer Extension for JavaScript QR Code Generator
 //
 // Copyright (c) 2026 Yuriy Apostol
 // https://github.com/yuriyapostol
@@ -12,18 +12,23 @@
 //
 //---------------------------------------------------------------------
 
-import { qrcode } from '../core/qrcode';
+import { registerRenderer } from './utils/registry';
 
-qrcode.registerRenderer('canvas', function(context : CanvasRenderingContext2D,
-    cellSize? : number | { [key : string] : any }, margin? : number,
-    cellColor? : string, backgroundColor? : string) {
+registerRenderer('canvas', {
+  args: [
+    { name: 'context', type: 'object', positionalOnly: true },
+    { name: 'cellSize', type: 'number' },
+    { name: 'margin', type: 'number' },
+    { name: 'cellColor', type: 'string' },
+    { name: 'backgroundColor', type: 'string' }
+  ],
+  render: function(opts : { [key : string] : any }) {
 
-  let opts : { [key : string] : any } = {};
-  if (typeof cellSize === 'object') {
-    opts = cellSize || {};
-    cellSize = void 0;
-  }
-
+  const context = opts.context as CanvasRenderingContext2D;
+  let cellSize = opts.cellSize;
+  let margin = opts.margin;
+  let cellColor = opts.cellColor;
+  let backgroundColor = opts.backgroundColor;
   if (typeof cellSize !== 'number') cellSize = (typeof opts.cellSize === 'number') ? opts.cellSize : 2;
   if (typeof margin === 'undefined') margin = opts.margin;
   if (typeof margin !== 'number') margin = (typeof margin === 'undefined') ? cellSize * 4 : 0;
@@ -48,5 +53,6 @@ qrcode.registerRenderer('canvas', function(context : CanvasRenderingContext2D,
         context.fillRect(col * cellSizeValue + marginSize, y, cellSizeValue, cellSizeValue);
       }
     }
+  }
   }
 });

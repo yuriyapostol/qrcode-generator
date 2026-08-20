@@ -36,7 +36,23 @@ export type QRCodeEncoder = {
   modes?: EncoderMode[];
 };
 
-export type QRCodeRenderer = (this: QRCode, ...args: any[]) => any;
+export type QRCodeRendererArgument = {
+  name: string;
+  type?: 'number' | 'string' | 'boolean' | 'object' | 'any';
+  positionalOnly?: boolean;
+};
+
+export type QRCodeRendererOptions = {
+  renderer?: string;
+  [key: string]: any;
+};
+
+export type QRCodeRenderer = {
+  args?: QRCodeRendererArgument[];
+  render(this: QRCode, opts: QRCodeRendererOptions): any;
+};
+
+export type QRCodeExtension = (qr: QRCode, factory: QRCodeFactory) => void;
 
 export interface QRCode {
   addData(data: string, mode?: Mode, opts?: QRCodeAddDataOptions) : void;
@@ -57,6 +73,7 @@ export interface QRCodeFactory {
   getEncoder(encoding: string): QRCodeEncoder | undefined;
   setDefaultEncoding(mode: EncoderMode, encoding: string): void;
   getDefaultEncoding(mode: EncoderMode): string | undefined;
+  use(extension: QRCodeExtension): void;
   registerRenderer(name: string, renderer: QRCodeRenderer): void;
   getRenderer(name: string): QRCodeRenderer | undefined;
 }

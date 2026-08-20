@@ -1,20 +1,28 @@
-import g from "../core/qrcode.mjs";
-g.registerRenderer("table", function(d, p, a, b) {
-  let l = {};
-  typeof d == "object" && (l = d || {}, d = void 0);
-  let r = l.cell || {};
-  typeof r == "string" && (r = { color: r }), (typeof r != "object" || !r) && (r = {}), typeof d == "number" && (r.size = d), typeof r.size != "number" && (r.size = typeof l.cellSize == "number" ? l.cellSize : 1), typeof a == "string" && (r.color = a), typeof r.color != "string" && (r.color = typeof l.cellColor == "string" ? l.cellColor : "black"), typeof p > "u" && (p = l.margin), typeof p != "number" && (p = typeof p > "u" ? r.size * 4 : 0);
-  let t = l.background || {};
-  typeof t == "string" && (t = { color: t }), (typeof t != "object" || !t) && (t = {}), typeof b == "string" && (t.color = b), typeof t.color != "string" && (t.color = typeof l.backgroundColor == "string" ? l.backgroundColor : "white");
-  const i = Number(this.getModuleCount()), n = Number(r.size), e = Number(p), c = (s, f) => `<td style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${s}px; height: ${f}px; background-color: ${t.color};"/>`;
-  let o = `<table style="border: none; border-collapse: collapse; border-spacing: 0px; padding: 0px; margin: 0px; background-color: ${t.color};"><tbody>`;
-  e > 0 && (o += "<tr>", o += c(e, e), o += `<td colspan="${i}" style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${i * n}px; height: ${e}px; background-color: ${t.color};"/>`, o += c(e, e), o += "</tr>");
-  for (let s = 0; s < i; s += 1) {
-    o += "<tr>", e > 0 && (o += c(e, n));
-    for (let f = 0; f < i; f += 1)
-      o += `<td style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${n}px; height: ${n}px; background-color: ${this.isDark(s, f) ? r.color : "transparent"};"/>`;
-    e > 0 && (o += c(e, n)), o += "</tr>";
+import { registerRenderer as g } from "./utils/registry.mjs";
+g("table", {
+  args: [
+    { name: "cellSize", type: "number" },
+    { name: "margin", type: "number" },
+    { name: "cellColor", type: "string" },
+    { name: "backgroundColor", type: "string" }
+  ],
+  render: function(n) {
+    let o = n.cell || {};
+    typeof o == "string" && (o = { color: o }), (typeof o != "object" || !o) && (o = {}), typeof o.size != "number" && (o.size = typeof n.cellSize == "number" ? n.cellSize : 1), typeof o.color != "string" && (o.color = typeof n.cellColor == "string" ? n.cellColor : "black");
+    let d = n.margin;
+    typeof d != "number" && (d = typeof d > "u" ? o.size * 4 : 0);
+    let l = n.background || {};
+    typeof l == "string" && (l = { color: l }), (typeof l != "object" || !l) && (l = {}), typeof l.color != "string" && (l.color = typeof n.backgroundColor == "string" ? n.backgroundColor : "white");
+    const t = Number(this.getModuleCount()), i = Number(o.size), r = Number(d), c = (a, p) => `<td style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${a}px; height: ${p}px; background-color: ${l.color};"/>`;
+    let e = `<table style="border: none; border-collapse: collapse; border-spacing: 0px; padding: 0px; margin: 0px; background-color: ${l.color};"><tbody>`;
+    r > 0 && (e += "<tr>", e += c(r, r), e += `<td colspan="${t}" style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${t * i}px; height: ${r}px; background-color: ${l.color};"/>`, e += c(r, r), e += "</tr>");
+    for (let a = 0; a < t; a += 1) {
+      e += "<tr>", r > 0 && (e += c(r, i));
+      for (let p = 0; p < t; p += 1)
+        e += `<td style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${i}px; height: ${i}px; background-color: ${this.isDark(a, p) ? o.color : "transparent"};"/>`;
+      r > 0 && (e += c(r, i)), e += "</tr>";
+    }
+    return r > 0 && (e += "<tr>", e += c(r, r), e += `<td colspan="${t}" style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${t * i}px; height: ${r}px; background-color: ${l.color};"/>`, e += c(r, r), e += "</tr>"), e += "</tbody></table>", e;
   }
-  return e > 0 && (o += "<tr>", o += c(e, e), o += `<td colspan="${i}" style="border: none; border-collapse: collapse; padding: 0px; margin: 0px; width: ${i * n}px; height: ${e}px; background-color: ${t.color};"/>`, o += c(e, e), o += "</tr>"), o += "</tbody></table>", o;
 });
 //# sourceMappingURL=table.mjs.map

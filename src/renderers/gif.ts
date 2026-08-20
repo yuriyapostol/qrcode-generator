@@ -2,9 +2,8 @@
 //
 // GIF Renderer Extension for JavaScript QR Code Generator
 //
-// Created the GIF/DataURL renderer extension and added color support
-//   Copyright (c) 2026 Yuriy Apostol
-//   https://github.com/yuriyapostol
+// Copyright (c) 2025 Yuriy Apostol
+// https://github.com/yuriyapostol
 //
 // Based on createImgTag/createDataURL helpers from original QR Code Generator for JavaScript
 //   Copyright (c) 2009 Kazuhiko Arase
@@ -17,7 +16,7 @@
 //
 //---------------------------------------------------------------------
 
-import { qrcode } from '../core/qrcode';
+import { registerRenderer } from './utils/registry';
 import { parseRgbColor, type RGB } from './utils/color';
 import { escapeXml } from './utils/xml';
 
@@ -285,16 +284,20 @@ const createDataURL = function(width : number, height : number,
   return 'data:image/gif;base64,' + base64;
 };
 
-qrcode.registerRenderer('gif', function(cellSize? : number | { [key : string] : any },
-    margin? : number, cellColor? : string, backgroundColor? : string) {
-
-  let opts : { [key : string] : any } = {};
-  if (typeof cellSize === 'object') {
-    opts = cellSize || {};
-    cellSize = void 0;
-  }
+registerRenderer('gif', {
+  args: [
+    { name: 'cellSize', type: 'number' },
+    { name: 'margin', type: 'number' },
+    { name: 'cellColor', type: 'string' },
+    { name: 'backgroundColor', type: 'string' }
+  ],
+  render: function(opts : { [key : string] : any }) {
 
   let tag = (opts.tag === false) ? false : (opts.tag === true || typeof opts.tag === 'undefined' ? 'img' : opts.tag);
+  let cellSize = opts.cellSize;
+  let margin = opts.margin;
+  let cellColor = opts.cellColor;
+  let backgroundColor = opts.backgroundColor;
   if (typeof cellSize !== 'number') cellSize = (typeof opts.cellSize === 'number') ? opts.cellSize : 2;
   if (typeof margin === 'undefined') margin = opts.margin;
   if (typeof margin !== 'number') margin = (typeof margin === 'undefined') ? cellSize * 4 : 0;
@@ -351,4 +354,5 @@ qrcode.registerRenderer('gif', function(cellSize? : number | { [key : string] : 
   html += '/>';
 
   return html;
+  }
 });
