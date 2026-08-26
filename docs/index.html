@@ -240,8 +240,8 @@
     <section class="hero">
       <h1 itemprop="name">QR Code Generator</h1>
       <p itemprop="description">
-        Minimal playground for the modular API. Choose a coder preset and a renderer preset,
-        then edit the generated code directly. The preview updates from the code on the left.
+        Modular QR code generator for JavaScript with optional renderers for SVG, PNG, GIF, HTML table,
+        ASCII, and canvas output. Documentation and API examples are available on GitHub.
       </p>
       <a class="repo-link" href="https://github.com/yuriyapostol/qrcode-generator">github.com/yuriyapostol/qrcode-generator</a>
     </section>
@@ -251,7 +251,7 @@
         <div class="controls-panel">
           <div class="panel-header">
             <h2>Playground Code</h2>
-            <p>Preset selectors generate starter code. After that, the preview is driven by the textarea content.</p>
+            <p>Preset selectors generate starter markup. After that, the preview is driven by the textarea content.</p>
           </div>
 
           <div class="selector-grid">
@@ -286,7 +286,7 @@
           <div class="preview-frame" id="preview" role="tabpanel" aria-labelledby="tab-preview"></div>
           <pre class="result-code" id="result-code" role="tabpanel" aria-labelledby="tab-code" hidden></pre>
           <div class="hint">
-            Set the rendered value to <code>result</code>. Strings are shown as HTML or text automatically.
+            Edit HTML snippets directly. Inline <code>&lt;script&gt;</code> blocks run after the markup is inserted into the preview.
           </div>
         </div>
       </div>
@@ -307,6 +307,7 @@
     import './dist/renderers/gif.mjs';
     import './dist/renderers/png.mjs';
     import './dist/renderers/canvas.mjs';
+    window.qrcode = qrcode;
 
     const elements = {
       coderPreset: document.getElementById('coder-preset'),
@@ -321,53 +322,56 @@
     const coderPresets = {
       'byte-basic': {
         label: 'Byte / Basic',
-        code: [
+        script: [
           "const qr = qrcode(0, 'M');",
           "qr.addData('here comes qr!', 'Byte');",
           'qr.make();'
-        ].join('\n')
+        ]
       },
       'utf8-multiline': {
         label: 'UTF-8 / Multiline',
-        code: [
+        script: [
           "const qr = qrcode(0, 'Q');",
           "qr.addData('Hello from Kyiv\\nПривіт з Києва', 'Byte', { encoding: 'UTF-8', eci: true });",
           'qr.make();'
-        ].join('\n')
+        ]
       },
-      'numeric': {
+      numeric: {
         label: 'Numeric',
-        code: [
+        script: [
           "const qr = qrcode(0, 'L');",
           "qr.addData('20260807', 'Numeric');",
           'qr.make();'
-        ].join('\n')
+        ]
       },
-      'kanji': {
+      kanji: {
         label: 'Kanji / SJIS',
-        code: [
+        script: [
           "const qr = qrcode(0, 'M');",
           "qr.addData('茗荷', 'Kanji', { encoding: 'SJIS' });",
           'qr.make();'
-        ].join('\n')
+        ]
       },
       'mixed-segments': {
         label: 'Mixed Segments',
-        code: [
+        script: [
           "const qr = qrcode(0, 'H');",
           "qr.addData('INV', 'Alphanumeric');",
           "qr.addData('-2026-', 'Byte');",
           "qr.addData('0042', 'Numeric');",
           'qr.make();'
-        ].join('\n')
+        ]
       }
     };
 
     const rendererPresets = {
       'svg-scalable': {
         label: 'SVG Scalable',
-        code: [
-          "const result = qr.render('svg', {",
+        html: [
+          '<div id="target"></div>'
+        ],
+        script: [
+          "document.getElementById('target').innerHTML = qr.render('svg', {",
           "  scalable: true,",
           "  margin: 14,",
           "  style: 'width: 50%; height: auto; border-radius: 5%',",
@@ -382,24 +386,30 @@
           "  alt: 'Scalable SVG QR',",
           "  title: 'Scalable SVG QR'",
           '});'
-        ].join('\n')
+        ]
       },
       'svg-crisp': {
         label: 'SVG Crisp',
-        code: [
-          "const result = qr.render('svg', {",
+        html: [
+          '<div id="target"></div>'
+        ],
+        script: [
+          "document.getElementById('target').innerHTML = qr.render('svg', {",
           '  margin: 8,',
           '  crispEdges: true,',
           "  cell: { size: 5, color: '#182126' },",
           "  background: { color: 'transparent' },",
           "  title: 'Crisp SVG QR'",
           '});'
-        ].join('\n')
+        ]
       },
       gif: {
         label: 'GIF Image',
-        code: [
-          "const result = qr.render('gif', {",
+        html: [
+          '<div id="target"></div>'
+        ],
+        script: [
+          "document.getElementById('target').innerHTML = qr.render('gif', {",
           '  cellSize: 4,',
           '  margin: 12,',
           "  cellColor: '#182126',",
@@ -407,12 +417,15 @@
           "  alt: 'GIF QR',",
           "  title: 'GIF QR'",
           '});'
-        ].join('\n')
+        ]
       },
       png: {
         label: 'PNG Image',
-        code: [
-          "const result = qr.render('png', {",
+        html: [
+          '<div id="target"></div>'
+        ],
+        script: [
+          "document.getElementById('target').innerHTML = qr.render('png', {",
           '  cellSize: 4,',
           '  margin: 12,',
           "  cellColor: '#182126',",
@@ -420,15 +433,14 @@
           "  alt: 'PNG QR',",
           "  title: 'PNG QR'",
           '});'
-        ].join('\n')
+        ]
       },
       'static-dom': {
         label: 'Static DOM Target',
         standalone: true,
-        code: [
-          "const template = document.createElement('template');",
-          'template.innerHTML = `',
+        html: [
           '<img',
+          '  id="target"',
           '  data-renderer="png"',
           '  data-type-number="0"',
           '  data-error-correction-level="M"',
@@ -439,43 +451,46 @@
           '  data-background-color="#f4efe7"',
           '  alt="Static DOM target QR"',
           '  title="Static DOM target QR"',
-          '>',
-          '`;',
-          '',
-          "const result = template.content.firstElementChild;",
-          '',
-          'qrcode.render({ target: result });'
-        ].join('\n')
+          '>'
+        ],
+        script: [
+          "qrcode.render({ target: document.getElementById('target') });"
+        ]
       },
       table: {
         label: 'HTML Table',
-        code: [
-          "const result = qr.render('table', {",
+        html: [
+          '<div id="target"></div>'
+        ],
+        script: [
+          "document.getElementById('target').innerHTML = qr.render('table', {",
           "  cell: { size: 6, color: '#c65d3a' },",
           '  margin: 12,',
           "  background: { color: '#d8d2c7' }",
           '});'
-        ].join('\n')
+        ]
       },
       ascii: {
         label: 'ASCII',
-        code: [
-          "const result = qr.render('ascii', 1, 1);"
-        ].join('\n')
+        html: [
+          '<pre id="target" class="render-pre"></pre>'
+        ],
+        script: [
+          "document.getElementById('target').textContent = qr.render('ascii', 1, 1);"
+        ]
       },
       canvas: {
         label: 'Canvas',
-        code: [
+        html: [
+          '<canvas id="target"></canvas>'
+        ],
+        script: [
           'const cellSize = 6;',
           'const margin = 18;',
           'const size = qr.getModuleCount() * cellSize + margin * 2;',
-          "const result = document.createElement('canvas');",
+          "const result = document.getElementById('target');",
           'result.width = size;',
           'result.height = size;',
-          "result.style.width = `${result.width}px`;",
-          "result.style.height = `${result.height}px`;",
-          "result.style.borderRadius = '18px';",
-          "result.style.boxShadow = '0 14px 32px rgba(24, 33, 38, 0.12)';",
           "const context = result.getContext('2d');",
           "qr.render('canvas', context, {",
           '  cellSize,',
@@ -483,7 +498,7 @@
           "  cellColor: '#182126',",
           "  backgroundColor: '#f4efe7'",
           '});'
-        ].join('\n')
+        ]
       }
     };
 
@@ -508,16 +523,12 @@
     const buildCodeFromPresets = () => {
       const coder = coderPresets[elements.coderPreset.value];
       const renderer = rendererPresets[elements.rendererPreset.value];
-      if (renderer.standalone) {
-        return renderer.code;
-      }
-      return `${coder.code}\n\n${renderer.code}`;
+      const html = renderer.html.join('\n');
+      const scriptLines = renderer.standalone
+        ? renderer.script
+        : [...coder.script, '', ...renderer.script];
+      return `${html}\n<script>\n${scriptLines.join('\n')}\n<\/script>`;
     };
-
-    const escapeHtml = value => value
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;');
 
     const setStatus = (message, isError = false) => {
       elements.status.className = isError ? 'status error' : 'status';
@@ -540,70 +551,35 @@
       elements.resultCode.textContent = '';
     };
 
-    const looksLikeHtml = value => /^\s*</.test(value);
-
-    const stringifyResult = value => {
-      if (value == null) {
-        return '';
+    const executePreviewScripts = root => {
+      const scripts = [...root.querySelectorAll('script')];
+      for (const originalScript of scripts) {
+        const script = document.createElement('script');
+        for (const attribute of originalScript.attributes) {
+          script.setAttribute(attribute.name, attribute.value);
+        }
+        script.textContent = `(() => {\n${originalScript.textContent}\n})();`;
+        originalScript.replaceWith(script);
       }
-      if (typeof value === 'string') {
-        return value;
-      }
-      if (value instanceof HTMLElement) {
-        return value.outerHTML;
-      }
-      if (typeof value === 'object' && value.nodeType === 1) {
-        return value.outerHTML || String(value);
-      }
-      return String(value);
     };
 
-    const renderResult = value => {
-      if (value == null) {
-        return false;
+    const getRenderedCode = root => {
+      const result = root.querySelector('#target');
+      if (!result) return root.innerHTML;
+      if (result.tagName.toLowerCase() === 'pre') {
+        return result.textContent || '';
       }
-      elements.resultCode.textContent = stringifyResult(value);
-      if (value instanceof HTMLElement) {
-        elements.preview.appendChild(value);
-        return true;
-      }
-      if (typeof value === 'string') {
-        if (looksLikeHtml(value)) {
-          elements.preview.innerHTML = value;
-          return true;
-        }
-        elements.preview.innerHTML = `<pre class="render-pre">${escapeHtml(value)}</pre>`;
-        return true;
-      }
-      if (typeof value === 'object' && value.nodeType === 1) {
-        elements.preview.appendChild(value);
-        return true;
-      }
-      elements.preview.innerHTML = `<pre class="render-pre">${escapeHtml(String(value))}</pre>`;
-      return true;
+      return result.outerHTML;
     };
 
     const evaluatePlayground = () => {
       clearPreview();
 
       try {
-        const run = new Function(
-          'qrcode',
-          'document',
-          `${elements.code.value}
-return typeof result !== 'undefined'
-  ? result
-  : (typeof qr !== 'undefined' ? qr : undefined);`
-        );
-
-        const value = run(qrcode, document);
-
-        if (!renderResult(value)) {
-          setStatus('The code ran, but no renderable value was assigned to result.', true);
-          return;
-        }
-
-        setStatus(`Rendered from code | coder preset: ${coderPresets[elements.coderPreset.value].label} | renderer preset: ${rendererPresets[elements.rendererPreset.value].label}`);
+        elements.preview.innerHTML = elements.code.value;
+        executePreviewScripts(elements.preview);
+        elements.resultCode.textContent = getRenderedCode(elements.preview);
+        setStatus(`Rendered from HTML | coder preset: ${coderPresets[elements.coderPreset.value].label} | renderer preset: ${rendererPresets[elements.rendererPreset.value].label}`);
       } catch (error) {
         clearPreview();
         setStatus(String(error), true);
