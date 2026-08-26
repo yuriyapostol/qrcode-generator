@@ -185,12 +185,12 @@ qrcode.render({ target: document.querySelector('[data-renderer]') });
 
 DOM targets can provide renderer options through `data-*` attributes. JavaScript
 options override attribute values. Static `qrcode.render({ target })` also reads
-QR Code creation and data attributes.
+QR Code creation and data attributes. For `<img>` targets, `output="element"`
+is implied automatically, so `data-output="element"` is optional.
 
 ```html
 <img
   data-renderer="png"
-  data-output="element"
   data-type-number="0"
   data-error-correction-level="L"
   data-value="Hello"
@@ -205,7 +205,6 @@ For multiple data segments, use `data-segments` with JSON argument tuples:
 ```html
 <img
   data-renderer="png"
-  data-output="element"
   data-segments='[["HELLO","Alphanumeric"],["1234","Numeric"]]'
 >
 ```
