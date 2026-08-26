@@ -316,6 +316,104 @@ export const misc = function(qrcode) {
       expect(binary.charCodeAt(3) ).to.equal(0x47);
     });
 
+    it('png renderer accepts output from renderer shorthand', function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('abc');
+
+      const dataURL = qr.render('png:dataUrl');
+
+      expect(dataURL.startsWith('data:image/png;base64,') ).to.be.true;
+      expect(qr.getModuleCount() ).to.equal(21);
+    });
+
+    it('gif renderer accepts object renderer spec', function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('abc');
+      qr.make();
+
+      const dataURL = qr.render({
+        renderer : {
+          type : 'gif',
+          output : 'dataUrl'
+        }
+      });
+
+      expect(dataURL.startsWith('data:image/gif;base64,') ).to.be.true;
+    });
+
+    it('clear resets QR data for reuse', function(){
+      const qr = qrcode(0, 'L');
+      qr.addData('abc');
+      qr.render('png:dataUrl');
+      expect(qr.getModuleCount() ).to.equal(21);
+
+      qr.clear();
+      expect(qr.getModuleCount() ).to.equal(0);
+
+      qr.addData('reused object with longer data');
+      const dataURL = qr.render('png:dataUrl');
+
+      expect(dataURL.startsWith('data:image/png;base64,') ).to.be.true;
+      expect(qr.getModuleCount() ).to.be.greaterThan(0);
+    });
+
+    it('addData accepts an array of argument tuples', function(){
+      const expected = qrcode(0, 'L');
+      expected.addData('A\u0020$%*+-./:Z', 'Alphanumeric');
+      expected.addData('1234', 'Numeric');
+      expected.addData('abc');
+      const expectedDataURL = expected.render('png:dataUrl');
+
+      const actual = qrcode(0, 'L');
+      actual.addData([
+        ['A\u0020$%*+-./:Z', 'Alphanumeric'],
+        ['1234', 'Numeric'],
+        ['abc']
+      ]);
+
+      expect(actual.render('png:dataUrl') ).to.equal(expectedDataURL);
+    });
+
+    it('png renderer writes to target image inferred from DOM attributes', function(){
+      const qr = qrcode(1, 'L');
+      qr.addData('abc');
+      qr.make();
+
+      const image = document.createElement('img');
+      image.setAttribute('data-cell-size', '3');
+      image.setAttribute('data-margin', '1');
+      image.setAttribute('data-cell-color', '#112233');
+      image.setAttribute('alt', 'QR image');
+
+      const result = qr.render({ target : image });
+
+      expect(result).to.equal(image);
+      expect(image.getAttribute('src').startsWith('data:image/png;base64,') ).to.be.true;
+      expect(image.getAttribute('width') ).to.equal('65');
+      expect(image.getAttribute('height') ).to.equal('65');
+      expect(image.getAttribute('alt') ).to.equal('QR image');
+    });
+
+    it('static render creates QR code from target DOM attributes', function(){
+      const image = document.createElement('img');
+      image.setAttribute('data-renderer', 'png');
+      image.setAttribute('data-output', 'element');
+      image.setAttribute('data-type-number', '1');
+      image.setAttribute('data-error-correction-level', 'L');
+      image.setAttribute('data-value', 'abc');
+      image.setAttribute('data-cell-size', '3');
+      image.setAttribute('data-margin', '1');
+      image.setAttribute('alt', 'Static QR image');
+
+      const result = qrcode.render({ target : image });
+
+      expect(result).to.equal(image);
+      expect(image.getAttribute('src').startsWith('data:image/png;base64,') ).to.be.true;
+      expect(image.getAttribute('width') ).to.equal('65');
+      expect(image.getAttribute('height') ).to.equal('65');
+      expect(image.getAttribute('alt') ).to.equal('Static QR image');
+    });
+
     it('png renderer returns image tag by positional args', function(){
       const qr = qrcode(1, 'L');
       qr.addData('abc');

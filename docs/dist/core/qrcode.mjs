@@ -1,248 +1,258 @@
-const W = {}, q = {}, tt = [], nt = [], y = function(r, _) {
-  let w = r;
-  const o = K[_];
-  let a = null, g = 0, t = null;
-  const s = [], u = function(e, l) {
-    g = w * 4 + 17, a = (function(n) {
-      const c = new Array(n);
-      for (let i = 0; i < n; i += 1) {
-        c[i] = new Array(n);
+const q = {}, tt = {}, nt = [], et = [], k = function(i, d) {
+  const _ = i;
+  let o = i;
+  const p = K[d];
+  let l = null, t = 0, u = null;
+  const c = [], h = function(e, a) {
+    t = o * 4 + 17, l = (function(n) {
+      const s = new Array(n);
+      for (let r = 0; r < n; r += 1) {
+        s[r] = new Array(n);
         for (let A = 0; A < n; A += 1)
-          c[i][A] = null;
+          s[r][A] = null;
       }
-      return c;
-    })(g), h(0, 0), h(g - 7, 0), h(0, g - 7), f(), d(), j(e, l), w >= 7 && T(e), t == null && (t = p(w, o, s)), F(t, l);
-  }, h = function(e, l) {
+      return s;
+    })(t), x(0, 0), x(t - 7, 0), x(0, t - 7), T(), f(), J(e, a), o >= 7 && j(e), u == null && (u = I(o, p, c)), E(u, a);
+  }, x = function(e, a) {
     for (let n = -1; n <= 7; n += 1)
-      if (!(e + n <= -1 || g <= e + n))
-        for (let c = -1; c <= 7; c += 1)
-          l + c <= -1 || g <= l + c || (0 <= n && n <= 6 && (c == 0 || c == 6) || 0 <= c && c <= 6 && (n == 0 || n == 6) || 2 <= n && n <= 4 && 2 <= c && c <= 4 ? a[e + n][l + c] = !0 : a[e + n][l + c] = !1);
-  }, U = function() {
-    let e = 0, l = 0;
+      if (!(e + n <= -1 || t <= e + n))
+        for (let s = -1; s <= 7; s += 1)
+          a + s <= -1 || t <= a + s || (0 <= n && n <= 6 && (s == 0 || s == 6) || 0 <= s && s <= 6 && (n == 0 || n == 6) || 2 <= n && n <= 4 && 2 <= s && s <= 4 ? l[e + n][a + s] = !0 : l[e + n][a + s] = !1);
+  }, g = function() {
+    let e = 0, a = 0;
     for (let n = 0; n < 8; n += 1) {
-      u(!0, n);
-      const c = x.getLostPoint(J);
-      (n == 0 || e > c) && (e = c, l = n);
+      h(!0, n);
+      const s = H.getLostPoint(Q);
+      (n == 0 || e > s) && (e = s, a = n);
     }
-    return l;
-  }, d = function() {
-    for (let e = 8; e < g - 8; e += 1)
-      a[e][6] == null && (a[e][6] = e % 2 == 0);
-    for (let e = 8; e < g - 8; e += 1)
-      a[6][e] == null && (a[6][e] = e % 2 == 0);
+    return a;
   }, f = function() {
-    const e = x.getPatternPosition(w);
-    for (let l = 0; l < e.length; l += 1)
+    for (let e = 8; e < t - 8; e += 1)
+      l[e][6] == null && (l[e][6] = e % 2 == 0);
+    for (let e = 8; e < t - 8; e += 1)
+      l[6][e] == null && (l[6][e] = e % 2 == 0);
+  }, T = function() {
+    const e = H.getPatternPosition(o);
+    for (let a = 0; a < e.length; a += 1)
       for (let n = 0; n < e.length; n += 1) {
-        const c = e[l], i = e[n];
-        if (a[c][i] == null)
+        const s = e[a], r = e[n];
+        if (l[s][r] == null)
           for (let A = -2; A <= 2; A += 1)
             for (let L = -2; L <= 2; L += 1)
-              A == -2 || A == 2 || L == -2 || L == 2 || A == 0 && L == 0 ? a[c + A][i + L] = !0 : a[c + A][i + L] = !1;
+              A == -2 || A == 2 || L == -2 || L == 2 || A == 0 && L == 0 ? l[s + A][r + L] = !0 : l[s + A][r + L] = !1;
       }
-  }, T = function(e) {
-    const l = x.getBCHTypeNumber(w);
+  }, j = function(e) {
+    const a = H.getBCHTypeNumber(o);
     for (let n = 0; n < 18; n += 1) {
-      const c = !e && (l >> n & 1) == 1;
-      a[Math.floor(n / 3)][n % 3 + g - 8 - 3] = c;
+      const s = !e && (a >> n & 1) == 1;
+      l[Math.floor(n / 3)][n % 3 + t - 8 - 3] = s;
     }
     for (let n = 0; n < 18; n += 1) {
-      const c = !e && (l >> n & 1) == 1;
-      a[n % 3 + g - 8 - 3][Math.floor(n / 3)] = c;
+      const s = !e && (a >> n & 1) == 1;
+      l[n % 3 + t - 8 - 3][Math.floor(n / 3)] = s;
     }
-  }, j = function(e, l) {
-    const n = o << 3 | l, c = x.getBCHTypeInfo(n);
-    for (let i = 0; i < 15; i += 1) {
-      const A = !e && (c >> i & 1) == 1;
-      i < 6 ? a[i][8] = A : i < 8 ? a[i + 1][8] = A : a[g - 15 + i][8] = A;
+  }, J = function(e, a) {
+    const n = p << 3 | a, s = H.getBCHTypeInfo(n);
+    for (let r = 0; r < 15; r += 1) {
+      const A = !e && (s >> r & 1) == 1;
+      r < 6 ? l[r][8] = A : r < 8 ? l[r + 1][8] = A : l[t - 15 + r][8] = A;
     }
-    for (let i = 0; i < 15; i += 1) {
-      const A = !e && (c >> i & 1) == 1;
-      i < 8 ? a[8][g - i - 1] = A : i < 9 ? a[8][15 - i - 1 + 1] = A : a[8][15 - i - 1] = A;
+    for (let r = 0; r < 15; r += 1) {
+      const A = !e && (s >> r & 1) == 1;
+      r < 8 ? l[8][t - r - 1] = A : r < 9 ? l[8][15 - r - 1 + 1] = A : l[8][15 - r - 1] = A;
     }
-    a[g - 8][8] = !e;
-  }, F = function(e, l) {
-    let n = -1, c = g - 1, i = 7, A = 0;
-    const L = x.getMaskFunction(l);
-    for (let k = g - 1; k > 0; k -= 2)
-      for (k == 6 && (k -= 1); ; ) {
-        for (let m = 0; m < 2; m += 1)
-          if (a[c][k - m] == null) {
-            let N = !1;
-            A < e.length && (N = (e[A] >>> i & 1) == 1), L(c, k - m) && (N = !N), a[c][k - m] = N, i -= 1, i == -1 && (A += 1, i = 7);
+    l[t - 8][8] = !e;
+  }, E = function(e, a) {
+    let n = -1, s = t - 1, r = 7, A = 0;
+    const L = H.getMaskFunction(a);
+    for (let y = t - 1; y > 0; y -= 2)
+      for (y == 6 && (y -= 1); ; ) {
+        for (let R = 0; R < 2; R += 1)
+          if (l[s][y - R] == null) {
+            let m = !1;
+            A < e.length && (m = (e[A] >>> r & 1) == 1), L(s, y - R) && (m = !m), l[s][y - R] = m, r -= 1, r == -1 && (A += 1, r = 7);
           }
-        if (c += n, c < 0 || g <= c) {
-          c -= n, n = -n;
+        if (s += n, s < 0 || t <= s) {
+          s -= n, n = -n;
           break;
         }
       }
-  }, E = function(e, l) {
-    let n = 0, c = 0, i = 0;
-    const A = new Array(l.length), L = new Array(l.length);
-    for (let D = 0; D < l.length; D += 1) {
-      const C = l[D].dataCount, G = l[D].totalCount - C;
-      c = Math.max(c, C), i = Math.max(i, G), A[D] = new Array(C);
-      for (let R = 0; R < A[D].length; R += 1)
-        A[D][R] = 255 & e.getBuffer()[R + n];
+  }, w = function(e, a) {
+    let n = 0, s = 0, r = 0;
+    const A = new Array(a.length), L = new Array(a.length);
+    for (let B = 0; B < a.length; B += 1) {
+      const C = a[B].dataCount, $ = a[B].totalCount - C;
+      s = Math.max(s, C), r = Math.max(r, $), A[B] = new Array(C);
+      for (let O = 0; O < A[B].length; O += 1)
+        A[B][O] = 255 & e.getBuffer()[O + n];
       n += C;
-      const Y = x.getErrorCorrectPolynomial(G), $ = v(A[D], Y.getLength() - 1).mod(Y);
-      L[D] = new Array(Y.getLength() - 1);
-      for (let R = 0; R < L[D].length; R += 1) {
-        const X = R + $.getLength() - L[D].length;
-        L[D][R] = X >= 0 ? $.getAt(X) : 0;
+      const Y = H.getErrorCorrectPolynomial($), X = v(A[B], Y.getLength() - 1).mod(Y);
+      L[B] = new Array(Y.getLength() - 1);
+      for (let O = 0; O < L[B].length; O += 1) {
+        const Z = O + X.getLength() - L[B].length;
+        L[B][O] = Z >= 0 ? X.getAt(Z) : 0;
       }
     }
-    let k = 0;
-    for (let D = 0; D < l.length; D += 1)
-      k += l[D].totalCount;
-    const m = new Array(k);
-    let N = 0;
-    for (let D = 0; D < c; D += 1)
-      for (let C = 0; C < l.length; C += 1)
-        D < A[C].length && (m[N] = A[C][D], N += 1);
-    for (let D = 0; D < i; D += 1)
-      for (let C = 0; C < l.length; C += 1)
-        D < L[C].length && (m[N] = L[C][D], N += 1);
-    return m;
-  }, p = function(e, l, n) {
-    const c = Z.getRSBlocks(e, l), i = z();
+    let y = 0;
+    for (let B = 0; B < a.length; B += 1)
+      y += a[B].totalCount;
+    const R = new Array(y);
+    let m = 0;
+    for (let B = 0; B < s; B += 1)
+      for (let C = 0; C < a.length; C += 1)
+        B < A[C].length && (R[m] = A[C][B], m += 1);
+    for (let B = 0; B < r; B += 1)
+      for (let C = 0; C < a.length; C += 1)
+        B < L[C].length && (R[m] = L[C][B], m += 1);
+    return R;
+  }, I = function(e, a, n) {
+    const s = z.getRSBlocks(e, a), r = V();
     for (let L = 0; L < n.length; L += 1) {
-      const k = n[L];
-      i.put(k.getMode(), 4), k.getMode() !== P.MODE_ECI && i.put(k.getLength(), x.getLengthInBits(k.getMode(), e)), k.write(i);
+      const y = n[L];
+      r.put(y.getMode(), 4), y.getMode() !== P.MODE_ECI && r.put(y.getLength(), H.getLengthInBits(y.getMode(), e)), y.write(r);
     }
     let A = 0;
-    for (let L = 0; L < c.length; L += 1)
-      A += c[L].dataCount;
-    if (i.getLengthInBits() > A * 8)
-      throw "code length overflow. (" + i.getLengthInBits() + ">" + A * 8 + ")";
-    for (i.getLengthInBits() + 4 <= A * 8 && i.put(0, 4); i.getLengthInBits() % 8 != 0; )
-      i.putBit(!1);
-    for (; !(i.getLengthInBits() >= A * 8 || (i.put(236, 8), i.getLengthInBits() >= A * 8)); )
-      i.put(17, 8);
-    return E(i, c);
-  }, I = function(e, l) {
-    if (typeof l?.encoding == "string")
-      return l.encoding;
-    const n = y.getDefaultEncoding(e);
+    for (let L = 0; L < s.length; L += 1)
+      A += s[L].dataCount;
+    if (r.getLengthInBits() > A * 8)
+      throw "code length overflow. (" + r.getLengthInBits() + ">" + A * 8 + ")";
+    for (r.getLengthInBits() + 4 <= A * 8 && r.put(0, 4); r.getLengthInBits() % 8 != 0; )
+      r.putBit(!1);
+    for (; !(r.getLengthInBits() >= A * 8 || (r.put(236, 8), r.getLengthInBits() >= A * 8)); )
+      r.put(17, 8);
+    return w(r, s);
+  }, F = function(e, a) {
+    if (typeof a?.encoding == "string")
+      return a.encoding;
+    const n = k.getDefaultEncoding(e);
     if (typeof n == "string")
       return n;
-    if (e === "Byte" && y.getEncoder("UTF-8"))
+    if (e === "Byte" && k.getEncoder("UTF-8"))
       return "UTF-8";
-    if (e === "Kanji" && y.getEncoder("SJIS"))
+    if (e === "Kanji" && k.getEncoder("SJIS"))
       return "SJIS";
-  }, Q = function(e, l) {
-    const n = I(e, l);
+  }, b = function(e, a) {
+    const n = F(e, a);
     if (!n)
       return;
-    const c = y.getEncoder(n);
-    if (!c)
+    const s = k.getEncoder(n);
+    if (!s)
       throw "unknown encoding: " + n;
-    if (c.modes && c.modes.indexOf(e) < 0)
+    if (s.modes && s.modes.indexOf(e) < 0)
       throw "encoding not supported for mode: " + e + "/" + n;
-    return c;
-  }, b = function(e, l) {
+    return s;
+  }, N = function(e, a) {
     let n;
     if (typeof e?.eci == "number")
       n = e.eci;
-    else if (e?.eci === !0 && (n = l.eci, typeof n != "number"))
+    else if (e?.eci === !0 && (n = a.eci, typeof n != "number"))
       throw "eci not supported for encoding";
-    typeof n == "number" && s.push(it(n));
-  }, J = {
-    addData: function(e, l, n) {
-      l = l || "Byte";
-      let c = null;
-      switch (l) {
-        case "Numeric":
-          if (typeof n < "u")
-            throw "options not supported for mode:" + l;
-          c = et(e);
-          break;
-        case "Alphanumeric":
-          if (typeof n < "u")
-            throw "options not supported for mode:" + l;
-          c = ot(e);
-          break;
-        case "Byte": {
-          const i = Q("Byte", n);
-          if (i)
-            b(n, i), c = V(e, i.encode);
-          else {
-            if (typeof n?.eci < "u")
-              throw "eci not supported without encoding";
-            c = V(e);
-          }
-          break;
+    typeof n == "number" && c.push(ct(n));
+  }, G = function(e, a, n) {
+    if (Array.isArray(e)) {
+      e.forEach((r) => {
+        G(r[0], r[1], r[2]);
+      });
+      return;
+    }
+    a = a || "Byte";
+    let s = null;
+    switch (a) {
+      case "Numeric":
+        if (typeof n < "u")
+          throw "options not supported for mode:" + a;
+        s = ot(e);
+        break;
+      case "Alphanumeric":
+        if (typeof n < "u")
+          throw "options not supported for mode:" + a;
+        s = rt(e);
+        break;
+      case "Byte": {
+        const r = b("Byte", n);
+        if (r)
+          N(n, r), s = W(e, r.encode);
+        else {
+          if (typeof n?.eci < "u")
+            throw "eci not supported without encoding";
+          s = W(e);
         }
-        case "Kanji": {
-          const i = Q("Kanji", n);
-          if (!i)
-            throw "sjis not supported.";
-          b(n, i), c = rt(e, i.encode);
-          break;
-        }
-        default:
-          throw "mode:" + l;
+        break;
       }
-      s.push(c), t = null;
+      case "Kanji": {
+        const r = b("Kanji", n);
+        if (!r)
+          throw "sjis not supported.";
+        N(n, r), s = it(e, r.encode);
+        break;
+      }
+      default:
+        throw "mode:" + a;
+    }
+    c.push(s), u = null, _ < 1 && (o = _);
+  }, Q = {
+    addData: G,
+    clear: function() {
+      o = _, l = null, t = 0, u = null, c.length = 0;
     },
-    isDark: function(e, l) {
-      if (e < 0 || g <= e || l < 0 || g <= l)
-        throw e + "," + l;
-      return a[e][l];
+    isDark: function(e, a) {
+      if (e < 0 || t <= e || a < 0 || t <= a)
+        throw e + "," + a;
+      return l[e][a];
     },
     getModuleCount: function() {
-      return g;
+      return t;
     },
     make: function() {
-      if (w < 1) {
+      if (_ < 1) {
         let e = 1;
         for (; e < 40; e++) {
-          const l = Z.getRSBlocks(e, o), n = z();
-          for (let i = 0; i < s.length; i++) {
-            const A = s[i];
-            n.put(A.getMode(), 4), A.getMode() !== P.MODE_ECI && n.put(A.getLength(), x.getLengthInBits(A.getMode(), e)), A.write(n);
+          const a = z.getRSBlocks(e, p), n = V();
+          for (let r = 0; r < c.length; r++) {
+            const A = c[r];
+            n.put(A.getMode(), 4), A.getMode() !== P.MODE_ECI && n.put(A.getLength(), H.getLengthInBits(A.getMode(), e)), A.write(n);
           }
-          let c = 0;
-          for (let i = 0; i < l.length; i++)
-            c += l[i].dataCount;
-          if (n.getLengthInBits() <= c * 8)
+          let s = 0;
+          for (let r = 0; r < a.length; r++)
+            s += a[r].dataCount;
+          if (n.getLengthInBits() <= s * 8)
             break;
         }
-        w = e;
+        o = e;
       }
-      u(!1, U());
+      h(!1, g());
     }
   };
-  return tt.forEach((e) => {
-    e(J, y);
-  }), nt.push(J), J;
+  return nt.forEach((e) => {
+    e(Q, k);
+  }), et.push(Q), Q;
 };
-y.registerEncoder = function(r, _) {
-  W[r] = _;
+k.registerEncoder = function(i, d) {
+  q[i] = d;
 };
-y.getEncoder = function(r) {
-  return W[r];
+k.getEncoder = function(i) {
+  return q[i];
 };
-y.setDefaultEncoding = function(r, _) {
-  if (!y.getEncoder(_))
-    throw "unknown encoding: " + _;
-  q[r] = _;
+k.setDefaultEncoding = function(i, d) {
+  if (!k.getEncoder(d))
+    throw "unknown encoding: " + d;
+  tt[i] = d;
 };
-y.getDefaultEncoding = function(r) {
-  return q[r];
+k.getDefaultEncoding = function(i) {
+  return tt[i];
 };
-y.use = function(r) {
-  tt.push(r), nt.forEach((_) => {
-    r(_, y);
+k.use = function(i) {
+  nt.push(i), et.forEach((d) => {
+    i(d, k);
   });
 };
-y.stringToBytes = function(r) {
-  const _ = [];
-  for (let M = 0; M < r.length; M += 1) {
-    const B = r.charCodeAt(M);
-    _.push(B & 255);
+k.stringToBytes = function(i) {
+  const d = [];
+  for (let M = 0; M < i.length; M += 1) {
+    const D = i.charCodeAt(M);
+    d.push(D & 255);
   }
-  return _;
+  return d;
 };
 const P = {
   MODE_NUMBER: 1,
@@ -255,7 +265,7 @@ const P = {
   M: 0,
   Q: 3,
   H: 2
-}, O = {
+}, S = {
   PATTERN000: 0,
   PATTERN001: 1,
   PATTERN010: 2,
@@ -264,8 +274,8 @@ const P = {
   PATTERN101: 5,
   PATTERN110: 6,
   PATTERN111: 7
-}, x = /* @__PURE__ */ (function() {
-  const r = [
+}, H = /* @__PURE__ */ (function() {
+  const i = [
     [],
     [6, 18],
     [6, 22],
@@ -306,75 +316,75 @@ const P = {
     [6, 32, 58, 84, 110, 136, 162],
     [6, 26, 54, 82, 110, 138, 166],
     [6, 30, 58, 86, 114, 142, 170]
-  ], _ = 1335, M = 7973, B = 21522, w = function(d) {
+  ], d = 1335, M = 7973, D = 21522, _ = function(g) {
     let f = 0;
-    for (; d != 0; )
-      f += 1, d >>>= 1;
+    for (; g != 0; )
+      f += 1, g >>>= 1;
     return f;
   };
   return {
-    getBCHTypeInfo: function(d) {
-      let f = d << 10;
-      for (; w(f) - w(_) >= 0; )
-        f ^= _ << w(f) - w(_);
-      return (d << 10 | f) ^ B;
+    getBCHTypeInfo: function(g) {
+      let f = g << 10;
+      for (; _(f) - _(d) >= 0; )
+        f ^= d << _(f) - _(d);
+      return (g << 10 | f) ^ D;
     },
-    getBCHTypeNumber: function(d) {
-      let f = d << 12;
-      for (; w(f) - w(M) >= 0; )
-        f ^= M << w(f) - w(M);
-      return d << 12 | f;
+    getBCHTypeNumber: function(g) {
+      let f = g << 12;
+      for (; _(f) - _(M) >= 0; )
+        f ^= M << _(f) - _(M);
+      return g << 12 | f;
     },
-    getPatternPosition: function(d) {
-      return r[d - 1];
+    getPatternPosition: function(g) {
+      return i[g - 1];
     },
-    getMaskFunction: function(d) {
-      switch (d) {
-        case O.PATTERN000:
+    getMaskFunction: function(g) {
+      switch (g) {
+        case S.PATTERN000:
           return function(f, T) {
             return (f + T) % 2 == 0;
           };
-        case O.PATTERN001:
+        case S.PATTERN001:
           return function(f, T) {
             return f % 2 == 0;
           };
-        case O.PATTERN010:
+        case S.PATTERN010:
           return function(f, T) {
             return T % 3 == 0;
           };
-        case O.PATTERN011:
+        case S.PATTERN011:
           return function(f, T) {
             return (f + T) % 3 == 0;
           };
-        case O.PATTERN100:
+        case S.PATTERN100:
           return function(f, T) {
             return (Math.floor(f / 2) + Math.floor(T / 3)) % 2 == 0;
           };
-        case O.PATTERN101:
+        case S.PATTERN101:
           return function(f, T) {
             return f * T % 2 + f * T % 3 == 0;
           };
-        case O.PATTERN110:
+        case S.PATTERN110:
           return function(f, T) {
             return (f * T % 2 + f * T % 3) % 2 == 0;
           };
-        case O.PATTERN111:
+        case S.PATTERN111:
           return function(f, T) {
             return (f * T % 3 + (f + T) % 2) % 2 == 0;
           };
         default:
-          throw "bad maskPattern:" + d;
+          throw "bad maskPattern:" + g;
       }
     },
-    getErrorCorrectPolynomial: function(d) {
+    getErrorCorrectPolynomial: function(g) {
       let f = v([1], 0);
-      for (let T = 0; T < d; T += 1)
-        f = f.multiply(v([1, S.gexp(T)], 0));
+      for (let T = 0; T < g; T += 1)
+        f = f.multiply(v([1, U.gexp(T)], 0));
       return f;
     },
-    getLengthInBits: function(d, f) {
+    getLengthInBits: function(g, f) {
       if (1 <= f && f < 10)
-        switch (d) {
+        switch (g) {
           case P.MODE_NUMBER:
             return 10;
           case P.MODE_ALPHA_NUM:
@@ -384,10 +394,10 @@ const P = {
           case P.MODE_KANJI:
             return 8;
           default:
-            throw "mode:" + d;
+            throw "mode:" + g;
         }
       else if (f < 27)
-        switch (d) {
+        switch (g) {
           case P.MODE_NUMBER:
             return 12;
           case P.MODE_ALPHA_NUM:
@@ -397,10 +407,10 @@ const P = {
           case P.MODE_KANJI:
             return 10;
           default:
-            throw "mode:" + d;
+            throw "mode:" + g;
         }
       else if (f < 41)
-        switch (d) {
+        switch (g) {
           case P.MODE_NUMBER:
             return 14;
           case P.MODE_ALPHA_NUM:
@@ -410,77 +420,77 @@ const P = {
           case P.MODE_KANJI:
             return 12;
           default:
-            throw "mode:" + d;
+            throw "mode:" + g;
         }
       else
         throw "type:" + f;
     },
-    getLostPoint: function(d) {
-      const f = d.getModuleCount();
+    getLostPoint: function(g) {
+      const f = g.getModuleCount();
       let T = 0;
       for (let E = 0; E < f; E += 1)
-        for (let p = 0; p < f; p += 1) {
+        for (let w = 0; w < f; w += 1) {
           let I = 0;
-          const Q = d.isDark(E, p);
+          const F = g.isDark(E, w);
           for (let b = -1; b <= 1; b += 1)
             if (!(E + b < 0 || f <= E + b))
-              for (let H = -1; H <= 1; H += 1)
-                p + H < 0 || f <= p + H || b == 0 && H == 0 || Q == d.isDark(E + b, p + H) && (I += 1);
+              for (let N = -1; N <= 1; N += 1)
+                w + N < 0 || f <= w + N || b == 0 && N == 0 || F == g.isDark(E + b, w + N) && (I += 1);
           I > 5 && (T += 3 + I - 5);
         }
       for (let E = 0; E < f - 1; E += 1)
-        for (let p = 0; p < f - 1; p += 1) {
+        for (let w = 0; w < f - 1; w += 1) {
           let I = 0;
-          d.isDark(E, p) && (I += 1), d.isDark(E + 1, p) && (I += 1), d.isDark(E, p + 1) && (I += 1), d.isDark(E + 1, p + 1) && (I += 1), (I == 0 || I == 4) && (T += 3);
+          g.isDark(E, w) && (I += 1), g.isDark(E + 1, w) && (I += 1), g.isDark(E, w + 1) && (I += 1), g.isDark(E + 1, w + 1) && (I += 1), (I == 0 || I == 4) && (T += 3);
         }
       for (let E = 0; E < f; E += 1)
-        for (let p = 0; p < f - 6; p += 1)
-          d.isDark(E, p) && !d.isDark(E, p + 1) && d.isDark(E, p + 2) && d.isDark(E, p + 3) && d.isDark(E, p + 4) && !d.isDark(E, p + 5) && d.isDark(E, p + 6) && (T += 40);
+        for (let w = 0; w < f - 6; w += 1)
+          g.isDark(E, w) && !g.isDark(E, w + 1) && g.isDark(E, w + 2) && g.isDark(E, w + 3) && g.isDark(E, w + 4) && !g.isDark(E, w + 5) && g.isDark(E, w + 6) && (T += 40);
       for (let E = 0; E < f; E += 1)
-        for (let p = 0; p < f - 6; p += 1)
-          d.isDark(p, E) && !d.isDark(p + 1, E) && d.isDark(p + 2, E) && d.isDark(p + 3, E) && d.isDark(p + 4, E) && !d.isDark(p + 5, E) && d.isDark(p + 6, E) && (T += 40);
+        for (let w = 0; w < f - 6; w += 1)
+          g.isDark(w, E) && !g.isDark(w + 1, E) && g.isDark(w + 2, E) && g.isDark(w + 3, E) && g.isDark(w + 4, E) && !g.isDark(w + 5, E) && g.isDark(w + 6, E) && (T += 40);
       let j = 0;
       for (let E = 0; E < f; E += 1)
-        for (let p = 0; p < f; p += 1)
-          d.isDark(p, E) && (j += 1);
-      const F = Math.abs(100 * j / f / f - 50) / 5;
-      return T += F * 10, T;
+        for (let w = 0; w < f; w += 1)
+          g.isDark(w, E) && (j += 1);
+      const J = Math.abs(100 * j / f / f - 50) / 5;
+      return T += J * 10, T;
     }
   };
-})(), S = (function() {
-  const r = new Array(256), _ = new Array(256);
+})(), U = (function() {
+  const i = new Array(256), d = new Array(256);
   for (let o = 0; o < 8; o += 1)
-    r[o] = 1 << o;
+    i[o] = 1 << o;
   for (let o = 8; o < 256; o += 1)
-    r[o] = r[o - 4] ^ r[o - 5] ^ r[o - 6] ^ r[o - 8];
+    i[o] = i[o - 4] ^ i[o - 5] ^ i[o - 6] ^ i[o - 8];
   for (let o = 0; o < 255; o += 1)
-    _[r[o]] = o;
+    d[i[o]] = o;
   return {
     glog: function(o) {
       if (o < 1)
         throw "glog(" + o + ")";
-      return _[o];
+      return d[o];
     },
     gexp: function(o) {
       for (; o < 0; )
         o += 255;
       for (; o >= 256; )
         o -= 255;
-      return r[o];
+      return i[o];
     }
   };
-})(), v = function(r, _) {
-  if (typeof r.length > "u")
-    throw r.length + "/" + _;
+})(), v = function(i, d) {
+  if (typeof i.length > "u")
+    throw i.length + "/" + d;
   const M = (function() {
     let t = 0;
-    for (; t < r.length && r[t] == 0; )
+    for (; t < i.length && i[t] == 0; )
       t += 1;
-    const s = new Array(r.length - t + _);
-    for (let u = 0; u < r.length - t; u += 1)
-      s[u] = r[u + t];
-    return s;
-  })(), g = {
+    const u = new Array(i.length - t + d);
+    for (let c = 0; c < i.length - t; c += 1)
+      u[c] = i[c + t];
+    return u;
+  })(), l = {
     getAt: function(t) {
       return M[t];
     },
@@ -488,26 +498,26 @@ const P = {
       return M.length;
     },
     multiply: function(t) {
-      const s = new Array(g.getLength() + t.getLength() - 1);
-      for (let u = 0; u < g.getLength(); u += 1)
+      const u = new Array(l.getLength() + t.getLength() - 1);
+      for (let c = 0; c < l.getLength(); c += 1)
         for (let h = 0; h < t.getLength(); h += 1)
-          s[u + h] ^= S.gexp(S.glog(g.getAt(u)) + S.glog(t.getAt(h)));
-      return v(s, 0);
+          u[c + h] ^= U.gexp(U.glog(l.getAt(c)) + U.glog(t.getAt(h)));
+      return v(u, 0);
     },
     mod: function(t) {
-      if (g.getLength() - t.getLength() < 0)
-        return g;
-      const s = S.glog(g.getAt(0)) - S.glog(t.getAt(0)), u = new Array(g.getLength());
-      for (let h = 0; h < g.getLength(); h += 1)
-        u[h] = g.getAt(h);
+      if (l.getLength() - t.getLength() < 0)
+        return l;
+      const u = U.glog(l.getAt(0)) - U.glog(t.getAt(0)), c = new Array(l.getLength());
+      for (let h = 0; h < l.getLength(); h += 1)
+        c[h] = l.getAt(h);
       for (let h = 0; h < t.getLength(); h += 1)
-        u[h] ^= S.gexp(S.glog(t.getAt(h)) + s);
-      return v(u, 0).mod(t);
+        c[h] ^= U.gexp(U.glog(t.getAt(h)) + u);
+      return v(c, 0).mod(t);
     }
   };
-  return g;
-}, Z = /* @__PURE__ */ (function() {
-  const r = [
+  return l;
+}, z = /* @__PURE__ */ (function() {
+  const i = [
     // L
     // M
     // Q
@@ -712,100 +722,100 @@ const P = {
     [18, 75, 47, 31, 76, 48],
     [34, 54, 24, 34, 55, 25],
     [20, 45, 15, 61, 46, 16]
-  ], _ = function(o, a) {
+  ], d = function(o, p) {
     return {
       totalCount: o,
-      dataCount: a
+      dataCount: p
     };
-  }, M = function(o, a) {
-    switch (a) {
+  }, M = function(o, p) {
+    switch (p) {
       case K.L:
-        return r[(o - 1) * 4 + 0];
+        return i[(o - 1) * 4 + 0];
       case K.M:
-        return r[(o - 1) * 4 + 1];
+        return i[(o - 1) * 4 + 1];
       case K.Q:
-        return r[(o - 1) * 4 + 2];
+        return i[(o - 1) * 4 + 2];
       case K.H:
-        return r[(o - 1) * 4 + 3];
+        return i[(o - 1) * 4 + 3];
       default:
         return;
     }
   };
   return {
-    getRSBlocks: function(o, a) {
-      const g = M(o, a);
-      if (typeof g > "u")
-        throw "bad rs block @ typeNumber:" + o + "/errorCorrectionLevel:" + a;
-      const t = g.length / 3, s = [];
-      for (let u = 0; u < t; u += 1) {
-        const h = g[u * 3 + 0], U = g[u * 3 + 1], d = g[u * 3 + 2];
+    getRSBlocks: function(o, p) {
+      const l = M(o, p);
+      if (typeof l > "u")
+        throw "bad rs block @ typeNumber:" + o + "/errorCorrectionLevel:" + p;
+      const t = l.length / 3, u = [];
+      for (let c = 0; c < t; c += 1) {
+        const h = l[c * 3 + 0], x = l[c * 3 + 1], g = l[c * 3 + 2];
         for (let f = 0; f < h; f += 1)
-          s.push(_(U, d));
+          u.push(d(x, g));
       }
-      return s;
+      return u;
     }
   };
-})(), z = function() {
-  const r = [];
-  let _ = 0;
-  const g = {
+})(), V = function() {
+  const i = [];
+  let d = 0;
+  const l = {
     getBuffer: function() {
-      return r;
+      return i;
     },
     getAt: function(t) {
-      const s = Math.floor(t / 8);
-      return (r[s] >>> 7 - t % 8 & 1) == 1;
+      const u = Math.floor(t / 8);
+      return (i[u] >>> 7 - t % 8 & 1) == 1;
     },
-    put: function(t, s) {
-      for (let u = 0; u < s; u += 1)
-        g.putBit((t >>> s - u - 1 & 1) == 1);
+    put: function(t, u) {
+      for (let c = 0; c < u; c += 1)
+        l.putBit((t >>> u - c - 1 & 1) == 1);
     },
     getLengthInBits: function() {
-      return _;
+      return d;
     },
     putBit: function(t) {
-      const s = Math.floor(_ / 8);
-      r.length <= s && r.push(0), t && (r[s] |= 128 >>> _ % 8), _ += 1;
+      const u = Math.floor(d / 8);
+      i.length <= u && i.push(0), t && (i[u] |= 128 >>> d % 8), d += 1;
     }
   };
-  return g;
-}, et = function(r) {
-  const _ = P.MODE_NUMBER, M = r, B = function() {
-    return _;
-  }, w = function() {
+  return l;
+}, ot = function(i) {
+  const d = P.MODE_NUMBER, M = i, D = function() {
+    return d;
+  }, _ = function() {
     return M.length;
-  }, o = function(s) {
-    const u = M;
+  }, o = function(u) {
+    const c = M;
     let h = 0;
-    for (; h + 2 < u.length; )
-      s.put(a(u.substring(h, h + 3)), 10), h += 3;
-    h < u.length && (u.length - h == 1 ? s.put(a(u.substring(h, h + 1)), 4) : u.length - h == 2 && s.put(a(u.substring(h, h + 2)), 7));
-  }, a = function(s) {
-    let u = 0;
-    for (let h = 0; h < s.length; h += 1)
-      u = u * 10 + g(s.charAt(h));
-    return u;
-  }, g = function(s) {
-    if ("0" <= s && s <= "9")
-      return s.charCodeAt(0) - 48;
-    throw "illegal char :" + s;
+    for (; h + 2 < c.length; )
+      u.put(p(c.substring(h, h + 3)), 10), h += 3;
+    h < c.length && (c.length - h == 1 ? u.put(p(c.substring(h, h + 1)), 4) : c.length - h == 2 && u.put(p(c.substring(h, h + 2)), 7));
+  }, p = function(u) {
+    let c = 0;
+    for (let h = 0; h < u.length; h += 1)
+      c = c * 10 + l(u.charAt(h));
+    return c;
+  }, l = function(u) {
+    if ("0" <= u && u <= "9")
+      return u.charCodeAt(0) - 48;
+    throw "illegal char :" + u;
   };
-  return { getMode: B, getLength: w, write: o };
-}, ot = function(r) {
-  const _ = P.MODE_ALPHA_NUM, M = r, B = function() {
-    return _;
-  }, w = function() {
+  return { getMode: D, getLength: _, write: o };
+}, rt = function(i) {
+  const d = P.MODE_ALPHA_NUM, M = i, D = function() {
+    return d;
+  }, _ = function() {
     return M.length;
   }, o = function(t) {
-    const s = M;
-    let u = 0;
-    for (; u + 1 < s.length; )
+    const u = M;
+    let c = 0;
+    for (; c + 1 < u.length; )
       t.put(
-        a(s.charAt(u)) * 45 + a(s.charAt(u + 1)),
+        p(u.charAt(c)) * 45 + p(u.charAt(c + 1)),
         11
-      ), u += 2;
-    u < s.length && t.put(a(s.charAt(u)), 6);
-  }, a = function(t) {
+      ), c += 2;
+    c < u.length && t.put(p(u.charAt(c)), 6);
+  }, p = function(t) {
     if ("0" <= t && t <= "9")
       return t.charCodeAt(0) - 48;
     if ("A" <= t && t <= "Z")
@@ -833,76 +843,76 @@ const P = {
         throw "illegal char :" + t;
     }
   };
-  return { getMode: B, getLength: w, write: o };
-}, V = function(r, _) {
-  const M = P.MODE_8BIT_BYTE, B = (_ || y.stringToBytes)(r);
+  return { getMode: D, getLength: _, write: o };
+}, W = function(i, d) {
+  const M = P.MODE_8BIT_BYTE, D = (d || k.stringToBytes)(i);
   return { getMode: function() {
     return M;
   }, getLength: function() {
-    return B.length;
+    return D.length;
   }, write: function(t) {
-    for (let s = 0; s < B.length; s += 1)
-      t.put(B[s], 8);
+    for (let u = 0; u < D.length; u += 1)
+      t.put(D[u], 8);
   } };
-}, rt = function(r, _) {
+}, it = function(i, d) {
   const M = P.MODE_KANJI;
-  (function(t, s) {
-    const u = _(t);
-    if (u.length != 2 || (u[0] << 8 | u[1]) != s)
+  (function(t, u) {
+    const c = d(t);
+    if (c.length != 2 || (c[0] << 8 | c[1]) != u)
       throw "sjis not supported.";
   })("友", 38726);
-  const B = _(r);
+  const D = d(i);
   return { getMode: function() {
     return M;
   }, getLength: function() {
-    return ~~(B.length / 2);
+    return ~~(D.length / 2);
   }, write: function(t) {
-    const s = B;
-    let u = 0;
-    for (; u + 1 < s.length; ) {
-      let h = (255 & s[u]) << 8 | 255 & s[u + 1];
+    const u = D;
+    let c = 0;
+    for (; c + 1 < u.length; ) {
+      let h = (255 & u[c]) << 8 | 255 & u[c + 1];
       if (33088 <= h && h <= 40956)
         h -= 33088;
       else if (57408 <= h && h <= 60351)
         h -= 49472;
       else
-        throw "illegal char at " + (u + 1) + "/" + h;
-      h = (h >>> 8 & 255) * 192 + (h & 255), t.put(h, 13), u += 2;
+        throw "illegal char at " + (c + 1) + "/" + h;
+      h = (h >>> 8 & 255) * 192 + (h & 255), t.put(h, 13), c += 2;
     }
-    if (u < s.length)
-      throw "illegal char at " + (u + 1);
+    if (c < u.length)
+      throw "illegal char at " + (c + 1);
   } };
-}, it = function(r) {
-  const _ = P.MODE_ECI;
-  if (r < 0 || r > 999999)
-    throw "bad eci assignment number: " + r;
+}, ct = function(i) {
+  const d = P.MODE_ECI;
+  if (i < 0 || i > 999999)
+    throw "bad eci assignment number: " + i;
   return { getMode: function() {
-    return _;
+    return d;
   }, getLength: function() {
     return 0;
   }, write: function(o) {
-    r < 128 ? o.put(r, 8) : r < 16384 ? o.put(32768 | r, 16) : o.put(12582912 | r, 24);
+    i < 128 ? o.put(i, 8) : i < 16384 ? o.put(32768 | i, 16) : o.put(12582912 | i, 24);
   } };
-}, ct = function(r) {
-  const _ = r;
-  let M = 0, B = 0, w = 0;
+}, st = function(i) {
+  const d = i;
+  let M = 0, D = 0, _ = 0;
   const o = function() {
-    for (; w < 8; ) {
-      if (M >= _.length) {
-        if (w == 0)
+    for (; _ < 8; ) {
+      if (M >= d.length) {
+        if (_ == 0)
           return -1;
-        throw "unexpected end of file./" + w;
+        throw "unexpected end of file./" + _;
       }
-      const s = _.charAt(M);
-      if (M += 1, s == "=")
-        return w = 0, -1;
-      if (s.match(/^\s$/))
+      const u = d.charAt(M);
+      if (M += 1, u == "=")
+        return _ = 0, -1;
+      if (u.match(/^\s$/))
         continue;
-      B = B << 6 | a(s.charCodeAt(0)), w += 6;
+      D = D << 6 | p(u.charCodeAt(0)), _ += 6;
     }
-    const t = B >>> w - 8 & 255;
-    return w -= 8, t;
-  }, a = function(t) {
+    const t = D >>> _ - 8 & 255;
+    return _ -= 8, t;
+  }, p = function(t) {
     if (65 <= t && t <= 90)
       return t - 65;
     if (97 <= t && t <= 122)
@@ -916,43 +926,43 @@ const P = {
     throw "c:" + t;
   };
   return { read: o };
-}, at = function(r, _) {
+}, ht = function(i, d) {
   const M = (function() {
-    const w = ct(r), o = function() {
-      const t = w.read();
+    const _ = st(i), o = function() {
+      const t = _.read();
       if (t == -1) throw "eof";
       return t;
     };
-    let a = 0;
-    const g = {};
+    let p = 0;
+    const l = {};
     for (; ; ) {
-      const t = w.read();
+      const t = _.read();
       if (t == -1) break;
-      const s = o(), u = o(), h = o(), U = String.fromCharCode(t << 8 | s), d = u << 8 | h;
-      g[U] = d, a += 1;
+      const u = o(), c = o(), h = o(), x = String.fromCharCode(t << 8 | u), g = c << 8 | h;
+      l[x] = g, p += 1;
     }
-    if (a != _)
-      throw a + " != " + _;
-    return g;
-  })(), B = 63;
-  return function(w) {
+    if (p != d)
+      throw p + " != " + d;
+    return l;
+  })(), D = 63;
+  return function(_) {
     const o = [];
-    for (let a = 0; a < w.length; a += 1) {
-      const g = w.charCodeAt(a);
-      if (g < 128)
-        o.push(g);
+    for (let p = 0; p < _.length; p += 1) {
+      const l = _.charCodeAt(p);
+      if (l < 128)
+        o.push(l);
       else {
-        const t = M[w.charAt(a)];
-        typeof t == "number" ? (t & 255) == t ? o.push(t) : (o.push(t >>> 8), o.push(t & 255)) : o.push(B);
+        const t = M[_.charAt(p)];
+        typeof t == "number" ? (t & 255) == t ? o.push(t) : (o.push(t >>> 8), o.push(t & 255)) : o.push(D);
       }
     }
     return o;
   };
-}, gt = y.stringToBytes;
+}, dt = k.stringToBytes;
 export {
-  at as createStringToBytes,
-  y as default,
-  y as qrcode,
-  gt as stringToBytes
+  ht as createStringToBytes,
+  k as default,
+  k as qrcode,
+  dt as stringToBytes
 };
 //# sourceMappingURL=qrcode.mjs.map

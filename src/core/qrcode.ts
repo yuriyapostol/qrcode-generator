@@ -20,6 +20,7 @@ import {
   type QRCodeFactory,
   type QRCodeEncoder,
   type QRCodeAddDataOptions,
+  type QRCodeAddDataInput,
   type EncoderMode,
   type QRCodeExtension,
   type QRPolynominal,
@@ -49,6 +50,7 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
   const PAD0 = 0xEC;
   const PAD1 = 0x11;
 
+  const _initialTypeNumber = typeNumber;
   let _typeNumber = typeNumber;
   const _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
   let _modules : (null | boolean[][]) = null;
@@ -457,7 +459,14 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
     }
   };
 
-  const addData = function(data : string, mode? : string, opts? : QRCodeAddDataOptions) {
+  const addData = function(data : string | QRCodeAddDataInput[], mode? : string, opts? : QRCodeAddDataOptions) {
+
+    if (Array.isArray(data)) {
+      data.forEach(item => {
+        addData(item[0], item[1], item[2]);
+      });
+      return;
+    }
 
     mode = mode || 'Byte';
 
@@ -504,6 +513,17 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
 
     _dataList.push(newData);
     _dataCache = null;
+    if (_initialTypeNumber < 1) {
+      _typeNumber = _initialTypeNumber;
+    }
+  };
+
+  const clear = function() {
+    _typeNumber = _initialTypeNumber;
+    _modules = null;
+    _moduleCount = 0;
+    _dataCache = null;
+    _dataList.length = 0;
   };
 
   const isDark = function(row : number, col : number) {
@@ -518,7 +538,7 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
   };
 
   const make = function() {
-    if (_typeNumber < 1) {
+    if (_initialTypeNumber < 1) {
       let typeNumber = 1;
 
       for (; typeNumber < 40; typeNumber++) {
@@ -552,6 +572,7 @@ const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QR
 
   const _this = {
     addData,
+    clear,
     isDark,
     getModuleCount,
     make,

@@ -26,7 +26,6 @@ var typeNumber = 4;
 var errorCorrectionLevel = 'L';
 var qr = qrcode(typeNumber, errorCorrectionLevel);
 qr.addData('Hi!');
-qr.make();
 document.getElementById('placeHolder').innerHTML = qr.render('gif');
 ```
 
@@ -73,6 +72,20 @@ Set the default named encoder for `Byte` or `Kanji`.
 #### qrcode.getDefaultEncoding(mode) => <code>string | undefined</code>
 Get the default named encoder for `Byte` or `Kanji`.
 
+#### qrcode.render(opts) => <code>any</code>
+Create a QRCode object from options, add data, and render it.
+
+```javascript
+qrcode.render({
+  typeNumber: 0,
+  errorCorrectionLevel: 'L',
+  data: 'Hello',
+  renderer: 'png:dataUrl'
+});
+
+qrcode.render({ target: document.querySelector('[data-renderer]') });
+```
+
 ### QRCode
 
 #### addData(data, mode, opts) => <code>void</code>
@@ -96,10 +109,23 @@ qr.addData('Hello');
 qr.addData('Hello', 'Byte', { encoding: 'UTF-8' });
 qr.addData('Hello', 'Byte', { encoding: 'UTF-8', eci: true });
 qr.addData('友', 'Kanji', { encoding: 'SJIS' });
+qr.addData([
+  ['HELLO', 'Alphanumeric'],
+  ['1234', 'Numeric'],
+  ['world']
+]);
 ```
 
 #### make() => <code>void</code>
 Make a QR Code.
+
+`render(...)` calls `make()` automatically. Call `make()` directly only when you
+need to inspect modules through `getModuleCount()` or `isDark()` before
+rendering.
+
+#### clear() => <code>void</code>
+Clear encoded data and generated modules so the same QRCode object can be
+reused.
 
 #### getModuleCount() => <code>number</code>
 The number of modules(cells) for each orientation.
@@ -116,7 +142,6 @@ _[Note] call make() before this function._
 
 #### render(renderer, ...args) => <code>any</code>
 Render a QR Code with a registered renderer.
- _[Note] call make() before this function._
 
 `render(...)`, `registerRenderer(...)`, and `getRenderer(...)` are installed by
 importing any optional renderer. The base core module does not load renderer
@@ -124,11 +149,15 @@ registry code until a renderer module is imported.
 
 | Param  | Type                | Description                                           |
 | ------ | ------------------- | ----------------------------------------------------- |
-| renderer | <code>string</code> | Renderer name (`gif`, `png`, `svg`, `table`, `ascii`, `canvas`) |
+| renderer | <code>string</code> | Renderer name (`gif`, `png`, `svg`, `table`, `ascii`, `canvas`), optionally with output shorthand (`png:dataUrl`) |
 | args   | <code>any[]</code>  | Renderer-specific positional arguments and option objects |
 
 #### render({ renderer, ...opts }) => <code>any</code>
 Render a QR Code with renderer options passed as an object.
+
+`renderer` may also be an object. During normalization it is unpacked into a
+plain renderer name plus independent options such as `output`, `tagName`,
+`target`, and `context`.
 
 Renderer options can be passed as a single object or mixed into any positional
 argument slot. Plain objects are merged into renderer options; simple values are
@@ -139,8 +168,8 @@ assigned to the next positional parameter for that renderer. `opts.cell` and
 
 ```javascript
 qr.render('gif'); // default <img .../>
-qr.render({ renderer: 'gif', tag: false }); // data:image/gif...
-qr.render({ renderer: 'png', tag: false }); // data:image/png...
+qr.render('gif:dataUrl'); // data:image/gif...
+qr.render({ renderer: { type: 'png', output: 'dataUrl' } }); // data:image/png...
 qr.render('gif', 4, 12, '#182126', '#f4efe7');
 qr.render({ renderer: 'gif', cellSize: 4, margin: 12, cellColor: '#182126', backgroundColor: '#f4efe7' });
 qr.render('svg', 12, 24, { cell: '#777', background: '#fff' });
@@ -150,6 +179,35 @@ qr.render({ renderer: 'table', cellSize: 5, margin: 20 });
 qr.render('ascii', 1, 2);
 qr.render('canvas', context, 2);
 qr.render('canvas', context, { cell: { size: 6, color: '#111' }, margin: 12, background: '#eee' });
+qr.render({ target: document.querySelector('[data-renderer]') });
+qrcode.render({ target: document.querySelector('[data-renderer]') });
+```
+
+DOM targets can provide renderer options through `data-*` attributes. JavaScript
+options override attribute values. Static `qrcode.render({ target })` also reads
+QR Code creation and data attributes.
+
+```html
+<img
+  data-renderer="png"
+  data-output="element"
+  data-type-number="0"
+  data-error-correction-level="L"
+  data-value="Hello"
+  data-cell-size="4"
+  data-margin="8"
+  alt="QR code"
+>
+```
+
+For multiple data segments, use `data-segments` with JSON argument tuples:
+
+```html
+<img
+  data-renderer="png"
+  data-output="element"
+  data-segments='[["HELLO","Alphanumeric"],["1234","Numeric"]]'
+>
 ```
 
 #### SVG Formatter Options
@@ -200,11 +258,15 @@ qr.render('canvas', context, { cell: { size: 6, color: '#111' }, margin: 12, bac
 | opts.backgroundColor | <code>string</code> | Background color in GIF palette, default: `white` |
 | opts.alt | <code>string</code> | `alt` attribute for HTML output |
 | opts.title | <code>string</code> | `title` attribute for HTML output |
-| opts.tag | <code>boolean</code> \| <code>string</code> | `false` for data URL, `true`/`undefined` for `<img>`, or custom tag name |
+| opts.output | <code>string</code> | Output form: `html`, `dataUrl`, or `element` |
+| opts.tagName | <code>string</code> | HTML tag name for `html`/`element` output, default: `img` |
+| opts.target | <code>HTMLImageElement</code> | Existing image element for `element` output |
+| opts.tag | <code>boolean</code> \| <code>string</code> | Legacy: `false` for data URL, custom tag name for HTML output |
 
 ```javascript
 qr.render('gif', 4, 12, '#182126', '#f4efe7');
-qr.render({ renderer: 'gif', tag: false, cellColor: '#182126', backgroundColor: '#f4efe7' });
+qr.render('gif:dataUrl');
+qr.render({ renderer: { type: 'gif', output: 'dataUrl' }, cellColor: '#182126', backgroundColor: '#f4efe7' });
 qr.render({
   renderer: 'gif',
   cellSize: 4,
@@ -232,11 +294,15 @@ qr.render({
 | opts.backgroundColor | <code>string</code> | Background color, default: `white` |
 | opts.alt | <code>string</code> | `alt` attribute for HTML output |
 | opts.title | <code>string</code> | `title` attribute for HTML output |
-| opts.tag | <code>boolean</code> \| <code>string</code> | `false` for data URL, `true`/`undefined` for `<img>`, or custom tag name |
+| opts.output | <code>string</code> | Output form: `html`, `dataUrl`, or `element` |
+| opts.tagName | <code>string</code> | HTML tag name for `html`/`element` output, default: `img` |
+| opts.target | <code>HTMLImageElement</code> | Existing image element for `element` output |
+| opts.tag | <code>boolean</code> \| <code>string</code> | Legacy: `false` for data URL, custom tag name for HTML output |
 
 ```javascript
 qr.render('png', 4, 12, '#182126', '#f4efe7');
-qr.render({ renderer: 'png', tag: false });
+qr.render('png:dataUrl');
+qr.render({ renderer: { type: 'png', output: 'dataUrl' } });
 qr.render({
   renderer: 'png',
   cellSize: 4,
@@ -255,6 +321,7 @@ qr.render({
 | Param | Type | Description |
 | ----- | ---- | ----------- |
 | context | <code>CanvasRenderingContext2D</code> | Target 2D context |
+| target | <code>HTMLCanvasElement</code> | Canvas element used by `render({ target })` |
 | cellSize | <code>number</code> | Cell size, default: `2` |
 | margin | <code>number</code> | Outer margin, default: `cellSize * 4` |
 | cellColor | <code>string</code> | Dark cell color, default: `black` |

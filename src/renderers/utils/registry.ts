@@ -16,9 +16,11 @@ import { qrcode } from '../../core/qrcode';
 import {
   type QRCode,
   type QRCodeFactory,
+  type QRCodeRenderOptions,
   type QRCodeRenderer,
   type QRCodeRendererArgument,
-  type QRCodeRendererOptions
+  type QRCodeRendererOptions,
+  type QRCodeRendererSpec
 } from '../../core/types';
 
 const renderers : Record<string, QRCodeRenderer> = {};
@@ -77,6 +79,144 @@ const mergeRendererOptions = function(target : QRCodeRendererOptions, source : {
   Object.keys(source).forEach(key => {
     setRendererOption(target, key, source[key]);
   });
+};
+
+const normalizeOutputName = function(output : string) {
+  return output.toLowerCase() === 'dataurl' ? 'dataUrl' : output;
+};
+
+const applyRendererToken = function(opts : QRCodeRendererOptions, token : string) {
+  const lower = token.toLowerCase();
+  if (lower === 'dataurl' || lower === 'html' || lower === 'element' ||
+      lower === 'canvas' || lower === 'file') {
+    opts.output = normalizeOutputName(token);
+    return;
+  }
+  if (lower === 'img' || lower === 'image') {
+    opts.output = 'html';
+    opts.tagName = 'img';
+    return;
+  }
+  opts.output = token;
+};
+
+const parseRendererSpec = function(rendererSpec : QRCodeRendererSpec) {
+  if (typeof rendererSpec === 'string') {
+    const parts = rendererSpec.split(':');
+    const opts : QRCodeRendererOptions = {};
+    parts.slice(1).forEach(part => {
+      if (part) applyRendererToken(opts, part);
+    });
+    return { name: parts[0], opts };
+  }
+
+  if (isPlainObject(rendererSpec)) {
+    const { renderer, type, ...opts } = rendererSpec;
+    return { name: renderer || type, opts };
+  }
+
+  return { name: void 0, opts: {} };
+};
+
+const getTargetTagName = function(target : any) {
+  return (typeof target?.tagName === 'string') ? target.tagName.toLowerCase() : void 0;
+};
+
+const readTargetAttribute = function(target : any, name : string) {
+  if (typeof target?.getAttribute !== 'function') return void 0;
+  const value = target.getAttribute(name);
+  return value === null ? void 0 : value;
+};
+
+const readNumberTargetAttribute = function(target : any, name : string) {
+  const value = readTargetAttribute(target, name);
+  if (typeof value === 'undefined' || value === '') return void 0;
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : void 0;
+};
+
+const readBooleanOrNumberTargetAttribute = function(target : any, name : string) {
+  const value = readTargetAttribute(target, name);
+  if (typeof value === 'undefined' || value === '') return void 0;
+  const lower = value.toLowerCase();
+  if (lower === 'true') return true;
+  if (lower === 'false') return false;
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : value;
+};
+
+const parseJsonAttribute = function(target : any, name : string) {
+  const value = readTargetAttribute(target, name);
+  if (typeof value === 'undefined' || value === '') return void 0;
+  return JSON.parse(value);
+};
+
+const getTargetRendererOptions = function(target : any) {
+  const opts : QRCodeRendererOptions = {};
+  if (!target) return opts;
+
+  const tagName = getTargetTagName(target);
+  if (tagName) opts.tagName = tagName;
+
+  const renderer = readTargetAttribute(target, 'data-renderer');
+  const output = readTargetAttribute(target, 'data-output');
+  const tagNameAttr = readTargetAttribute(target, 'data-tag-name');
+  const cellSize = readNumberTargetAttribute(target, 'data-cell-size');
+  const margin = readNumberTargetAttribute(target, 'data-margin');
+  const cellColor = readTargetAttribute(target, 'data-cell-color');
+  const backgroundColor = readTargetAttribute(target, 'data-background-color');
+  const alt = readTargetAttribute(target, 'alt');
+  const title = readTargetAttribute(target, 'title');
+
+  if (renderer) {
+    const parsedRenderer = parseRendererSpec(renderer);
+    if (parsedRenderer.name) opts.renderer = parsedRenderer.name;
+    Object.assign(opts, parsedRenderer.opts);
+  }
+  if (output) opts.output = normalizeOutputName(output);
+  if (tagNameAttr) opts.tagName = tagNameAttr;
+  if (typeof cellSize === 'number') opts.cellSize = cellSize;
+  if (typeof margin === 'number') opts.margin = margin;
+  if (cellColor) opts.cellColor = cellColor;
+  if (backgroundColor) opts.backgroundColor = backgroundColor;
+  if (alt) opts.alt = alt;
+  if (title) opts.title = title;
+
+  if (!opts.renderer && tagName === 'canvas') opts.renderer = 'canvas';
+  if (!opts.renderer && tagName === 'img') opts.renderer = 'png';
+  if (!opts.output && tagName === 'canvas') opts.output = 'canvas';
+  if (!opts.output && tagName === 'img') opts.output = 'element';
+  if (!opts.context && tagName === 'canvas' && typeof target.getContext === 'function') {
+    opts.context = target.getContext('2d');
+  }
+
+  return opts;
+};
+
+const getTargetQRCodeOptions = function(target : any) {
+  const opts : QRCodeRenderOptions = {};
+  if (!target) return opts;
+
+  const typeNumber = readNumberTargetAttribute(target, 'data-type-number');
+  const errorCorrectionLevel = readTargetAttribute(target, 'data-error-correction-level');
+  const value = readTargetAttribute(target, 'data-value') || readTargetAttribute(target, 'data-data');
+  const mode = readTargetAttribute(target, 'data-mode');
+  const encoding = readTargetAttribute(target, 'data-encoding');
+  const eci = readBooleanOrNumberTargetAttribute(target, 'data-eci');
+  const segments = parseJsonAttribute(target, 'data-segments');
+
+  if (typeof typeNumber === 'number') opts.typeNumber = typeNumber as QRCodeRenderOptions['typeNumber'];
+  if (errorCorrectionLevel) opts.errorCorrectionLevel = errorCorrectionLevel as QRCodeRenderOptions['errorCorrectionLevel'];
+  if (segments) opts.data = segments;
+  else if (typeof value === 'string') opts.data = value;
+  if (mode) opts.mode = mode as QRCodeRenderOptions['mode'];
+  if (encoding || typeof eci !== 'undefined') {
+    opts.opts = {};
+    if (encoding) opts.opts.encoding = encoding;
+    if (typeof eci !== 'undefined') opts.opts.eci = eci as any;
+  }
+
+  return opts;
 };
 
 const isRendererArgumentCompatible = function(arg : QRCodeRendererArgument, value : any) {
@@ -151,24 +291,37 @@ const normalizeRendererOptions = function(rendererName : string,
 };
 
 const installRendererApi = function(qr : QRCode, factory : QRCodeFactory) {
-  qr.render = function(renderer_or_opts? : string | { renderer: string, [key: string] : any }, ...args : any[]) {
+  qr.render = function(renderer_or_opts? : QRCodeRendererSpec | { renderer?: QRCodeRendererSpec, target?: any, [key: string] : any }, ...args : any[]) {
     let rendererName;
     let renderOpts : QRCodeRendererOptions | undefined;
     if (typeof renderer_or_opts === 'string') {
-      rendererName = renderer_or_opts;
+      const parsed = parseRendererSpec(renderer_or_opts);
+      rendererName = parsed.name;
+      renderOpts = parsed.opts;
     }
-    else if (typeof renderer_or_opts === 'object' && renderer_or_opts?.renderer) {
-      const { renderer: objectRenderer, ...objectOpts } = renderer_or_opts;
-      rendererName = objectRenderer;
-      renderOpts = objectOpts;
+    else if (isPlainObject(renderer_or_opts) && renderer_or_opts?.renderer) {
+      const input = renderer_or_opts as { renderer: QRCodeRendererSpec, target?: any, [key: string] : any };
+      const { renderer: objectRenderer, ...objectOpts } = input;
+      const parsed = parseRendererSpec(objectRenderer);
+      const targetOpts = getTargetRendererOptions(objectOpts.target);
+      rendererName = parsed.name || targetOpts.renderer;
+      renderOpts = { ...targetOpts, ...parsed.opts, ...objectOpts };
+    }
+    else if (isPlainObject(renderer_or_opts)) {
+      const input = renderer_or_opts as { target?: any, [key: string] : any };
+      const targetOpts = getTargetRendererOptions(input.target);
+      rendererName = targetOpts.renderer;
+      renderOpts = { ...targetOpts, ...input };
     }
     if (!rendererName) return '[QRCode Object]';
     const renderer = factory.getRenderer(rendererName);
     if (!renderer) {
       throw 'unknown renderer: ' + rendererName;
     }
+    qr.make();
     return renderer.render.call(qr, normalizeRendererOptions(rendererName, renderer, args, renderOpts));
   };
+
 };
 
 (qrcode as QRCodeFactory).registerRenderer = function(name : string, renderer : QRCodeRenderer) {
@@ -177,6 +330,26 @@ const installRendererApi = function(qr : QRCode, factory : QRCodeFactory) {
 
 (qrcode as QRCodeFactory).getRenderer = function(name : string) {
   return renderers[name];
+};
+
+(qrcode as QRCodeFactory).render = function(opts : QRCodeRenderOptions) {
+  const targetOpts = getTargetQRCodeOptions(opts?.target);
+  const renderOpts = { ...targetOpts, ...(opts || {}) };
+  const typeNumber = (typeof renderOpts.typeNumber === 'number') ? renderOpts.typeNumber : 0;
+  const errorCorrectionLevel = renderOpts.errorCorrectionLevel || 'L';
+  const qr = (qrcode as QRCodeFactory)(typeNumber as any, errorCorrectionLevel);
+
+  if (typeof renderOpts.data === 'string') {
+    qr.addData(renderOpts.data, renderOpts.mode, renderOpts.opts);
+  }
+  else if (Array.isArray(renderOpts.data)) {
+    qr.addData(renderOpts.data);
+  }
+  else {
+    throw 'data is required';
+  }
+
+  return qr.render(renderOpts);
 };
 
 qrcode.use(installRendererApi);

@@ -54,5 +54,7 @@ registerRenderer('canvas', {
       }
     }
   }
+
+  return opts.target || context.canvas || context;
   }
 });

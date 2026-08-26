@@ -6,6 +6,11 @@ export type QRCodeAddDataOptions = {
     encoding?: string;
     eci?: boolean | number;
 };
+export type QRCodeAddDataInput = [
+    data: string,
+    mode?: Mode,
+    opts?: QRCodeAddDataOptions
+];
 export type QRCodeEncoder = {
     encode: (data: string) => number[];
     eci?: number;
@@ -18,7 +23,29 @@ export type QRCodeRendererArgument = {
 };
 export type QRCodeRendererOptions = {
     renderer?: string;
+    output?: string;
+    target?: any;
+    tagName?: string;
+    context?: any;
     [key: string]: any;
+};
+export type QRCodeRendererSpec = string | {
+    renderer?: string;
+    type?: string;
+    output?: string;
+    target?: any;
+    tagName?: string;
+    context?: any;
+    [key: string]: any;
+};
+export type QRCodeRenderOptions = QRCodeRendererOptions & {
+    typeNumber?: TypeNumber;
+    errorCorrectionLevel?: ErrorCorrectionLevel;
+    data?: string | QRCodeAddDataInput[];
+    mode?: Mode;
+    opts?: QRCodeAddDataOptions;
+    target?: any;
+    renderer?: QRCodeRendererSpec;
 };
 export type QRCodeRenderer = {
     args?: QRCodeRendererArgument[];
@@ -27,18 +54,22 @@ export type QRCodeRenderer = {
 export type QRCodeExtension = (qr: QRCode, factory: QRCodeFactory) => void;
 export interface QRCode {
     addData(data: string, mode?: Mode, opts?: QRCodeAddDataOptions): void;
+    addData(data: QRCodeAddDataInput[]): void;
+    clear(): void;
     isDark(row: number, col: number): boolean;
     getModuleCount(): number;
     make(): void;
     render(): string;
     render(renderer: string, ...args: any[]): any;
     render(opts: {
-        renderer: string;
+        renderer?: QRCodeRendererSpec;
+        target?: any;
         [key: string]: any;
     }): any;
 }
 export interface QRCodeFactory {
     (typeNumber: TypeNumber, errorCorrectionLevel: ErrorCorrectionLevel): QRCode;
+    render(opts: QRCodeRenderOptions): any;
     stringToBytes(s: string): number[];
     createStringToBytes(unicodeData: string, numChars: number): (s: string) => number[];
     registerEncoder(encoding: string, encoder: QRCodeEncoder): void;

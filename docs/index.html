@@ -422,6 +422,32 @@
           '});'
         ].join('\n')
       },
+      'static-dom': {
+        label: 'Static DOM Target',
+        standalone: true,
+        code: [
+          "const template = document.createElement('template');",
+          'template.innerHTML = `',
+          '<img',
+          '  data-renderer="png"',
+          '  data-output="element"',
+          '  data-type-number="0"',
+          '  data-error-correction-level="M"',
+          '  data-value="Rendered from data-* attributes"',
+          '  data-cell-size="4"',
+          '  data-margin="12"',
+          '  data-cell-color="#182126"',
+          '  data-background-color="#f4efe7"',
+          '  alt="Static DOM target QR"',
+          '  title="Static DOM target QR"',
+          '>',
+          '`;',
+          '',
+          "const result = template.content.firstElementChild;",
+          '',
+          'qrcode.render({ target: result });'
+        ].join('\n')
+      },
       table: {
         label: 'HTML Table',
         code: [
@@ -483,6 +509,9 @@
     const buildCodeFromPresets = () => {
       const coder = coderPresets[elements.coderPreset.value];
       const renderer = rendererPresets[elements.rendererPreset.value];
+      if (renderer.standalone) {
+        return renderer.code;
+      }
       return `${coder.code}\n\n${renderer.code}`;
     };
 

@@ -293,7 +293,10 @@ registerRenderer('gif', {
   ],
   render: function(opts : { [key : string] : any }) {
 
-  let tag = (opts.tag === false) ? false : (opts.tag === true || typeof opts.tag === 'undefined' ? 'img' : opts.tag);
+  const output = (typeof opts.output === 'string') ? opts.output.toLowerCase() : void 0;
+  let tag = (output === 'dataurl' || opts.tag === false) ? false :
+      ((typeof opts.tagName === 'string') ? opts.tagName :
+      (opts.tag === true || typeof opts.tag === 'undefined' ? 'img' : opts.tag));
   let cellSize = opts.cellSize;
   let margin = opts.margin;
   let cellColor = opts.cellColor;
@@ -329,6 +332,17 @@ registerRenderer('gif', {
   }
 
   tag = (typeof tag === 'string') ? tag : 'img';
+
+  if (output === 'element') {
+    const element = opts.target || (typeof document !== 'undefined' ? document.createElement(tag) : null);
+    if (!element) return dataURL;
+    element.setAttribute('src', dataURL);
+    element.setAttribute('width', String(size));
+    element.setAttribute('height', String(size));
+    if (alt) element.setAttribute('alt', alt);
+    if (title) element.setAttribute('title', title);
+    return element;
+  }
 
   let html = '';
   html += '<' + tag;
