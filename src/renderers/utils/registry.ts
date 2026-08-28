@@ -151,6 +151,10 @@ const parseJsonAttribute = function(target : any, name : string) {
   return JSON.parse(value);
 };
 
+const getQRCodeAttributeName = function(name : string) {
+  return `data-qrcode-${name}`;
+};
+
 const getTargetRendererOptions = function(target : any) {
   const opts : QRCodeRendererOptions = {};
   if (!target) return opts;
@@ -158,13 +162,13 @@ const getTargetRendererOptions = function(target : any) {
   const tagName = getTargetTagName(target);
   if (tagName) opts.tagName = tagName;
 
-  const renderer = readTargetAttribute(target, 'data-renderer');
-  const output = readTargetAttribute(target, 'data-output');
-  const tagNameAttr = readTargetAttribute(target, 'data-tag-name');
-  const cellSize = readNumberTargetAttribute(target, 'data-cell-size');
-  const margin = readNumberTargetAttribute(target, 'data-margin');
-  const cellColor = readTargetAttribute(target, 'data-cell-color');
-  const backgroundColor = readTargetAttribute(target, 'data-background-color');
+  const renderer = readTargetAttribute(target, getQRCodeAttributeName('renderer'));
+  const output = readTargetAttribute(target, getQRCodeAttributeName('output'));
+  const tagNameAttr = readTargetAttribute(target, getQRCodeAttributeName('tag-name'));
+  const cellSize = readNumberTargetAttribute(target, getQRCodeAttributeName('cell-size'));
+  const margin = readNumberTargetAttribute(target, getQRCodeAttributeName('margin'));
+  const cellColor = readTargetAttribute(target, getQRCodeAttributeName('cell-color'));
+  const backgroundColor = readTargetAttribute(target, getQRCodeAttributeName('background-color'));
   const alt = readTargetAttribute(target, 'alt');
   const title = readTargetAttribute(target, 'title');
 
@@ -197,13 +201,13 @@ const getTargetQRCodeOptions = function(target : any) {
   const opts : QRCodeRenderOptions = {};
   if (!target) return opts;
 
-  const typeNumber = readNumberTargetAttribute(target, 'data-type-number');
-  const errorCorrectionLevel = readTargetAttribute(target, 'data-error-correction-level');
-  const value = readTargetAttribute(target, 'data-value') || readTargetAttribute(target, 'data-data');
-  const mode = readTargetAttribute(target, 'data-mode');
-  const encoding = readTargetAttribute(target, 'data-encoding');
-  const eci = readBooleanOrNumberTargetAttribute(target, 'data-eci');
-  const segments = parseJsonAttribute(target, 'data-segments');
+  const typeNumber = readNumberTargetAttribute(target, getQRCodeAttributeName('type-number'));
+  const errorCorrectionLevel = readTargetAttribute(target, getQRCodeAttributeName('error-correction-level'));
+  const value = readTargetAttribute(target, getQRCodeAttributeName('value')) || readTargetAttribute(target, getQRCodeAttributeName('data'));
+  const mode = readTargetAttribute(target, getQRCodeAttributeName('mode'));
+  const encoding = readTargetAttribute(target, getQRCodeAttributeName('encoding'));
+  const eci = readBooleanOrNumberTargetAttribute(target, getQRCodeAttributeName('eci'));
+  const segments = parseJsonAttribute(target, getQRCodeAttributeName('segments'));
 
   if (typeof typeNumber === 'number') opts.typeNumber = typeNumber as QRCodeRenderOptions['typeNumber'];
   if (errorCorrectionLevel) opts.errorCorrectionLevel = errorCorrectionLevel as QRCodeRenderOptions['errorCorrectionLevel'];

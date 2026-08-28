@@ -380,9 +380,9 @@ export const misc = function(qrcode) {
       qr.make();
 
       const image = document.createElement('img');
-      image.setAttribute('data-cell-size', '3');
-      image.setAttribute('data-margin', '1');
-      image.setAttribute('data-cell-color', '#112233');
+      image.setAttribute('data-qrcode-cell-size', '3');
+      image.setAttribute('data-qrcode-margin', '1');
+      image.setAttribute('data-qrcode-cell-color', '#112233');
       image.setAttribute('alt', 'QR image');
 
       const result = qr.render({ target : image });
@@ -396,13 +396,13 @@ export const misc = function(qrcode) {
 
     it('static render creates QR code from target DOM attributes', function(){
       const image = document.createElement('img');
-      image.setAttribute('data-renderer', 'png');
-      image.setAttribute('data-output', 'element');
-      image.setAttribute('data-type-number', '1');
-      image.setAttribute('data-error-correction-level', 'L');
-      image.setAttribute('data-value', 'abc');
-      image.setAttribute('data-cell-size', '3');
-      image.setAttribute('data-margin', '1');
+      image.setAttribute('data-qrcode-renderer', 'png');
+      image.setAttribute('data-qrcode-output', 'element');
+      image.setAttribute('data-qrcode-type-number', '1');
+      image.setAttribute('data-qrcode-error-correction-level', 'L');
+      image.setAttribute('data-qrcode-value', 'abc');
+      image.setAttribute('data-qrcode-cell-size', '3');
+      image.setAttribute('data-qrcode-margin', '1');
       image.setAttribute('alt', 'Static QR image');
 
       const result = qrcode.render({ target : image });

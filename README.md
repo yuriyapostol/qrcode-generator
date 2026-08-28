@@ -83,7 +83,7 @@ qrcode.render({
   renderer: 'png:dataUrl'
 });
 
-qrcode.render({ target: document.querySelector('[data-renderer]') });
+qrcode.render({ target: document.querySelector('[data-qrcode-renderer]') });
 ```
 
 ### QRCode
@@ -179,33 +179,35 @@ qr.render({ renderer: 'table', cellSize: 5, margin: 20 });
 qr.render('ascii', 1, 2);
 qr.render('canvas', context, 2);
 qr.render('canvas', context, { cell: { size: 6, color: '#111' }, margin: 12, background: '#eee' });
-qr.render({ target: document.querySelector('[data-renderer]') });
-qrcode.render({ target: document.querySelector('[data-renderer]') });
+qr.render({ target: document.querySelector('[data-qrcode-renderer]') });
+qrcode.render({ target: document.querySelector('[data-qrcode-renderer]') });
 ```
 
-DOM targets can provide renderer options through `data-*` attributes. JavaScript
+DOM targets can provide renderer options through `data-qrcode-*` attributes. JavaScript
 options override attribute values. Static `qrcode.render({ target })` also reads
 QR Code creation and data attributes. For `<img>` targets, `output="element"`
-is implied automatically, so `data-output="element"` is optional.
+is implied automatically, so `data-qrcode-output="element"` is optional.
 
 ```html
 <img
-  data-renderer="png"
-  data-type-number="0"
-  data-error-correction-level="L"
-  data-value="Hello"
-  data-cell-size="4"
-  data-margin="8"
+  data-qrcode-renderer="png"
+  data-qrcode-type-number="0"
+  data-qrcode-error-correction-level="L"
+  data-qrcode-value="Hello"
+  data-qrcode-cell-size="4"
+  data-qrcode-margin="8"
+  data-qrcode-cell-color="#182126"
+  data-qrcode-background-color="#f4efe7"
   alt="QR code"
 >
 ```
 
-For multiple data segments, use `data-segments` with JSON argument tuples:
+For multiple data segments, use `data-qrcode-segments` with JSON argument tuples:
 
 ```html
 <img
-  data-renderer="png"
-  data-segments='[["HELLO","Alphanumeric"],["1234","Numeric"]]'
+  data-qrcode-renderer="png"
+  data-qrcode-segments='[["HELLO","Alphanumeric"],["1234","Numeric"]]'
 >
 ```
 
