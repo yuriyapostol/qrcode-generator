@@ -1,4 +1,4 @@
-const q = {}, tt = {}, nt = [], et = [], k = function(i, d) {
+const q = {}, tt = {}, nt = [], et = [], k = function(i = 0, d = "M") {
   const _ = i;
   let o = i;
   const p = K[d];

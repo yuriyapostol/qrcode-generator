@@ -323,7 +323,7 @@
       'byte-basic': {
         label: 'Byte / Basic',
         script: [
-          "const qr = qrcode(0, 'M');",
+          "const qr = qrcode();",
           "qr.addData('here comes qr!', 'Byte');",
           'qr.make();'
         ]
@@ -347,7 +347,7 @@
       kanji: {
         label: 'Kanji / SJIS',
         script: [
-          "const qr = qrcode(0, 'M');",
+          "const qr = qrcode();",
           "qr.addData('茗荷', 'Kanji', { encoding: 'SJIS' });",
           'qr.make();'
         ]
