@@ -96,7 +96,7 @@ export interface QRCode {
 }
 
 export interface QRCodeFactory {
-  (typeNumber: TypeNumber, errorCorrectionLevel: ErrorCorrectionLevel) : QRCode;
+  (typeNumber?: TypeNumber, errorCorrectionLevel?: ErrorCorrectionLevel) : QRCode;
   render(opts: QRCodeRenderOptions) : any;
   stringToBytes(s: string): number[];
   createStringToBytes(unicodeData: string, numChars: number) :

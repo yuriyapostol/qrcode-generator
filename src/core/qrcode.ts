@@ -45,7 +45,7 @@ const instances : QRCode[] = [];
  * @param typeNumber 1 to 40
  * @param errorCorrectionLevel 'L','M','Q','H'
  */
-const qrcode = function(typeNumber : number, errorCorrectionLevel : string) : QRCode {
+const qrcode = function(typeNumber : number = 0, errorCorrectionLevel : string = 'M') : QRCode {
 
   const PAD0 = 0xEC;
   const PAD1 = 0x11;
