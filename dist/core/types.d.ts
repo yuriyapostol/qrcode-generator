@@ -21,6 +21,7 @@ export type QRCodeRendererArgument = {
     type?: 'number' | 'string' | 'boolean' | 'object' | 'any';
     positionalOnly?: boolean;
 };
+export type QRCodeTarget = Element | ArrayLike<Element> | Iterable<Element> | string;
 export type QRCodeRendererOptions = {
     renderer?: string;
     output?: string;
@@ -38,13 +39,13 @@ export type QRCodeRendererSpec = string | {
     context?: any;
     [key: string]: any;
 };
-export type QRCodeRenderOptions = QRCodeRendererOptions & {
+export type QRCodeRenderOptions = Omit<QRCodeRendererOptions, 'target'> & {
     typeNumber?: TypeNumber;
     errorCorrectionLevel?: ErrorCorrectionLevel;
     data?: string | QRCodeAddDataInput[];
     mode?: Mode;
     opts?: QRCodeAddDataOptions;
-    target?: any;
+    target?: QRCodeTarget;
     renderer?: QRCodeRendererSpec;
 };
 export type QRCodeRenderer = {

@@ -86,6 +86,21 @@ qrcode.render({
 qrcode.render({ target: document.querySelector('[data-qrcode-renderer]') });
 ```
 
+To render several QR codes, pass a CSS selector, an array, or a DOM collection as
+`target`. Each matched element must provide its QR data through `data-qrcode-value`
+or `data-qrcode-values`. The call returns an array of renderer
+results in target order.
+
+```javascript
+qrcode.render({ target: '.qr-code', renderer: 'png' });
+qrcode.render({ target: document.querySelectorAll('.qr-code') });
+```
+
+```html
+<img class="qr-code" data-qrcode-value="https://example.com/first">
+<img class="qr-code" data-qrcode-value="https://example.com/second">
+```
+
 ### QRCode
 
 #### addData(data, mode, opts) => <code>void</code>
@@ -202,12 +217,12 @@ is implied automatically, so `data-qrcode-output="element"` is optional.
 >
 ```
 
-For multiple data segments, use `data-qrcode-segments` with JSON argument tuples:
+For multiple data values, use `data-qrcode-values` with JSON argument tuples:
 
 ```html
 <img
   data-qrcode-renderer="png"
-  data-qrcode-segments='[["HELLO","Alphanumeric"],["1234","Numeric"]]'
+  data-qrcode-values='[["HELLO","Alphanumeric"],["1234","Numeric"]]'
 >
 ```
 

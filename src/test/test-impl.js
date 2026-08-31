@@ -425,6 +425,54 @@ export const misc = function(qrcode) {
       expect(image.getAttribute('alt') ).to.equal('Static QR image');
     });
 
+    it('static render creates QR codes for every target selected by CSS selector', function(){
+      const first = document.createElement('img');
+      first.className = 'batch-qr-code';
+      first.setAttribute('data-qrcode-renderer', 'png');
+      first.setAttribute('data-qrcode-value', 'first');
+
+      const second = document.createElement('img');
+      second.className = 'batch-qr-code';
+      second.setAttribute('data-qrcode-renderer', 'png');
+      second.setAttribute('data-qrcode-value', 'second');
+
+      document.body.append(first, second);
+      const result = qrcode.render({ target : '.batch-qr-code' });
+      first.remove();
+      second.remove();
+
+      expect(result).to.deep.equal([first, second]);
+      expect(first.getAttribute('src').startsWith('data:image/png;base64,') ).to.be.true;
+      expect(second.getAttribute('src').startsWith('data:image/png;base64,') ).to.be.true;
+    });
+
+    it('static render accepts a NodeList of targets', function(){
+      const first = document.createElement('img');
+      first.className = 'batch-qr-code';
+      first.setAttribute('data-qrcode-renderer', 'png');
+      first.setAttribute('data-qrcode-value', 'first');
+
+      const second = document.createElement('img');
+      second.className = 'batch-qr-code';
+      second.setAttribute('data-qrcode-renderer', 'png');
+      second.setAttribute('data-qrcode-values', '[["second"]]');
+
+      document.body.append(first, second);
+      const result = qrcode.render({ target : document.querySelectorAll('.batch-qr-code') });
+      first.remove();
+      second.remove();
+
+      expect(result).to.deep.equal([first, second]);
+    });
+
+    it('static render requires target data for multiple targets', function(){
+      const first = document.createElement('img');
+      const second = document.createElement('img');
+
+      expect(() => qrcode.render({ target : [first, second], data : 'shared' }) )
+        .to.throw('data must be provided by data-qrcode-value');
+    });
+
     it('png renderer returns image tag by positional args', function(){
       const qr = qrcode(1, 'L');
       qr.addData('abc');

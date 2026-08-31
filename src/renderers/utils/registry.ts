@@ -20,7 +20,8 @@ import {
   type QRCodeRenderer,
   type QRCodeRendererArgument,
   type QRCodeRendererOptions,
-  type QRCodeRendererSpec
+  type QRCodeRendererSpec,
+  type QRCodeTarget
 } from '../../core/types';
 
 const renderers : Record<string, QRCodeRenderer> = {};
@@ -203,15 +204,15 @@ const getTargetQRCodeOptions = function(target : any) {
 
   const typeNumber = readNumberTargetAttribute(target, getQRCodeAttributeName('type-number'));
   const errorCorrectionLevel = readTargetAttribute(target, getQRCodeAttributeName('error-correction-level'));
-  const value = readTargetAttribute(target, getQRCodeAttributeName('value')) || readTargetAttribute(target, getQRCodeAttributeName('data'));
+  const value = readTargetAttribute(target, getQRCodeAttributeName('value'));
   const mode = readTargetAttribute(target, getQRCodeAttributeName('mode'));
   const encoding = readTargetAttribute(target, getQRCodeAttributeName('encoding'));
   const eci = readBooleanOrNumberTargetAttribute(target, getQRCodeAttributeName('eci'));
-  const segments = parseJsonAttribute(target, getQRCodeAttributeName('segments'));
+  const values = parseJsonAttribute(target, getQRCodeAttributeName('values'));
 
   if (typeof typeNumber === 'number') opts.typeNumber = typeNumber as QRCodeRenderOptions['typeNumber'];
   if (errorCorrectionLevel) opts.errorCorrectionLevel = errorCorrectionLevel as QRCodeRenderOptions['errorCorrectionLevel'];
-  if (segments) opts.data = segments;
+  if (values) opts.data = values;
   else if (typeof value === 'string') opts.data = value;
   if (mode) opts.mode = mode as QRCodeRenderOptions['mode'];
   if (encoding || typeof eci !== 'undefined') {
@@ -221,6 +222,24 @@ const getTargetQRCodeOptions = function(target : any) {
   }
 
   return opts;
+};
+
+const getRenderTargets = function(target : QRCodeTarget | undefined) : any[] | null {
+  if (typeof target === 'string') {
+    if (typeof document === 'undefined') {
+      throw 'a selector target requires a DOM document';
+    }
+    return Array.from(document.querySelectorAll(target));
+  }
+  if (Array.isArray(target)) return target;
+  if (target && typeof (target as any).getAttribute === 'function') return null;
+  if (target && typeof (target as any)[Symbol.iterator] === 'function') {
+    return Array.from(target as Iterable<Element>);
+  }
+  if (target && typeof (target as any).length === 'number') {
+    return Array.from(target as ArrayLike<Element>);
+  }
+  return null;
 };
 
 const isRendererArgumentCompatible = function(arg : QRCodeRendererArgument, value : any) {
@@ -337,6 +356,14 @@ const installRendererApi = function(qr : QRCode, factory : QRCodeFactory) {
 };
 
 (qrcode as QRCodeFactory).render = function(opts : QRCodeRenderOptions) {
+  const targets = getRenderTargets(opts?.target);
+  if (targets) {
+    if (typeof opts.data !== 'undefined') {
+      throw 'data must be provided by data-qrcode-value or data-qrcode-values for multiple targets';
+    }
+    return targets.map(target => (qrcode as QRCodeFactory).render({ ...opts, target }));
+  }
+
   const targetOpts = getTargetQRCodeOptions(opts?.target);
   const renderOpts = { ...targetOpts, ...(opts || {}) };
   const typeNumber = (typeof renderOpts.typeNumber === 'number') ? renderOpts.typeNumber : 0;

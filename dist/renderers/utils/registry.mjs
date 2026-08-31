@@ -1,31 +1,31 @@
 import a from "../../core/qrcode.mjs";
-const v = {}, f = function(e) {
+const A = {}, s = function(e) {
   if (typeof e != "object" || e === null) return !1;
   const n = Object.getPrototypeOf(e);
   return n === Object.prototype || n === null;
 }, C = function(e, n) {
-  const t = f(e) ? { ...e } : {};
-  return typeof n == "string" ? t.color = n : f(n) && Object.assign(t, n), t;
-}, y = function(e, n) {
-  return f(e[n]) || (e[n] = {}), e[n];
-}, k = function(e, n, t) {
+  const t = s(e) ? { ...e } : {};
+  return typeof n == "string" ? t.color = n : s(n) && Object.assign(t, n), t;
+}, g = function(e, n) {
+  return s(e[n]) || (e[n] = {}), e[n];
+}, z = function(e, n, t) {
   if (n !== "renderer") {
     if (n === "cell" || n === "background") {
       e[n] = C(e[n], t), n === "cell" ? (typeof e.cell.size == "number" && (e.cellSize = e.cell.size), typeof e.cell.color == "string" && (e.cellColor = e.cell.color)) : typeof e.background.color == "string" && (e.backgroundColor = e.background.color);
       return;
     }
-    e[n] = t, n === "cellSize" && typeof t == "number" ? y(e, "cell").size = t : n === "cellColor" && typeof t == "string" ? y(e, "cell").color = t : n === "backgroundColor" && typeof t == "string" && (y(e, "background").color = t);
+    e[n] = t, n === "cellSize" && typeof t == "number" ? g(e, "cell").size = t : n === "cellColor" && typeof t == "string" ? g(e, "cell").color = t : n === "backgroundColor" && typeof t == "string" && (g(e, "background").color = t);
   }
 }, R = function(e, n) {
   Object.keys(n).forEach((t) => {
-    k(e, t, n[t]);
+    z(e, t, n[t]);
   });
-}, j = function(e) {
+}, k = function(e) {
   return e.toLowerCase() === "dataurl" ? "dataUrl" : e;
-}, A = function(e, n) {
+}, j = function(e, n) {
   const t = n.toLowerCase();
   if (t === "dataurl" || t === "html" || t === "element" || t === "canvas" || t === "file") {
-    e.output = j(n);
+    e.output = k(n);
     return;
   }
   if (t === "img" || t === "image") {
@@ -37,15 +37,15 @@ const v = {}, f = function(e) {
   if (typeof e == "string") {
     const n = e.split(":"), t = {};
     return n.slice(1).forEach((r) => {
-      r && A(t, r);
+      r && j(t, r);
     }), { name: n[0], opts: t };
   }
-  if (f(e)) {
+  if (s(e)) {
     const { renderer: n, type: t, ...r } = e;
     return { name: n || t, opts: r };
   }
   return { name: void 0, opts: {} };
-}, w = function(e) {
+}, h = function(e) {
   return typeof e?.tagName == "string" ? e.tagName.toLowerCase() : void 0;
 }, u = function(e, n) {
   if (typeof e?.getAttribute != "function") return;
@@ -56,7 +56,7 @@ const v = {}, f = function(e) {
   if (typeof t > "u" || t === "") return;
   const r = Number(t);
   return Number.isFinite(r) ? r : void 0;
-}, L = function(e, n) {
+}, w = function(e, n) {
   const t = u(e, n);
   if (typeof t > "u" || t === "") return;
   const r = t.toLowerCase();
@@ -68,81 +68,94 @@ const v = {}, f = function(e) {
   const t = u(e, n);
   if (!(typeof t > "u" || t === ""))
     return JSON.parse(t);
-}, s = function(e) {
+}, f = function(e) {
   return `data-qrcode-${e}`;
-}, z = function(e) {
+}, v = function(e) {
   const n = {};
   if (!e) return n;
-  const t = w(e);
+  const t = h(e);
   t && (n.tagName = t);
-  const r = u(e, s("renderer")), o = u(e, s("output")), c = u(e, s("tag-name")), l = N(e, s("cell-size")), i = N(e, s("margin")), d = u(e, s("cell-color")), p = u(e, s("background-color")), m = u(e, "alt"), b = u(e, "title");
+  const r = u(e, f("renderer")), o = u(e, f("output")), l = u(e, f("tag-name")), c = N(e, f("cell-size")), i = N(e, f("margin")), d = u(e, f("cell-color")), p = u(e, f("background-color")), m = u(e, "alt"), b = u(e, "title");
   if (r) {
-    const g = O(r);
-    g.name && (n.renderer = g.name), Object.assign(n, g.opts);
+    const y = O(r);
+    y.name && (n.renderer = y.name), Object.assign(n, y.opts);
   }
-  return o && (n.output = j(o)), c && (n.tagName = c), typeof l == "number" && (n.cellSize = l), typeof i == "number" && (n.margin = i), d && (n.cellColor = d), p && (n.backgroundColor = p), m && (n.alt = m), b && (n.title = b), !n.renderer && t === "canvas" && (n.renderer = "canvas"), !n.renderer && t === "img" && (n.renderer = "png"), !n.output && t === "canvas" && (n.output = "canvas"), !n.output && t === "img" && (n.output = "element"), !n.context && t === "canvas" && typeof e.getContext == "function" && (n.context = e.getContext("2d")), n;
-}, h = function(e) {
+  return o && (n.output = k(o)), l && (n.tagName = l), typeof c == "number" && (n.cellSize = c), typeof i == "number" && (n.margin = i), d && (n.cellColor = d), p && (n.backgroundColor = p), m && (n.alt = m), b && (n.title = b), !n.renderer && t === "canvas" && (n.renderer = "canvas"), !n.renderer && t === "img" && (n.renderer = "png"), !n.output && t === "canvas" && (n.output = "canvas"), !n.output && t === "img" && (n.output = "element"), !n.context && t === "canvas" && typeof e.getContext == "function" && (n.context = e.getContext("2d")), n;
+}, L = function(e) {
   const n = {};
   if (!e) return n;
-  const t = N(e, s("type-number")), r = u(e, s("error-correction-level")), o = u(e, s("value")) || u(e, s("data")), c = u(e, s("mode")), l = u(e, s("encoding")), i = L(e, s("eci")), d = S(e, s("segments"));
-  return typeof t == "number" && (n.typeNumber = t), r && (n.errorCorrectionLevel = r), d ? n.data = d : typeof o == "string" && (n.data = o), c && (n.mode = c), (l || typeof i < "u") && (n.opts = {}, l && (n.opts.encoding = l), typeof i < "u" && (n.opts.eci = i)), n;
-}, T = function(e, n) {
+  const t = N(e, f("type-number")), r = u(e, f("error-correction-level")), o = u(e, f("value")), l = u(e, f("mode")), c = u(e, f("encoding")), i = w(e, f("eci")), d = S(e, f("values"));
+  return typeof t == "number" && (n.typeNumber = t), r && (n.errorCorrectionLevel = r), d ? n.data = d : typeof o == "string" && (n.data = o), l && (n.mode = l), (c || typeof i < "u") && (n.opts = {}, c && (n.opts.encoding = c), typeof i < "u" && (n.opts.eci = i)), n;
+}, T = function(e) {
+  if (typeof e == "string") {
+    if (typeof document > "u")
+      throw "a selector target requires a DOM document";
+    return Array.from(document.querySelectorAll(e));
+  }
+  return Array.isArray(e) ? e : e && typeof e.getAttribute == "function" ? null : e && typeof e[Symbol.iterator] == "function" || e && typeof e.length == "number" ? Array.from(e) : null;
+}, q = function(e, n) {
   return !e.type || e.type === "any" ? !0 : e.type === "object" ? typeof n == "object" && n !== null : typeof n === e.type;
 }, x = function(e, n, t) {
   for (let r = 0; r < e.length; r += 1)
-    if (typeof n[e[r].name] > "u" && T(e[r], t))
+    if (typeof n[e[r].name] > "u" && q(e[r], t))
       return e[r];
   return null;
-}, E = function(e, n, t, r) {
-  const o = { renderer: e }, c = n.args || [];
-  return r && R(o, r), t.forEach((l) => {
-    const i = x(c, o, l);
-    if (f(l) && !i?.positionalOnly) {
-      R(o, l);
+}, D = function(e, n, t, r) {
+  const o = { renderer: e }, l = n.args || [];
+  return r && R(o, r), t.forEach((c) => {
+    const i = x(l, o, c);
+    if (s(c) && !i?.positionalOnly) {
+      R(o, c);
       return;
     }
-    i && k(o, i.name, l);
-  }), typeof o.cell == "string" || f(o.cell) ? o.cell = C(void 0, o.cell) : f(o.cell) || (o.cell = {}), typeof o.background == "string" || f(o.background) ? o.background = C(void 0, o.background) : f(o.background) || (o.background = {}), typeof o.cellSize == "number" && typeof o.cell.size != "number" && (o.cell.size = o.cellSize), typeof o.cell.size == "number" && typeof o.cellSize != "number" && (o.cellSize = o.cell.size), typeof o.cellColor == "string" && typeof o.cell.color != "string" && (o.cell.color = o.cellColor), typeof o.cell.color == "string" && typeof o.cellColor != "string" && (o.cellColor = o.cell.color), typeof o.backgroundColor == "string" && typeof o.background.color != "string" && (o.background.color = o.backgroundColor), typeof o.background.color == "string" && typeof o.backgroundColor != "string" && (o.backgroundColor = o.background.color), o;
-}, Q = function(e, n) {
+    i && z(o, i.name, c);
+  }), typeof o.cell == "string" || s(o.cell) ? o.cell = C(void 0, o.cell) : s(o.cell) || (o.cell = {}), typeof o.background == "string" || s(o.background) ? o.background = C(void 0, o.background) : s(o.background) || (o.background = {}), typeof o.cellSize == "number" && typeof o.cell.size != "number" && (o.cell.size = o.cellSize), typeof o.cell.size == "number" && typeof o.cellSize != "number" && (o.cellSize = o.cell.size), typeof o.cellColor == "string" && typeof o.cell.color != "string" && (o.cell.color = o.cellColor), typeof o.cell.color == "string" && typeof o.cellColor != "string" && (o.cellColor = o.cell.color), typeof o.backgroundColor == "string" && typeof o.background.color != "string" && (o.background.color = o.backgroundColor), typeof o.background.color == "string" && typeof o.backgroundColor != "string" && (o.backgroundColor = o.background.color), o;
+}, E = function(e, n) {
   e.render = function(t, ...r) {
-    let o, c;
+    let o, l;
     if (typeof t == "string") {
       const i = O(t);
-      o = i.name, c = i.opts;
-    } else if (f(t) && t?.renderer) {
-      const i = t, { renderer: d, ...p } = i, m = O(d), b = z(p.target);
-      o = m.name || b.renderer, c = { ...b, ...m.opts, ...p };
-    } else if (f(t)) {
-      const i = t, d = z(i.target);
-      o = d.renderer, c = { ...d, ...i };
+      o = i.name, l = i.opts;
+    } else if (s(t) && t?.renderer) {
+      const i = t, { renderer: d, ...p } = i, m = O(d), b = v(p.target);
+      o = m.name || b.renderer, l = { ...b, ...m.opts, ...p };
+    } else if (s(t)) {
+      const i = t, d = v(i.target);
+      o = d.renderer, l = { ...d, ...i };
     }
     if (!o) return "[QRCode Object]";
-    const l = n.getRenderer(o);
-    if (!l)
+    const c = n.getRenderer(o);
+    if (!c)
       throw "unknown renderer: " + o;
-    return e.make(), l.render.call(e, E(o, l, r, c));
+    return e.make(), c.render.call(e, D(o, c, r, l));
   };
 };
 a.registerRenderer = function(e, n) {
-  v[e] = n;
+  A[e] = n;
 };
 a.getRenderer = function(e) {
-  return v[e];
+  return A[e];
 };
 a.render = function(e) {
-  const t = { ...h(e?.target), ...e || {} }, r = typeof t.typeNumber == "number" ? t.typeNumber : 0, o = t.errorCorrectionLevel || "L", c = a(r, o);
-  if (typeof t.data == "string")
-    c.addData(t.data, t.mode, t.opts);
-  else if (Array.isArray(t.data))
-    c.addData(t.data);
+  const n = T(e?.target);
+  if (n) {
+    if (typeof e.data < "u")
+      throw "data must be provided by data-qrcode-value or data-qrcode-values for multiple targets";
+    return n.map((i) => a.render({ ...e, target: i }));
+  }
+  const r = { ...L(e?.target), ...e || {} }, o = typeof r.typeNumber == "number" ? r.typeNumber : 0, l = r.errorCorrectionLevel || "L", c = a(o, l);
+  if (typeof r.data == "string")
+    c.addData(r.data, r.mode, r.opts);
+  else if (Array.isArray(r.data))
+    c.addData(r.data);
   else
     throw "data is required";
-  return c.render(t);
+  return c.render(r);
 };
-a.use(Q);
-const D = a.registerRenderer, F = a.getRenderer;
+a.use(E);
+const F = a.registerRenderer, J = a.getRenderer;
 export {
-  F as getRenderer,
-  D as registerRenderer
+  J as getRenderer,
+  F as registerRenderer
 };
 //# sourceMappingURL=registry.mjs.map
