@@ -44,13 +44,13 @@ Optional modules:
 
 ### QRCodeFactory
 
-#### qrcode(typeNumber, errorCorrectionLevel) => <code>QRCode</code>
+#### qrcode(typeNumber?, errorCorrectionLevel?) => <code>QRCode</code>
 Create a QRCode Object.
 
 | Param                | Type                | Description                                    |
 | ---------------------| ------------------- | ---------------------------------------------- |
-| typeNumber           | <code>number</code> | Type number (1 ~ 40), or 0 for auto detection. |
-| errorCorrectionLevel | <code>string</code> | Error correction level ('L', 'M', 'Q', 'H')    |
+| typeNumber           | <code>number</code> | Type number (1 ~ 40), or 0 for auto detection. Default: <code>0</code>. |
+| errorCorrectionLevel | <code>string</code> | Error correction level ('L', 'M', 'Q', 'H'). Default: <code>'M'</code>. |
 
 #### qrcode.registerEncoder(encoding, encoder) => <code>void</code>
 Register a named text encoder for `Byte` and/or `Kanji` segments.
